@@ -1,0 +1,10 @@
+openAiAuthKey.txt
+*_summaries/**
+*_webpages/**
+*_summaries
+*_webpages
+.vscode
+.vscode/**
+*.png
+__pycache__
+__pycache__/**
