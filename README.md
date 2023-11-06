@@ -28,13 +28,13 @@ First, find the tournament ID from the Tabroom URL of the tournament you are int
 To run for all schools at the tournament:
 
 ```bash
-python tabroom_summary --tournament-id 11111 --all-schools
+python tabroom_summary.py --tournament-id 11111 --all-schools
 ```
 
 To run for a single school at the tournament:
 
 ```bash
-python tabroom_summary --tournament-id 11111 --school-name "The Milford School for Children"
+python tabroom_summary.py --tournament-id 11111 --school-name "The Milford School for Children"
 
 ```
 
