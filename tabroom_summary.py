@@ -220,17 +220,29 @@ def get_debate_results(
     ret_val = []
     event_name = event["name"]
     for r_set in event.get("result_sets", []):
-        # TODO - Currently unable to handle bracket data cleanly.
         if r_set.get("bracket") == 1:
-            continue
+            continue  # No brackets -- doesn't translate well to text
         label = r_set["label"]
-        if label == "Final Places":
-            total_entries = len(r_set["results"])
-        else:
-            total_entries = 0
+        if re.search(r"NDCA Dukes and Bailey Points", label) or re.search(
+            r"NDCA Baker Points", label
+        ):
+            continue  # These points are some real inside baseball that no one cares about
+        try:
+            total_entries = len(
+                r_set["results"]
+            )  # TODO - figure out total entries in cases where partial results are published
+        except:
+            total_entries = 0  # couldn't find the entry count
         for result in r_set["results"]:
             if "entry" not in result:
                 continue  # Handling a strange case for blank results
+            if result["values"] == [{}]:
+                continue  # Sometimes Palmer populates a duplicate entry with blank 'values'. Skip it.
+            results_by_round = ""  # Palmer likes to hide round-by-round results in this very low-priority column.
+            for value in result["values"]:
+                if value["priority"] == 999:
+                    results_by_round = value["value"]
+                    break
             if label == "Speaker Awards":
                 try:
                     # Try to get the individual student name from the Speaker Awards
@@ -259,14 +271,27 @@ def get_debate_results(
             ):
                 continue
             ret_val.append(
-                f"{event_name}|debate|{label}|{entry_name}|{entry_code}|{result_school}|{rank}|{round_reached}|{percentile}"
+                f"{event_name}|debate|{label}|{entry_name}|{entry_code}|{result_school}|{rank}|{round_reached}|{percentile}|{results_by_round}"
             )
     return ret_val
 
 
 def generate_chat_gpt_prompt(
-    tournament_data, school_name, school_count, custom_url=None
+    tournament_data,
+    school_name,
+    school_count,
+    custom_url=None,
+    state_count=1,
+    has_speech=False,
+    has_debate=False,
 ):
+    """
+    Generates a text prompt to send to ChatGPT, telling it what to create. Does not contain the results, but does contain a header.
+
+    Just add results data and this baby is ready to send to ChatGPT.
+
+    Returns a list of strings with ChatGPT prompt pieces.
+    """
     start_date = datetime.strptime(
         tournament_data["start"].split(" ")[0], "%Y-%m-%d"
     ).strftime(
@@ -276,24 +301,26 @@ def generate_chat_gpt_prompt(
         follow_up_url = custom_url
     else:
         follow_up_url = f"{tournament_data['webname']}.tabroom.com"
+    if state_count > 1:
+        state_detail = f" from {state_count} states."
+    else:
+        state_detail = "."
     chat_gpt_basic_prompt = f"""
-    The following data represents results of a high school speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}), starting on {start_date}.
+    The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}.
     
-    The tournament was attended by {len(ENTRY_DICTIONARY)} student entries and {school_count} schools.
+    The tournament was attended by {len(ENTRY_DICTIONARY)} student entries and {school_count} schools{state_detail}
 
-    Write a 3 paragraph summary for the {school_name} High School newspaper. Use as many student names of {school_name} students as reasonable. Write concisely if there are more than 10 results to write about.
+    Write a 3 paragraph summary for the {school_name} team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely.
     At the end, indicate that additional information (including how to compete, judge, or volunteer) can be found at {follow_up_url}.
     
     Include individuals' rankings and statistics, such as number of wins. When referencing results, you should include the total number of entries in the event. Don't include raw percentile information in the output.
 
     Do not use the definite article 'the' before the names of events.
     """
-    chat_gpt_debate_prompt = (
-        chat_gpt_basic_prompt
-        + f"""
+    chat_gpt_debate_prompt = f"""
     Final Places and Speaker Awards are more important than Prelim seeds. Ignore entries below the {PERCENTILE_MINIMUM}th percentile.
 
-    Wins should be listed earlier than other achievements. Varsity should generally come before Novice or Junior Varsity (JV) results.
+    Wins should be listed earlier than other achievements. Varsity results should be listed before Novice or Junior Varsity (JV) results.
 
     Terms like 'Doubles', 'Octos', and 'Quarters' may be used to indicate the elimination round a team reached.
     Doubles refers to the Round of 32 (also known as double-octofinals), Octos refers to the Round of 16 (octofinals), and Quarters refers to the Round of 8 (quarterfinals), respectively.
@@ -303,27 +330,43 @@ def generate_chat_gpt_prompt(
 
     Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
 
+    Results may include round-by-round results, delimited by a "|" character to demarcate each round, which represent how a student performed in a single round.
+    Single round results will include a W or L or B to indicate a win or a loss or bye. They will also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent).
+    You can reference these single round results when summarizing an individual's performance.
+
     """
-    )
-    chat_gpt_speech_prompt = (
-        chat_gpt_basic_prompt
-        + f"""
+    chat_gpt_speech_prompt = f"""
     Speech events involve acting, prepared speeches, and improvisational speeches.
 
     Results may include round-by-round results, which represent how a student was ranked in a given room of competition (1 is best). You can reference these when summarizing an individual's performance.
 
-    Some round-by-round results will have multiple scores: these represent scores from a panel of several judges, as opposed to a single judge. If a student receives all 1s from a panel of judges, that can be called out as a "picket fence", which is a positive achievement in speech.
+    Some round-by-round results will have multiple scores: these represent scores from a panel of several judges, as opposed to a single judge.
+    If a student receives all 1s from a panel of judges, that can be called out as a "picket fence", which is a positive achievement in speech.
     """
-    )
 
-    chat_gpt_payload = [chat_gpt_debate_prompt]
+    chat_gpt_payload = [chat_gpt_basic_prompt]
+    if has_debate:
+        chat_gpt_payload.append(chat_gpt_debate_prompt)
+    if has_speech:
+        chat_gpt_payload.append(chat_gpt_speech_prompt)
     chat_gpt_payload.append(HEADER_STRING)
     return chat_gpt_payload
 
 
-if __name__ == "__main__":
-    # TODO - Add number of states present if more than 1 into the GPT prompt.
+def generate_list_generation_prompt():
+    return f"""
+    This is a list of results from the speech and debate tournament.
+    Create a numbered list of all the results, so that each event is a new number in the list, and each event contains results from all students in that event.
+    Because these are all results for a single team, do not include the school name in the individual results entry.
+    Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
+    Bold the name of the event by putting 2 asterisks around it.
+    For example:
+    1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
+    2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals. 
+    """
 
+
+if __name__ == "__main__":
     # PARSE INPUT FROM USER
     parser = argparse.ArgumentParser(
         prog="tabroom_summary",
@@ -367,20 +410,26 @@ if __name__ == "__main__":
     data = json.loads(html)
 
     # SCRAPE TABROOM FOR ALL THE GOOD DATA NOT PRESENT IN THE API
-    scraped_output, ENTRY_TO_SCHOOL_DICT_GLOBAL = tabroom_scrape.main(
-        tournament_id=tournament_id
-    )
+    scrape_output = tabroom_scrape.main(tournament_id=tournament_id)
+    scraped_results = scrape_output["results"]
+    ENTRY_TO_SCHOOL_DICT_GLOBAL = scrape_output["entry_to_school_dict"]
+    school_set = scrape_output["school_set"]
+    state_set = scrape_output["state_set"]
 
-    # GET THE UNIQUE LIST OF SCHOOLS ATTENDING THE TOURNAMENT
-    if all_schools:
+    # School Set isn't guaranteed to exist, so approximate it if needed.
+    if not school_set:
         school_set = set()
         for value in ENTRY_TO_SCHOOL_DICT_GLOBAL.values():
             school_set.add(value)
+    if all_schools:
+        schools_to_write_up = school_set
     else:
-        school_set = set([school_name])
+        schools_to_write_up = set([school_name])
 
     # WALK THROUGH EACH EVENT AND PARSE RESULTS
     tournament_results = []
+    has_speech = False
+    has_debate = False
     for category in data["categories"]:
         for event in category["events"]:
             update_global_entry_dictionary(
@@ -389,10 +438,12 @@ if __name__ == "__main__":
 
             # Parse results sets
             if event["type"] == "debate":
+                has_debate = True
                 tournament_results += get_debate_results(
                     event=event, filtered=False  # , school_name=school_name
                 )
             elif event["type"] == "speech":
+                has_speech = True
                 # If Final Places is published as a result set...
                 if "Final Places" in [
                     result_set.get("label", "")
@@ -416,17 +467,21 @@ if __name__ == "__main__":
 
     # FOR EACH SCHOOL, GENERATE A SUMMARY AND SAVE IT TO DISK
     os.makedirs(f"{data['name']}_summaries", exist_ok=True)
-    for school in school_set:
+    for school in schools_to_write_up:
         chat_gpt_payload = generate_chat_gpt_prompt(
             tournament_data=data,
             school_name=school,
             custom_url=custom_url,
             school_count=len(school_set),
+            state_count=len(state_set),
+            has_speech=has_speech,
+            has_debate=has_debate,
         )
         filtered_tournament_results = [
             result
             for result in tournament_results
             if result.split("|")[SCHOOL_INDEX] == school
+            # TODO - This produces some false positives
             or (
                 result.split("|")[EVENT_TYPE_INDEX] == "debate"
                 and result.split("|")[SCHOOL_INDEX][:-3]
@@ -478,8 +533,42 @@ if __name__ == "__main__":
                 {"role": "user", "content": body_response},
             ],
         )["choices"][0]["message"]["content"]
+
+        sorted_by_event = sorted(
+            filtered_tournament_results,
+            key=lambda x: x.split("|")[HEADER_STRING.split("|").index("Event")],
+            reverse=False,
+        )
+        sorted_by_event_without_round_by_round = []
+        for result_for_numbered_list in sorted_by_event:
+            # Remove round-by-round results from the numbered list -- not required
+            result_for_numbered_list = "|".join(
+                result_for_numbered_list.split("|")[
+                    0 : HEADER_STRING.split("|").index("Place")
+                ]
+            )
+            sorted_by_event_without_round_by_round.append(result_for_numbered_list)
+        logging.info(f"Generating listed results for {school}")
+        list_generation_prompt = generate_list_generation_prompt()
+        numbered_list_prompt = (
+            list_generation_prompt
+            + "\r\n"
+            + "\r\n".join(sorted_by_event_without_round_by_round)
+        )
+
+        logging.info(f"GPT Prompt: {numbered_list_prompt}")
+        numbered_response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": numbered_list_prompt},
+            ],
+        )["choices"][0]["message"]["content"]
+
         with open(f"{data['name']}_summaries/{school}_summary.txt", "w") as f:
-            f.write(headline_response + "\r\n" + body_response)
+            f.write(
+                headline_response + "\r\n" + body_response + "\r\n" + numbered_response
+            )
 
     # GENERATE A SIMPLE HTML WEBPAGE WITH THE RESULTS
     generate_website.main(input_directory=f"{data['name']}_summaries")

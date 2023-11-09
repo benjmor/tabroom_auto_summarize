@@ -2,13 +2,17 @@ import argparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from urllib.parse import urlparse, parse_qs
 import logging
 import multiprocessing  # Adding multiprocessing to download several results concurrently
 import selenium
+from time import sleep
 from concurrent import futures
 
 logging.basicConfig(
@@ -151,7 +155,15 @@ def parse_event_specific_results(option):
     logging.info(f"Link to results for {event_name}: {link}")
     driver = webdriver.Chrome(options=chrome_options)
     wait = WebDriverWait(driver, 5)
-    driver.get(link)
+    try:
+        driver.get(link)
+    except WebDriverException:
+        sleep_time = 5
+        logging.error(
+            f"Error when attempting to load {link}. Sleeping for {sleep_time} seconds before trying again."
+        )
+        sleep(secs=sleep_time)
+        driver.get(link)
     driver.find_elements(By.CSS_SELECTOR, "div.sidenote a")
     result_pages = wait.until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.sidenote a"))
@@ -187,6 +199,32 @@ def parse_event_specific_results(option):
     return output
 
 
+def get_schools_and_states(tournament_id, chrome_options):
+    """
+    Parses the "Institutions in Attendance" table to get stats
+    """
+    school_set = set({})
+    state_set = set({})
+    url = f"https://www.tabroom.com/index/tourn/schools.mhtml?tourn_id={tournament_id}"
+    browser = webdriver.Chrome(options=chrome_options)
+    try:
+        browser.get(url)
+    except:
+        logging.error(
+            "Error when attempting to load Institutions in Attendance page, probably because the tournament does not publish it."
+        )
+        return school_set, state_set
+    columns = browser.find_elements(By.CLASS_NAME, "third")
+    for column in columns:
+        schools = column.find_elements(By.CLASS_NAME, "fivesixth")
+        for school in schools:
+            school_set.add(school.text)
+        states = column.find_elements(By.CLASS_NAME, "sixth")
+        for state in states:
+            state_set.add(state.text)
+    return school_set, state_set
+
+
 def main(tournament_id):
     global chrome_options
     chrome_options = Options()
@@ -199,6 +237,7 @@ def main(tournament_id):
 
     # Start a new browser session
     browser = webdriver.Chrome(options=chrome_options)
+    school_set, state_set = get_schools_and_states(tournament_id, chrome_options)
 
     # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
 
@@ -222,12 +261,16 @@ def main(tournament_id):
 
     # Close the browser session
     browser.quit()
-    return results, entry_to_school_name_dict
+    return {
+        "results": results,
+        "entry_to_school_dict": entry_to_school_name_dict,
+        "school_set": school_set,
+        "state_set": state_set,
+    }
 
 
 if __name__ == "__main__":
     # This is not intended to be called as a main routine but is here for testing purposes.
-    # Create an argument parser to take a tournament ID
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-t",
