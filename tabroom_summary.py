@@ -326,12 +326,19 @@ def generate_chat_gpt_prompt(
     Doubles refers to the Round of 32 (also known as double-octofinals), Octos refers to the Round of 16 (octofinals), and Quarters refers to the Round of 8 (quarterfinals), respectively.
     Use these terms to describe the elimination round a debater reached.
 
+    PF is an abbreviation for Public Forum, a 2-on-2 style of debate.
+    LD is an abbreviation for Lincoln-Douglas, a 1-on-1 style of debate.
+    CX is an abbreviation for Cross-examination (aka Policy), a 2-on-2 style of debate.
+    These abbreviations may be prefixed with V, JV, or N, indicating Varsity, Junior Varsity, or Novice level.
+
     Winning a first place speaker award should be referred to as winning top speaker for the tournament.
 
     Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
 
-    Results may include round-by-round results, delimited by a "|" character to demarcate each round, which represent how a student performed in a single round.
-    Single round results will include a W or L or B to indicate a win or a loss or bye. They will also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent).
+    Results may include round-by-round results, delimited by a "|" character or &nbsp string to demarcate each round, which represent how a student performed in a single round.
+    Single round results will include a W or L or B to indicate a win or a loss or bye.
+    They will also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent). If referencing speaker points, mention that the score is out of 30.
+    You may see summed speaker points, representing scores added between teammates. These combined speaker points are instead out of a maximum of 60.
     You can reference these single round results when summarizing an individual's performance.
 
     """
@@ -359,6 +366,14 @@ def generate_list_generation_prompt():
     Create a numbered list of all the results, so that each event is a new number in the list, and each event contains results from all students in that event.
     Because these are all results for a single team, do not include the school name in the individual results entry.
     Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
+
+    PF is an abbreviation for Public Forum, a 2-on-2 style of debate.
+    LD is an abbreviation for Lincoln-Douglas, a 1-on-1 style of debate.
+    CX is an abbreviation for Cross-examination (aka Policy), a 2-on-2 style of debate.
+    These abbreviations may be prefixed with V, JV, or N, indicating Varsity, Junior Varsity, or Novice level.
+
+    Don't create separate line-items for different types of results. For example, PF Speaker Awards and PF Final Places should both appear on the same numbered line.
+
     Bold the name of the event by putting 2 asterisks around it.
     For example:
     1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
@@ -391,6 +406,7 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
+        "-u",
         "--custom-url",
         help="Custom URL of the tournament you want to generate results for. For example, a league website.",
         required=False,
@@ -468,6 +484,7 @@ if __name__ == "__main__":
     # FOR EACH SCHOOL, GENERATE A SUMMARY AND SAVE IT TO DISK
     os.makedirs(f"{data['name']}_summaries", exist_ok=True)
     for school in schools_to_write_up:
+        logging.info(f"Starting results generation for {school}...")
         chat_gpt_payload = generate_chat_gpt_prompt(
             tournament_data=data,
             school_name=school,
@@ -480,7 +497,7 @@ if __name__ == "__main__":
         filtered_tournament_results = [
             result
             for result in tournament_results
-            if result.split("|")[SCHOOL_INDEX] == school
+            if re.match(result.split("|")[SCHOOL_INDEX], school)
             # TODO - This produces some false positives
             or (
                 result.split("|")[EVENT_TYPE_INDEX] == "debate"
@@ -567,7 +584,13 @@ if __name__ == "__main__":
 
         with open(f"{data['name']}_summaries/{school}_summary.txt", "w") as f:
             f.write(
-                headline_response + "\r\n" + body_response + "\r\n" + numbered_response
+                headline_response
+                + "\r\n"
+                + body_response
+                + "\r\n"
+                + "Event-by-Event Results"
+                + "\r\n"
+                + numbered_response
             )
 
     # GENERATE A SIMPLE HTML WEBPAGE WITH THE RESULTS
