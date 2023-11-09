@@ -19,6 +19,7 @@ ENTRY_TO_SCHOOL_DICT_GLOBAL = {}
 PERCENTILE_MINIMUM = (
     10  # Being a bit generous here -- anyone not in the bottom 10% gets included
 )
+RESULTS_TO_PASS_TO_GPT = 15
 HEADER_STRING = "Event|Event Type|Result Set|Entry Names|Entry Code|School|Rank|Place|Percentile|Results By Round"
 SCHOOL_INDEX = HEADER_STRING.split("|").index("School")
 EVENT_TYPE_INDEX = HEADER_STRING.split("|").index("Event Type")
@@ -67,9 +68,15 @@ def get_speech_results_from_final_places(
         # Check if the values is a dummy value, continue if it is.
         if not result["values"][0]:
             continue
-        entry_name = ENTRY_DICTIONARY[result["entry"]]
+        entry_name = ENTRY_DICTIONARY[result["entry"]].strip()  # Remove whitespace
         entry_code = ""  # CODE_DICTIONARY["entry"] # This is honestly pretty useless for speech, will omit.
-        entry_school = ENTRY_TO_SCHOOL_DICT_GLOBAL[entry_name]
+        try:
+            entry_school = ENTRY_TO_SCHOOL_DICT_GLOBAL[entry_name]
+        except KeyError:
+            logging.error(
+                f"Could not find {entry_name} in ENTRY_TO_SCHOOL_DICT_GLOBAL."
+            )
+            entry_school = "UNKNOWN"
         rank = result["rank"]
         place = result["place"]
         percentile = result["percentile"]
@@ -242,9 +249,9 @@ def get_debate_results(
             )
             round_reached = result.get("place")
             result_school = result.get(
-                "school", ENTRY_TO_SCHOOL_DICT_GLOBAL[entry_name]
+                "school", ENTRY_TO_SCHOOL_DICT_GLOBAL.get(entry_name, "UNKNOWN")
             )
-            percentile = result.get("percentile", "")
+            percentile = result.get("percentile", "0")
             if (
                 filtered
                 and (float(percentile) < PERCENTILE_MINIMUM)
@@ -274,17 +281,25 @@ def generate_chat_gpt_prompt(
     
     The tournament was attended by {len(ENTRY_DICTIONARY)} student entries and {school_count} schools.
 
-    Write a 3 paragraph summary for the {school_name} High School newspaper. Use as many student names of {school_name} students as reasonable.
+    Write a 3 paragraph summary for the {school_name} High School newspaper. Use as many student names of {school_name} students as reasonable. Write concisely if there are more than 10 results to write about.
     At the end, indicate that additional information (including how to compete, judge, or volunteer) can be found at {follow_up_url}.
     
     Include individuals' rankings and statistics, such as number of wins. When referencing results, you should include the total number of entries in the event. Don't include raw percentile information in the output.
+
+    Do not use the definite article 'the' before the names of events.
     """
     chat_gpt_debate_prompt = (
         chat_gpt_basic_prompt
         + f"""
-    Final Places and Speaker Awards are more important than Prelim seeds. Ignore entries below the 40th percentile.
+    Final Places and Speaker Awards are more important than Prelim seeds. Ignore entries below the {PERCENTILE_MINIMUM}th percentile.
 
     Wins should be listed earlier than other achievements. Varsity should generally come before Novice or Junior Varsity (JV) results.
+
+    Terms like 'Doubles', 'Octos', and 'Quarters' may be used to indicate the elimination round a team reached.
+    Doubles refers to the Round of 32 (also known as double-octofinals), Octos refers to the Round of 16 (octofinals), and Quarters refers to the Round of 8 (quarterfinals), respectively.
+    Use these terms to describe the elimination round a debater reached.
+
+    Winning a first place speaker award should be referred to as winning top speaker for the tournament.
 
     Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
 
@@ -431,7 +446,17 @@ if __name__ == "__main__":
             ),
             reverse=True,
         )
-        chat_gpt_payload += sorted_filtered_school_results
+        # Filter down to just the top 15 results (based on percentile) to get better results for large schools
+        if len(sorted_filtered_school_results) > RESULTS_TO_PASS_TO_GPT:
+            top_sorted_filtered_school_results = sorted_filtered_school_results[
+                0 : RESULTS_TO_PASS_TO_GPT - 1
+            ]
+        else:
+            top_sorted_filtered_school_results = sorted_filtered_school_results
+        logging.info(
+            f"School specific results without truncating low percentiles: {sorted_filtered_school_results}"
+        )
+        chat_gpt_payload += top_sorted_filtered_school_results
         final_gpt_payload = "\r\n".join(chat_gpt_payload)
         openai.api_key_path = "openAiAuthKey.txt"
         logging.info(f"Generating summary for {school}")

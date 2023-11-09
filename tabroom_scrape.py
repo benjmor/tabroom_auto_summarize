@@ -2,18 +2,26 @@ import argparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from urllib.parse import urlparse, parse_qs
 import logging
 import multiprocessing  # Adding multiprocessing to download several results concurrently
 import selenium
 from concurrent import futures
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
+    datefmt="%Y-%m-%d:%H:%M:%S",
+    level=logging.INFO,
+)
 
 # Enumerate some global things here
 final_results_identifiers = [
-    "Final Places"
-]  # ["Prelim Seeds", "Speaker Awards", "Final Places"]
+    "Final Places",
+    "Prelim Seeds",  # Sometimes need to parse the prelim seeds to scrape name/entry data
+]  # ["Speaker Awards", "Final Places"]
 final_round_results_identifiers = ["Finals Round results"]
 entry_to_school_name_dict = {}
 link_map = {}
@@ -31,7 +39,7 @@ def parse_results(driver, result_id, entry_to_school_dict):
             element_id = f"{result_id}-{table_num}"
             table = driver.find_element(By.ID, f"{result_id}-{table_num}")
         except selenium.common.exceptions.NoSuchElementException:
-            logging.info(
+            logging.debug(
                 f"No table found for element ID {element_id}, trying without table number"
             )
             try:
@@ -39,13 +47,31 @@ def parse_results(driver, result_id, entry_to_school_dict):
                 element_id = result_id
                 table = driver.find_element(By.ID, f"{element_id}")
             except selenium.common.exceptions.NoSuchElementException:
-                logging.info(f"No table found for element ID {element_id}, either")
+                logging.debug(f"No table found for element ID {element_id}, either")
                 break
+            except StaleElementReferenceException:
+                logging.error(
+                    "Error within the results parser when reviewing secondary results table."
+                )
+        except StaleElementReferenceException:
+            logging.error(
+                "Error within the results parser when reviewing results table."
+            )
         # Find the table headers
         csv_list = []
-        headers = table.find_elements(By.CSS_SELECTOR, "thead th")
+        try:
+            headers = table.find_elements(By.CSS_SELECTOR, "thead th")
+        except StaleElementReferenceException:
+            logging.error(
+                "Error within the results parser when finding results headers."
+            )
         if not headers:
-            headers = table.find_elements(By.XPATH, "//th")
+            try:
+                headers = table.find_elements(By.XPATH, "//th")
+            except StaleElementReferenceException:
+                logging.error(
+                    "Error within the results parser when finding results header using alternative approach."
+                )
         header_names = [header.text for header in headers]
         # Get indices for school col and name col
         name_col = -1
@@ -63,16 +89,24 @@ def parse_results(driver, result_id, entry_to_school_dict):
                 break
         # The website has a hidden CSV of round results that are useful to feed to a ChatGPT.
         header_names.append("round_results_debate_only")
-        rows = table.find_elements(By.CSS_SELECTOR, "tbody tr")
+        try:
+            rows = table.find_elements(By.CSS_SELECTOR, "tbody tr")
+        except StaleElementReferenceException:
+            logging.error("Error within the results parser when grabbing results rows.")
         csv_list.append(header_names)
         for row in rows:
             # Skip header rows (rows that use this funky class name)
             # But also grab the column indices so we can check the school
             if row.get_attribute("class") == "yellowrow rotation odd":
                 continue
-            visible_results = [
-                cell.text for cell in row.find_elements(By.CSS_SELECTOR, "td")
-            ]
+            try:
+                visible_results = [
+                    cell.text for cell in row.find_elements(By.CSS_SELECTOR, "td")
+                ]
+            except StaleElementReferenceException:
+                logging.error(
+                    "Error within the results parser when getting cell text from body rows."
+                )
             # Add that hidden CSV if it's there because we love it -- it contains round-by-round debate results
             try:
                 visible_results.append(
@@ -83,6 +117,10 @@ def parse_results(driver, result_id, entry_to_school_dict):
             except selenium.common.exceptions.NoSuchElementException:
                 logging.debug(
                     f"Could not add hidden results table for element ID {element_id}. This is normal for speech events, but weird for debate."
+                )
+            except StaleElementReferenceException:
+                logging.error(
+                    "Error within the results parser when finding hidden results."
                 )
             csv_list.append(visible_results)
             entry_to_school_dict[visible_results[name_col]] = visible_results[
@@ -99,39 +137,53 @@ def parse_event_specific_results(option):
     Function created to process all events in parallel
     """
     output = []
-    event_name = option.get_attribute("innerHTML")
+    try:
+        event_name = option.get_attribute("innerHTML")
+    except StaleElementReferenceException:
+        logging.error("Error when attempting to load inner HTML.")
     link_map[event_name] = {}
     csv_map[event_name] = {}
-    value = option.get_attribute("value")
+    try:
+        value = option.get_attribute("value")
+    except StaleElementReferenceException:
+        logging.error("Error when attempting to load value.")
     link = f"{base_url}&event_id={value}"
     logging.info(f"Link to results for {event_name}: {link}")
     driver = webdriver.Chrome(options=chrome_options)
-    logging.info("Here!")
+    wait = WebDriverWait(driver, 5)
     driver.get(link)
-    logging.info("Here2!")
-    result_pages = driver.find_elements(By.CSS_SELECTOR, "div.sidenote a")
+    driver.find_elements(By.CSS_SELECTOR, "div.sidenote a")
+    result_pages = wait.until(
+        EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.sidenote a"))
+    )
+    # Navigating through these results breaks them. Figure out a way to avoid that.
+    result_page_details = []
     for result in result_pages:
-        try:
-            result_name = result.text
-        except Exception as ex:
-            logging.error(repr(ex))
-            continue
-        if result_name in final_results_identifiers:
-            result_url = result.get_attribute("href")
-            result_id = parse_qs(urlparse(result_url).query)["result_id"][0]
-            driver.get(result_url)
-            link_map[event_name][result_name] = result_url
-            result_csv = parse_results(driver, result_id, entry_to_school_name_dict)
-            csv_map[event_name][result_name] = result_csv
-            output.append(result_csv)
-        if result_name in final_round_results_identifiers:
-            result_url = result.get_attribute("href")
-            round_id = parse_qs(urlparse(result_url).query)["round_id"][0]
-            driver.get(result_url)
-            link_map[event_name][result_name] = result_url
-            result_csv = parse_results(driver, round_id, entry_to_school_name_dict)
-            csv_map[event_name][result_name] = result_csv
-            output.append(result_csv)
+        result_name = result.text
+        identifiers_dict = {
+            "result_id": final_results_identifiers,
+            "round_id": final_round_results_identifiers,
+        }
+        for id in identifiers_dict.keys():
+            if result_name in identifiers_dict[id]:
+                result_url = result.get_attribute("href")
+                result_id = parse_qs(urlparse(result_url).query)[id][0]
+                link_map[event_name][result_name] = result_url
+                result_page_details.append(
+                    {
+                        "result_id": result_id,
+                        "result_url": result_url,
+                        "result_name": result_name,
+                    }
+                )
+    for result_page_detail in result_page_details:
+        driver.get(result_page_detail["result_url"])
+        result_csv = parse_results(
+            driver, result_page_detail["result_id"], entry_to_school_name_dict
+        )
+        csv_map[event_name][result_page_detail["result_name"]] = result_csv
+        output.append(result_csv)
+    driver.quit()
     return output
 
 
@@ -139,7 +191,10 @@ def main(tournament_id):
     global chrome_options
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    chrome_options.add_experimental_option(
+        "excludeSwitches", ["enable-logging"]
+    )  # attempting to suppress the USB read errors on Windows
+    # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
 
     # Start a new browser session
