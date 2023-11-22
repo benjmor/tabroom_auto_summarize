@@ -582,6 +582,7 @@ if __name__ == "__main__":
             ],
         )["choices"][0]["message"]["content"]
 
+        # school_state = # TODO - get the state for each school
         with open(f"{data['name']}_summaries/{school}_summary.txt", "w") as f:
             f.write(
                 headline_response
