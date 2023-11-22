@@ -21,6 +21,7 @@ def main(input_directory):
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.10.7/dist/showdown.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glenbrooks 2023 Speech and Debate Result Summaries</title>
@@ -72,18 +73,23 @@ def main(input_directory):
 </nav>
 
 <main id="content">
-    <!-- Content will be loaded here -->
+    <div id="markdown-content"></div>
 </main>
 
 <script>
     function loadContent(filename) {{
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {{
-            if (this.readyState == 4 && this.status == 200) {{
-                document.getElementById("content").innerHTML = this.responseText;
-            }}
-        }};
         xhttp.open("GET", filename, true);
+        xhttp.onreadystatechange = function() {{
+            const markdownText = xhttp.responseText;
+
+            // Convert Markdown to HTML using Showdown.js
+            const converter = new showdown.Converter();
+            const htmlContent = converter.makeHtml(markdownText);
+
+            // Display the HTML content in the specified div
+            document.getElementById('markdown-content').innerHTML = htmlContent;
+        }};
         xhttp.send();
     }}
 </script>
