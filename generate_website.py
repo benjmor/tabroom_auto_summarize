@@ -106,5 +106,5 @@ def main(input_directory):
 if __name__ == "__main__":
     # Not really intending for this to be called from __main__, but may eventually for testing purposes
     main(
-        input_directory="./MyTournament MySchool_summaries",
+        input_directory="./Glenbrooks Speech and Debate Tournament_summaries",
     )
