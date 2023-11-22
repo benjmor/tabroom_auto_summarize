@@ -13,7 +13,7 @@ def main(input_directory):
     for filename in os.listdir(input_directory):
         if filename.endswith(".txt"):
             school = filename.replace("_summary.txt", "")
-            sidebar.append(f"<a href=\"#\" onclick=\"loadContent(\"{filename}\")\">{school}</a>")
+            sidebar.append(f"<a href=\"#\" onclick=\"loadContent('{filename}')\">{school}</a>")
     sidebar.sort()
     sidebar_content = "\r\n".join(sidebar)
     # HTML template
