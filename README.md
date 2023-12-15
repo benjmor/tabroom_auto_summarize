@@ -19,7 +19,7 @@ Python 3.7+ installed.
 # Installation
 
 1. Install the required Python libraries: `pip install -r requirements.txt`
-2. Create an [OpenAI key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) and save the key to `openAiAuthKey.txt` in the same folder as the script. Remember never to upload this key anywhere! Treat it like a password.
+2. Create an [OpenAI key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) and save the key to `openAiAuthKey.txt` in the same folder as the script. Remember never to upload this key anywhere (except a password manager, if you use one)! Treat it like a password.
 
 # Example Usage (single school)
 
