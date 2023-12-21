@@ -1,0 +1,4196 @@
+[
+  {
+    "event_name": "CXN",
+    "code_to_name_dict": {
+      "Ronald Reagan WC": "Cruz & Ward",
+      "Rufus King KD": "Kenadee Donald"
+    },
+    "name_to_school_dict": {
+      "Cruz & Ward": "Ronald Reagan",
+      "Kenadee Donald": "Rufus King"
+    },
+    "name_to_full_name_dict": {
+      "Cruz & Ward": "Natalie Ward & Victor Cruz",
+      "Kenadee Donald": "Kenadee Donald"
+    },
+    "result_list": [
+      {
+        "result_set_type": "Final Places",
+        "results": [
+          {
+            "round_by_round": [],
+            "Place": "Prelim",
+            "Entry": "Cruz & Ward",
+            "School": "Ronald Reagan",
+            "Win": "0",
+            "Pts": "0",
+            "Rk": "0",
+            "Pts -1HL": "0",
+            "Rk -1HL": "0",
+            "OSd": "0",
+            "Rand": "1.86"
+          },
+          {
+            "round_by_round": [],
+            "Place": "Prelim",
+            "Entry": "Kenadee Donald",
+            "School": "Rufus King",
+            "Win": "0",
+            "Pts": "0",
+            "Rk": "0",
+            "Pts -1HL": "0",
+            "Rk -1HL": "0",
+            "OSd": "0",
+            "Rand": "3.57"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Speaker Awards",
+        "results": [
+          {
+            "place": "1-T",
+            "code": "Ronald Reagan WC",
+            "school": "Ronald Reagan",
+            "round_by_round": "",
+            "tiebreaker_data": {
+              "Pts": "0.00",
+              "Rnk": "0.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "0.00"
+            },
+            "name": "Victor Cruz"
+          },
+          {
+            "place": "1-T",
+            "code": "Ronald Reagan WC",
+            "school": "Ronald Reagan",
+            "round_by_round": "",
+            "tiebreaker_data": {
+              "Pts": "0.00",
+              "Rnk": "0.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "0.00"
+            },
+            "name": "Natalie Ward"
+          },
+          {
+            "place": "1-T",
+            "code": "Rufus King KD",
+            "school": "Rufus King",
+            "round_by_round": "",
+            "tiebreaker_data": {
+              "Pts": "0.00",
+              "Rnk": "0.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "0.00"
+            },
+            "name": "Kenadee Donald"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Prelim Records",
+        "results": [
+          {
+            "name": "Cruz & Ward",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5299296",
+            "code": "Ronald Reagan WC",
+            "school": "Ronald Reagan",
+            "wins": "0",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Natalie Ward & Victor Cruz",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Rufus King KD",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Rufus King KD",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Kenadee Donald",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5304538",
+            "code": "Rufus King KD",
+            "school": "Rufus King",
+            "wins": "0",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Kenadee Donald",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Ronald Reagan WC",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Ronald Reagan WC",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "event_name": "CXV",
+    "code_to_name_dict": {
+      "Rufus King ME": "Martin-Caldwell & Elliott",
+      "Ronald Reagan TR": "Rojas & Thiam"
+    },
+    "name_to_school_dict": {
+      "Martin-Caldwell & Elliott": "Rufus King",
+      "Rojas & Thiam": "Ronald Reagan"
+    },
+    "name_to_full_name_dict": {
+      "Martin-Caldwell & Elliott": "Corbeau Martin Caldwell & Andrew Elliott",
+      "Rojas & Thiam": "Ramata Thiam & Solana Rojas"
+    },
+    "result_list": [
+      {
+        "result_set_type": "Final Places",
+        "results": [
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Martin-Caldwell & Elliott",
+            "School": "Rufus King",
+            "Win": "2",
+            "Pts": "113",
+            "Rk": "8",
+            "Pts -1HL": "0",
+            "Rk -1HL": "3",
+            "OSd": "2",
+            "Rand": "4.92"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Rojas & Thiam",
+            "School": "Ronald Reagan",
+            "Win": "0",
+            "Pts": "111",
+            "Rk": "12",
+            "Pts -1HL": "0",
+            "Rk -1HL": "6",
+            "OSd": "1",
+            "Rand": "7.58"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Speaker Awards",
+        "results": [
+          {
+            "place": "1",
+            "code": "Rufus King ME",
+            "school": "Rufus King",
+            "round_by_round": "129,128.5",
+            "tiebreaker_data": {
+              "Pts": "57.50",
+              "Rnk": "2.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "57.52"
+            },
+            "name": "Corbeau Martin Caldwell"
+          },
+          {
+            "place": "2-T",
+            "code": "Ronald Reagan TR",
+            "school": "Ronald Reagan",
+            "round_by_round": "228.5,427",
+            "tiebreaker_data": {
+              "Pts": "55.50",
+              "Rnk": "6.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "55.49"
+            },
+            "name": "Ramata Thiam"
+          },
+          {
+            "place": "2-T",
+            "code": "Ronald Reagan TR",
+            "school": "Ronald Reagan",
+            "round_by_round": "328,327.5",
+            "tiebreaker_data": {
+              "Pts": "55.50",
+              "Rnk": "6.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "55.49"
+            },
+            "name": "Solana Rojas"
+          },
+          {
+            "place": "2-T",
+            "code": "Rufus King ME",
+            "school": "Rufus King",
+            "round_by_round": "427.5,228",
+            "tiebreaker_data": {
+              "Pts": "55.50",
+              "Rnk": "6.00",
+              "Pts -1HL": "0.00",
+              "Rnk -1HL": "0.00",
+              "Z2": "55.49"
+            },
+            "name": "Andrew Elliott"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Prelim Records",
+        "results": [
+          {
+            "name": "Martin-Caldwell & Elliott",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5287572",
+            "code": "Rufus King ME",
+            "school": "Rufus King",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Corbeau Martin Caldwell & Andrew Elliott",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Ronald Reagan TR",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Ronald Reagan TR",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Rojas & Thiam",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5298327",
+            "code": "Ronald Reagan TR",
+            "school": "Ronald Reagan",
+            "wins": "0",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Ramata Thiam & Solana Rojas",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Rufus King ME",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Rufus King ME",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "event_name": "LDV",
+    "code_to_name_dict": {
+      "Whitefish Bay LW": "Lucy Wu",
+      "Marquette WM": "William Mukana",
+      "West Bend DG": "Dakota Gunnare",
+      "West Bend ER": "Elyse Reedell",
+      "West Bend NM": "Noah Mintie",
+      "Marquette JP": "James Pienkos",
+      "Marquette VO": "Vidal Ojeda",
+      "Sheboygan South CH": "Charles Hamm",
+      "Sheboygan South MM": "Michael Mavity Maddalena",
+      "Whitefish Bay MT": "Malina Troicki",
+      "Brookfield Central AN": "Adee Niljikar",
+      "Homestead LE": "Liliana Espinosa",
+      "Marquette GY": "Grant Young",
+      "Marquette IN": "Isaac Neumann",
+      "Marquette JW": "Joshua Wilder",
+      "Homestead AS": "Aayeshah Singh",
+      "Homestead SQ": "Safiya Quryshi",
+      "Whitefish Bay JH": "James Harris",
+      "Whitefish Bay SJ": "Simra Jamal"
+    },
+    "name_to_school_dict": {
+      "Lucy Wu": "Whitefish Bay",
+      "Dakota Gunnare": "West Bend",
+      "Elyse Reedell": "West Bend",
+      "Noah Mintie": "West Bend",
+      "William Mukana": "Marquette",
+      "Charles Hamm": "Sheboygan South",
+      "Michael Mavity Maddalena": "Sheboygan South",
+      "Vidal Ojeda": "Marquette",
+      "James Pienkos": "Marquette",
+      "Malina Troicki": "Whitefish Bay",
+      "Isaac Neumann": "Marquette",
+      "Joshua Wilder": "Marquette",
+      "Adee Niljikar": "Brookfield Central",
+      "Liliana Espinosa": "Homestead",
+      "Grant Young": "Marquette",
+      "Safiya Quryshi": "Homestead",
+      "Simra Jamal": "Whitefish Bay",
+      "James Harris": "Whitefish Bay",
+      "Aayeshah Singh": "Homestead"
+    },
+    "name_to_full_name_dict": {
+      "Lucy Wu": "Lucy Wu",
+      "William Mukana": "William Mukana",
+      "Dakota Gunnare": "Dakota Gunnare",
+      "Elyse Reedell": "Elyse Reedell",
+      "Noah Mintie": "Noah Mintie",
+      "James Pienkos": "James Pienkos",
+      "Vidal Ojeda": "Vidal Ojeda",
+      "Charles Hamm": "Charles Hamm",
+      "Michael Mavity Maddalena": "Kai Mavity Maddalena",
+      "Malina Troicki": "Malina Troicki",
+      "Adee Niljikar": "Adee Niljikar",
+      "Liliana Espinosa": "Liliana Espinosa",
+      "Grant Young": "Grant Young",
+      "Isaac Neumann": "Isaac Neumann",
+      "Joshua Wilder": "Joshua Wilder",
+      "Aayeshah Singh": "Aayeshah Singh",
+      "Safiya Quryshi": "Safiya Quryshi",
+      "James Harris": "James Harris",
+      "Simra Jamal": "Simra Jamal"
+    },
+    "result_list": [
+      {
+        "result_set_type": "Final Places",
+        "results": [
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Lucy Wu",
+            "School": "Whitefish Bay",
+            "WinPm": "5",
+            "PtsPm": "142.3",
+            "PtsPm -1HL": "86",
+            "Pts -2HL": "29",
+            "OSdPm": "8",
+            "RandPm": "0.77",
+            "Z2": "144.38"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Dakota Gunnare",
+            "School": "West Bend",
+            "WinPm": "4",
+            "PtsPm": "145.6",
+            "PtsPm -1HL": "87.6",
+            "Pts -2HL": "29.1",
+            "OSdPm": "10.5",
+            "RandPm": "1.68",
+            "Z2": "147.1"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Elyse Reedell",
+            "School": "West Bend",
+            "WinPm": "4",
+            "PtsPm": "142",
+            "PtsPm -1HL": "85.5",
+            "Pts -2HL": "28.5",
+            "OSdPm": "9.4",
+            "RandPm": "1.38",
+            "Z2": "142.73"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Noah Mintie",
+            "School": "West Bend",
+            "WinPm": "4",
+            "PtsPm": "141.8",
+            "PtsPm -1HL": "85.5",
+            "Pts -2HL": "28.5",
+            "OSdPm": "9",
+            "RandPm": "1.53",
+            "Z2": "141.62"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "William Mukana",
+            "School": "Marquette",
+            "WinPm": "4",
+            "PtsPm": "139.6",
+            "PtsPm -1HL": "83",
+            "Pts -2HL": "28",
+            "OSdPm": "11.6",
+            "RandPm": "8.41",
+            "Z2": "140.94"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Charles Hamm",
+            "School": "Sheboygan South",
+            "WinPm": "3",
+            "PtsPm": "142.5",
+            "PtsPm -1HL": "85.5",
+            "Pts -2HL": "28",
+            "OSdPm": "7.4",
+            "RandPm": "2.38",
+            "Z2": "141.9"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Michael Mavity Maddalena",
+            "School": "Sheboygan South",
+            "WinPm": "3",
+            "PtsPm": "141.1",
+            "PtsPm -1HL": "85.6",
+            "Pts -2HL": "28.5",
+            "OSdPm": "8.6",
+            "RandPm": "1.47",
+            "Z2": "138.98"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Vidal Ojeda",
+            "School": "Marquette",
+            "WinPm": "3",
+            "PtsPm": "140.6",
+            "PtsPm -1HL": "84.1",
+            "Pts -2HL": "28.1",
+            "OSdPm": "9.6",
+            "RandPm": "7.42",
+            "Z2": "140.79"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "James Pienkos",
+            "School": "Marquette",
+            "WinPm": "3",
+            "PtsPm": "138.3",
+            "PtsPm -1HL": "83.7",
+            "Pts -2HL": "28",
+            "OSdPm": "11.2",
+            "RandPm": "6.97",
+            "Z2": "139.04"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Malina Troicki",
+            "School": "Whitefish Bay",
+            "WinPm": "3",
+            "PtsPm": "137.5",
+            "PtsPm -1HL": "82",
+            "Pts -2HL": "27",
+            "OSdPm": "10",
+            "RandPm": "7.91",
+            "Z2": "138.2"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Isaac Neumann",
+            "School": "Marquette",
+            "WinPm": "2",
+            "PtsPm": "139.3",
+            "PtsPm -1HL": "83.6",
+            "Pts -2HL": "27.9",
+            "OSdPm": "9.5",
+            "RandPm": "8.26",
+            "Z2": "138.54"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Joshua Wilder",
+            "School": "Marquette",
+            "WinPm": "2",
+            "PtsPm": "137",
+            "PtsPm -1HL": "82.5",
+            "Pts -2HL": "27.5",
+            "OSdPm": "13.2",
+            "RandPm": "3.07",
+            "Z2": "135.06"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Adee Niljikar",
+            "School": "Brookfield Central",
+            "WinPm": "2",
+            "PtsPm": "136.4",
+            "PtsPm -1HL": "81.9",
+            "Pts -2HL": "27.4",
+            "OSdPm": "10",
+            "RandPm": "5.9",
+            "Z2": "135.11"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Liliana Espinosa",
+            "School": "Homestead",
+            "WinPm": "2",
+            "PtsPm": "134",
+            "PtsPm -1HL": "80.5",
+            "Pts -2HL": "27",
+            "OSdPm": "10.2",
+            "RandPm": "0.81",
+            "Z2": "136.44"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Grant Young",
+            "School": "Marquette",
+            "WinPm": "2",
+            "PtsPm": "131.2",
+            "PtsPm -1HL": "80.2",
+            "Pts -2HL": "26.7",
+            "OSdPm": "10.8",
+            "RandPm": "8.11",
+            "Z2": "133.12"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Safiya Quryshi",
+            "School": "Homestead",
+            "WinPm": "1",
+            "PtsPm": "136.9",
+            "PtsPm -1HL": "81.4",
+            "Pts -2HL": "27.4",
+            "OSdPm": "10.75",
+            "RandPm": "1.11",
+            "Z2": "136.05"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Simra Jamal",
+            "School": "Whitefish Bay",
+            "WinPm": "1",
+            "PtsPm": "133.5",
+            "PtsPm -1HL": "80.4",
+            "Pts -2HL": "26.4",
+            "OSdPm": "8",
+            "RandPm": "2.12",
+            "Z2": "131.12"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "James Harris",
+            "School": "Whitefish Bay",
+            "WinPm": "1",
+            "PtsPm": "132",
+            "PtsPm -1HL": "80",
+            "Pts -2HL": "27",
+            "OSdPm": "9.4",
+            "RandPm": "2.88",
+            "Z2": "130.79"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Aayeshah Singh",
+            "School": "Homestead",
+            "WinPm": "1",
+            "PtsPm": "131.8",
+            "PtsPm -1HL": "79.4",
+            "Pts -2HL": "26.4",
+            "OSdPm": "9.5",
+            "RandPm": "6.52",
+            "Z2": "131.3"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Speaker Awards",
+        "results": [
+          {
+            "place": "1",
+            "code": "West Bend DG",
+            "school": "West Bend",
+            "round_by_round": "28,29,29.5,30",
+            "tiebreaker_data": {
+              "Pts -1HL": "87.75",
+              "Pts": "145.63",
+              "Pts -2HL": "0.00",
+              "Z2": "147.10"
+            },
+            "name": "Dakota Gunnare"
+          },
+          {
+            "place": "2",
+            "code": "Whitefish Bay LW",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,29,29.3,28,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "86.00",
+              "Pts": "142.30",
+              "Pts -2HL": "29.00",
+              "Z2": "144.38"
+            },
+            "name": "Lucy Wu"
+          },
+          {
+            "place": "3",
+            "code": "Sheboygan South MM",
+            "school": "Sheboygan South",
+            "round_by_round": "28.5,26.5,29,28.5,28.6",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.60",
+              "Pts": "141.10",
+              "Pts -2HL": "28.50",
+              "Z2": "138.98"
+            },
+            "name": "Kai Mavity Maddalena"
+          },
+          {
+            "place": "4",
+            "code": "Sheboygan South CH",
+            "school": "Sheboygan South",
+            "round_by_round": "28,27,28,30,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "142.50",
+              "Pts -2HL": "28.00",
+              "Z2": "141.90"
+            },
+            "name": "Charles Hamm"
+          },
+          {
+            "place": "5",
+            "code": "West Bend ER",
+            "school": "West Bend",
+            "round_by_round": "28.5,27,29,28,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "142.00",
+              "Pts -2HL": "28.50",
+              "Z2": "142.73"
+            },
+            "name": "Elyse Reedell"
+          },
+          {
+            "place": "6",
+            "code": "West Bend NM",
+            "school": "West Bend",
+            "round_by_round": "29,27,28.5,28,29.3",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "141.80",
+              "Pts -2HL": "28.50",
+              "Z2": "141.62"
+            },
+            "name": "Noah Mintie"
+          },
+          {
+            "place": "7",
+            "code": "Marquette VO",
+            "school": "Marquette",
+            "round_by_round": "27.5,28,29,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.00",
+              "Pts": "140.63",
+              "Pts -2HL": "0.00",
+              "Z2": "140.79"
+            },
+            "name": "Vidal Ojeda"
+          },
+          {
+            "place": "8",
+            "code": "Marquette JP",
+            "school": "Marquette",
+            "round_by_round": "28,26,28.6,27.7,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.70",
+              "Pts": "138.30",
+              "Pts -2HL": "28.00",
+              "Z2": "139.04"
+            },
+            "name": "James Pienkos"
+          },
+          {
+            "place": "9",
+            "code": "Marquette IN",
+            "school": "Marquette",
+            "round_by_round": "27.5,28.7,28.2,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.55",
+              "Pts": "139.25",
+              "Pts -2HL": "0.00",
+              "Z2": "138.54"
+            },
+            "name": "Isaac Neumann"
+          },
+          {
+            "place": "10",
+            "code": "Marquette WM",
+            "school": "Marquette",
+            "round_by_round": "28,27,28,27,29.6",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "139.60",
+              "Pts -2HL": "28.00",
+              "Z2": "140.94"
+            },
+            "name": "William Mukana"
+          },
+          {
+            "place": "11",
+            "code": "Marquette JW",
+            "school": "Marquette",
+            "round_by_round": "28,27.5,27.5,26.5,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.50",
+              "Pts": "137.00",
+              "Pts -2HL": "27.50",
+              "Z2": "135.06"
+            },
+            "name": "Joshua Wilder"
+          },
+          {
+            "place": "12",
+            "code": "Whitefish Bay MT",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,28.5,28,27,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.00",
+              "Pts": "137.50",
+              "Pts -2HL": "27.00",
+              "Z2": "138.20"
+            },
+            "name": "Malina Troicki"
+          },
+          {
+            "place": "13",
+            "code": "Brookfield Central AN",
+            "school": "Brookfield Central",
+            "round_by_round": "27.5,26.5,27,28,27.4",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.90",
+              "Pts": "136.40",
+              "Pts -2HL": "27.40",
+              "Z2": "135.11"
+            },
+            "name": "Adee Niljikar"
+          },
+          {
+            "place": "14",
+            "code": "Homestead SQ",
+            "school": "Homestead",
+            "round_by_round": "27,29.5,27,26",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "136.88",
+              "Pts -2HL": "0.00",
+              "Z2": "136.05"
+            },
+            "name": "Safiya Quryshi"
+          },
+          {
+            "place": "15",
+            "code": "Whitefish Bay SJ",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,27.1,26",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "133.50",
+              "Pts -2HL": "0.00",
+              "Z2": "104.89"
+            },
+            "name": "Simra Jamal"
+          },
+          {
+            "place": "16",
+            "code": "Homestead LE",
+            "school": "Homestead",
+            "round_by_round": "25.5,28,26,27.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "80.50",
+              "Pts": "134.00",
+              "Pts -2HL": "27.00",
+              "Z2": "136.44"
+            },
+            "name": "Liliana Espinosa"
+          },
+          {
+            "place": "17",
+            "code": "Marquette GY",
+            "school": "Marquette",
+            "round_by_round": "23,27,26.5,28,26.7",
+            "tiebreaker_data": {
+              "Pts -1HL": "80.20",
+              "Pts": "131.20",
+              "Pts -2HL": "26.70",
+              "Z2": "133.12"
+            },
+            "name": "Grant Young"
+          },
+          {
+            "place": "18",
+            "code": "Whitefish Bay JH",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,28,27,24,26",
+            "tiebreaker_data": {
+              "Pts -1HL": "80.00",
+              "Pts": "132.00",
+              "Pts -2HL": "27.00",
+              "Z2": "130.79"
+            },
+            "name": "James Harris"
+          },
+          {
+            "place": "19",
+            "code": "Homestead AS",
+            "school": "Homestead",
+            "round_by_round": "26,25,27.4,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "79.50",
+              "Pts": "131.75",
+              "Pts -2HL": "0.00",
+              "Z2": "131.30"
+            },
+            "name": "Aayeshah Singh"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Prelim Records",
+        "results": [
+          {
+            "name": "Lucy Wu",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290592",
+            "code": "Whitefish Bay LW",
+            "school": "Whitefish Bay",
+            "wins": "5",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Lucy Wu",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "West Bend ER",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "West Bend NM",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Marquette IN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Sheboygan South MM",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Marquette GY",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "William Mukana",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5279569",
+            "code": "Marquette WM",
+            "school": "Marquette",
+            "wins": "4",
+            "scrape_entry_record_data": {
+              "full_entry_name": "William Mukana",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Sheboygan South CH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay JH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "West Bend NM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay SJ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Brookfield Central AN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Dakota Gunnare",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5250554",
+            "code": "West Bend DG",
+            "school": "West Bend",
+            "wins": "4",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Dakota Gunnare",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Sheboygan South CH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Marquette VO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Bye",
+                  "opponent_code": "",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Homestead AS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Elyse Reedell",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5250556",
+            "code": "West Bend ER",
+            "school": "West Bend",
+            "wins": "4",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Elyse Reedell",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay LW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay MT",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Marquette JP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Brookfield Central AN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Homestead LE",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Noah Mintie",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5250555",
+            "code": "West Bend NM",
+            "school": "West Bend",
+            "wins": "4",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Noah Mintie",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Sheboygan South MM",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay LW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Marquette WM",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Marquette GY",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay SJ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "James Pienkos",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5281241",
+            "code": "Marquette JP",
+            "school": "Marquette",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "James Pienkos",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "West Bend DG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Homestead LE",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "West Bend ER",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Homestead AS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay JH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Vidal Ojeda",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5281238",
+            "code": "Marquette VO",
+            "school": "Marquette",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Vidal Ojeda",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Bye",
+                  "opponent_code": "Whitefish Bay SJ",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Sheboygan South MM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "West Bend DG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Sheboygan South CH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Homestead SQ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Charles Hamm",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5283865",
+            "code": "Sheboygan South CH",
+            "school": "Sheboygan South",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Charles Hamm",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Marquette WM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "West Bend DG",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Marquette JW",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Marquette VO",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay MT",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Michael Mavity Maddalena",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5283871",
+            "code": "Sheboygan South MM",
+            "school": "Sheboygan South",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Kai Mavity Maddalena",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "West Bend NM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Marquette VO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay JH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay LW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JW",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Malina Troicki",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290611",
+            "code": "Whitefish Bay MT",
+            "school": "Whitefish Bay",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Malina Troicki",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Marquette IN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "West Bend ER",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Homestead LE",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Homestead SQ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Sheboygan South CH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Adee Niljikar",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5286967",
+            "code": "Brookfield Central AN",
+            "school": "Brookfield Central",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Adee Niljikar",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Marquette GY",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Marquette IN",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Homestead SQ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "West Bend ER",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Marquette WM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Liliana Espinosa",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5299037",
+            "code": "Homestead LE",
+            "school": "Homestead",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Liliana Espinosa",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay JH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay MT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Marquette IN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "West Bend ER",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Grant Young",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5279571",
+            "code": "Marquette GY",
+            "school": "Marquette",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Grant Young",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Brookfield Central AN",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Homestead AS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay SJ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "West Bend NM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay LW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Isaac Neumann",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5279570",
+            "code": "Marquette IN",
+            "school": "Marquette",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Isaac Neumann",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay MT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Brookfield Central AN",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay LW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Homestead LE",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Bye",
+                  "opponent_code": "",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Joshua Wilder",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5279671",
+            "code": "Marquette JW",
+            "school": "Marquette",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Joshua Wilder",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Homestead AS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Homestead SQ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Sheboygan South CH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Aff",
+                  "opponent_code": "Whitefish Bay JH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Neg",
+                  "opponent_code": "Sheboygan South MM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Aayeshah Singh",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5299930",
+            "code": "Homestead AS",
+            "school": "Homestead",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Aayeshah Singh",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Neg",
+                  "opponent_code": "Marquette GY",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Bye",
+                  "opponent_code": "",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Marquette JP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "West Bend DG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Safiya Quryshi",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5299035",
+            "code": "Homestead SQ",
+            "school": "Homestead",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Safiya Quryshi",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Bye",
+                  "opponent_code": "",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JW",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Brookfield Central AN",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Whitefish Bay MT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Marquette VO",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "James Harris",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290578",
+            "code": "Whitefish Bay JH",
+            "school": "Whitefish Bay",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "James Harris",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Homestead LE",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Aff",
+                  "opponent_code": "Marquette WM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Neg",
+                  "opponent_code": "Sheboygan South MM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Marquette JW",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "Marquette JP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Simra Jamal",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290583",
+            "code": "Whitefish Bay SJ",
+            "school": "Whitefish Bay",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Simra Jamal",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Neg",
+                  "opponent_code": "Marquette VO",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Bye",
+                  "opponent_code": "",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Aff",
+                  "opponent_code": "Marquette GY",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Neg",
+                  "opponent_code": "Marquette WM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Aff",
+                  "opponent_code": "West Bend NM",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "event_name": "PFJV",
+    "code_to_name_dict": {
+      "Vel Phillips Memorial RL": "Lankella & Riley",
+      "Fort Atkinson CS": "Calvert Minor & Szabo",
+      "Fort Atkinson GG": "Gehrenbeck & Guerra",
+      "Fort Atkinson RP": "Rao & Perez Ayala",
+      "Madison West BG": "Bernstein & Garcete",
+      "Middleton KJ": "Jerin & Kandukuri",
+      "Middleton KY": "Kim & Yu",
+      "Middleton NF": "Flores Lanzo & Nelson",
+      "Edgewood BB": "Bruce & Buelling",
+      "Fort Atkinson RH": "Reichert & Hoover",
+      "Marquette FP": "Fonseca & Perez-Reyes",
+      "Whitefish Bay PH": "Posard & Hoagland",
+      "Whitefish Bay AO": "Austin & Oates",
+      "Middleton AK": "Albiter & Kim"
+    },
+    "name_to_school_dict": {
+      "Lankella & Riley": "Vel Phillips Memorial",
+      "Gehrenbeck & Guerra": "Fort Atkinson",
+      "Calvert Minor & Szabo": "Fort Atkinson",
+      "Rao & Perez Ayala": "Fort Atkinson",
+      "Jerin & Kandukuri": "Middleton",
+      "Bernstein & Garcete": "Madison West",
+      "Kim & Yu": "Middleton",
+      "Flores Lanzo & Nelson": "Middleton",
+      "Bruce & Buelling": "Edgewood",
+      "Fonseca & Perez-Reyes": "Marquette",
+      "Reichert & Hoover": "Fort Atkinson",
+      "Posard & Hoagland": "Whitefish Bay",
+      "Austin & Oates": "Whitefish Bay",
+      "Albiter & Kim": "Middleton"
+    },
+    "name_to_full_name_dict": {
+      "Lankella & Riley": "Henry Riley & Thanish Lankella",
+      "Calvert Minor & Szabo": "Cooper Calvert Minor & Eli Szabo",
+      "Gehrenbeck & Guerra": "Henry Gehrenbeck & Walid Guerra",
+      "Rao & Perez Ayala": "Devan Rao & Dencil Perez Ayala",
+      "Bernstein & Garcete": "Yonathan Bernstein & Camila Garcete",
+      "Jerin & Kandukuri": "Sai Kandukuri & Nathan Jerin",
+      "Kim & Yu": "Mark Kim & JaeMin Yu",
+      "Flores Lanzo & Nelson": "Brady Nelson & Genesis Flores Lanzo",
+      "Bruce & Buelling": "Ella Buelling & Zach Bruce",
+      "Reichert & Hoover": "AJ Reichert & Bella Hoover",
+      "Fonseca & Perez-Reyes": "Azlan Fonseca & Angel Perez-Reyes",
+      "Posard & Hoagland": "Eadlyn Posard & Ella Hoagland",
+      "Austin & Oates": "Cormac Austin & Peter Oates",
+      "Albiter & Kim": "Isabella Albiter & Audrey Kim"
+    },
+    "result_list": [
+      {
+        "result_set_type": "Final Places",
+        "results": [
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Lankella & Riley",
+            "School": "Vel Phillips Memorial",
+            "WinPm": "5",
+            "PtsPm": "284.5",
+            "PtsPm -1HL": "170",
+            "Pts -2HL": "56.5",
+            "OSdPm": "5.2",
+            "RandPm": "8.78",
+            "Z2": "286.33"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Gehrenbeck & Guerra",
+            "School": "Fort Atkinson",
+            "WinPm": "3",
+            "PtsPm": "283.3",
+            "PtsPm -1HL": "169",
+            "Pts -2HL": "56",
+            "OSdPm": "6.8",
+            "RandPm": "2.15",
+            "Z2": "282.95"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Calvert Minor & Szabo",
+            "School": "Fort Atkinson",
+            "WinPm": "3",
+            "PtsPm": "280.2",
+            "PtsPm -1HL": "168",
+            "Pts -2HL": "56",
+            "OSdPm": "7.2",
+            "RandPm": "1.7",
+            "Z2": "277.86"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Rao & Perez Ayala",
+            "School": "Fort Atkinson",
+            "WinPm": "3",
+            "PtsPm": "278.5",
+            "PtsPm -1HL": "167",
+            "Pts -2HL": "56",
+            "OSdPm": "7.8",
+            "RandPm": "2.3",
+            "Z2": "276.22"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Jerin & Kandukuri",
+            "School": "Middleton",
+            "WinPm": "3",
+            "PtsPm": "277.5",
+            "PtsPm -1HL": "167",
+            "Pts -2HL": "56",
+            "OSdPm": "5.2",
+            "RandPm": "5.67",
+            "Z2": "278.07"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Bernstein & Garcete",
+            "School": "Madison West",
+            "WinPm": "3",
+            "PtsPm": "276.5",
+            "PtsPm -1HL": "166",
+            "Pts -2HL": "55",
+            "OSdPm": "6.6",
+            "RandPm": "2.17",
+            "Z2": "281.39"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Kim & Yu",
+            "School": "Middleton",
+            "WinPm": "3",
+            "PtsPm": "275.7",
+            "PtsPm -1HL": "167.5",
+            "Pts -2HL": "56.5",
+            "OSdPm": "6.4",
+            "RandPm": "2.46",
+            "Z2": "276.38"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Flores Lanzo & Nelson",
+            "School": "Middleton",
+            "WinPm": "3",
+            "PtsPm": "274.5",
+            "PtsPm -1HL": "164.5",
+            "Pts -2HL": "54.5",
+            "OSdPm": "8.4",
+            "RandPm": "8.71",
+            "Z2": "273.08"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Bruce & Buelling",
+            "School": "Edgewood",
+            "WinPm": "2",
+            "PtsPm": "282",
+            "PtsPm -1HL": "170",
+            "Pts -2HL": "57",
+            "OSdPm": "9",
+            "RandPm": "3.89",
+            "Z2": "281.16"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Fonseca & Perez-Reyes",
+            "School": "Marquette",
+            "WinPm": "2",
+            "PtsPm": "276.9",
+            "PtsPm -1HL": "166.4",
+            "Pts -2HL": "56",
+            "OSdPm": "7.8",
+            "RandPm": "7.81",
+            "Z2": "277.52"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Reichert & Hoover",
+            "School": "Fort Atkinson",
+            "WinPm": "2",
+            "PtsPm": "273.2",
+            "PtsPm -1HL": "163.7",
+            "Pts -2HL": "54.5",
+            "OSdPm": "10",
+            "RandPm": "1.25",
+            "Z2": "272.74"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Posard & Hoagland",
+            "School": "Whitefish Bay",
+            "WinPm": "2",
+            "PtsPm": "267.5",
+            "PtsPm -1HL": "161.5",
+            "Pts -2HL": "54",
+            "OSdPm": "9",
+            "RandPm": "9.19",
+            "Z2": "270.32"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Austin & Oates",
+            "School": "Whitefish Bay",
+            "WinPm": "1",
+            "PtsPm": "279.5",
+            "PtsPm -1HL": "167",
+            "Pts -2HL": "56",
+            "OSdPm": "7.8",
+            "RandPm": "7.31",
+            "Z2": "277.96"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Albiter & Kim",
+            "School": "Middleton",
+            "WinPm": "0",
+            "PtsPm": "272.9",
+            "PtsPm -1HL": "163.4",
+            "Pts -2HL": "54.4",
+            "OSdPm": "7.8",
+            "RandPm": "6.25",
+            "Z2": "267.31"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Speaker Awards",
+        "results": [
+          {
+            "place": "1",
+            "code": "Edgewood BB",
+            "school": "Edgewood",
+            "round_by_round": "27.5,29,26,29.5,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "86.00",
+              "Pts": "141.50",
+              "Pts -2HL": "29.00",
+              "Z2": "141.29"
+            },
+            "name": "Ella Buelling"
+          },
+          {
+            "place": "2",
+            "code": "Fort Atkinson RP",
+            "school": "Fort Atkinson",
+            "round_by_round": "29,28.5,28,29,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "142.00",
+              "Pts -2HL": "28.50",
+              "Z2": "140.91"
+            },
+            "name": "Devan Rao"
+          },
+          {
+            "place": "3",
+            "code": "Vel Phillips Memorial RL",
+            "school": "Vel Phillips Memorial",
+            "round_by_round": "28,28.5,28,28.5,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.00",
+              "Pts": "142.50",
+              "Pts -2HL": "28.50",
+              "Z2": "143.45"
+            },
+            "name": "Thanish Lankella"
+          },
+          {
+            "place": "4",
+            "code": "Vel Phillips Memorial RL",
+            "school": "Vel Phillips Memorial",
+            "round_by_round": "28,28,28.5,28.5,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.00",
+              "Pts": "142.00",
+              "Pts -2HL": "28.50",
+              "Z2": "142.89"
+            },
+            "name": "Henry Riley"
+          },
+          {
+            "place": "5",
+            "code": "Fort Atkinson GG",
+            "school": "Fort Atkinson",
+            "round_by_round": "28,27.5,29.3,28,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.00",
+              "Pts": "141.80",
+              "Pts -2HL": "28.00",
+              "Z2": "142.04"
+            },
+            "name": "Henry Gehrenbeck"
+          },
+          {
+            "place": "6",
+            "code": "Marquette FP",
+            "school": "Marquette",
+            "round_by_round": "26.5,28,29,29,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.50",
+              "Pts": "140.00",
+              "Pts -2HL": "28.00",
+              "Z2": "140.34"
+            },
+            "name": "Angel Perez-Reyes"
+          },
+          {
+            "place": "7",
+            "code": "Fort Atkinson CS",
+            "school": "Fort Atkinson",
+            "round_by_round": "28,28,28.4,27.5,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.40",
+              "Pts": "141.40",
+              "Pts -2HL": "28.00",
+              "Z2": "140.29"
+            },
+            "name": "Eli Szabo"
+          },
+          {
+            "place": "8",
+            "code": "Fort Atkinson GG",
+            "school": "Fort Atkinson",
+            "round_by_round": "28,28,29.5,28,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.00",
+              "Pts": "141.50",
+              "Pts -2HL": "28.00",
+              "Z2": "140.91"
+            },
+            "name": "Walid Guerra"
+          },
+          {
+            "place": "9",
+            "code": "Edgewood BB",
+            "school": "Edgewood",
+            "round_by_round": "27,28,27,29.5,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.00",
+              "Pts": "140.50",
+              "Pts -2HL": "28.00",
+              "Z2": "139.87"
+            },
+            "name": "Zach Bruce"
+          },
+          {
+            "place": "10",
+            "code": "Middleton KJ",
+            "school": "Middleton",
+            "round_by_round": "27.5,28.5,26,29.5,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.00",
+              "Pts": "139.50",
+              "Pts -2HL": "28.00",
+              "Z2": "140.20"
+            },
+            "name": "Sai Kandukuri"
+          },
+          {
+            "place": "11",
+            "code": "Middleton KY",
+            "school": "Middleton",
+            "round_by_round": "28.5,28.4,28.5,26,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.90",
+              "Pts": "138.40",
+              "Pts -2HL": "28.40",
+              "Z2": "138.82"
+            },
+            "name": "JaeMin Yu"
+          },
+          {
+            "place": "12",
+            "code": "Middleton KY",
+            "school": "Middleton",
+            "round_by_round": "28,28.6,28.7,25,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.60",
+              "Pts": "137.30",
+              "Pts -2HL": "28.00",
+              "Z2": "137.55"
+            },
+            "name": "Mark Kim"
+          },
+          {
+            "place": "13",
+            "code": "Whitefish Bay AO",
+            "school": "Whitefish Bay",
+            "round_by_round": "28.5,29.5,28,27,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.50",
+              "Pts": "140.00",
+              "Pts -2HL": "28.00",
+              "Z2": "139.61"
+            },
+            "name": "Cormac Austin"
+          },
+          {
+            "place": "14",
+            "code": "Whitefish Bay AO",
+            "school": "Whitefish Bay",
+            "round_by_round": "28,29,28,27.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.50",
+              "Pts": "139.50",
+              "Pts -2HL": "28.00",
+              "Z2": "138.35"
+            },
+            "name": "Peter Oates"
+          },
+          {
+            "place": "15",
+            "code": "Fort Atkinson CS",
+            "school": "Fort Atkinson",
+            "round_by_round": "27.5,28,28.3,28,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.50",
+              "Pts": "138.80",
+              "Pts -2HL": "28.00",
+              "Z2": "137.57"
+            },
+            "name": "Cooper Calvert Minor"
+          },
+          {
+            "place": "16",
+            "code": "Middleton AK",
+            "school": "Middleton",
+            "round_by_round": "27.3,26.5,28,28.5,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.30",
+              "Pts": "138.30",
+              "Pts -2HL": "28.00",
+              "Z2": "136.10"
+            },
+            "name": "Audrey Kim"
+          },
+          {
+            "place": "17",
+            "code": "Middleton NF",
+            "school": "Middleton",
+            "round_by_round": "28,27,28.5,28,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "138.50",
+              "Pts -2HL": "28.00",
+              "Z2": "138.09"
+            },
+            "name": "Brady Nelson"
+          },
+          {
+            "place": "18",
+            "code": "Madison West BG",
+            "school": "Madison West",
+            "round_by_round": "26,29,27,29.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "138.50",
+              "Pts -2HL": "27.00",
+              "Z2": "140.60"
+            },
+            "name": "Yonathan Bernstein"
+          },
+          {
+            "place": "19",
+            "code": "Madison West BG",
+            "school": "Madison West",
+            "round_by_round": "26,28,27,29,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "138.00",
+              "Pts -2HL": "28.00",
+              "Z2": "140.79"
+            },
+            "name": "Camila Garcete"
+          },
+          {
+            "place": "20",
+            "code": "Middleton KJ",
+            "school": "Middleton",
+            "round_by_round": "27,28,26,29,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "138.00",
+              "Pts -2HL": "28.00",
+              "Z2": "137.87"
+            },
+            "name": "Nathan Jerin"
+          },
+          {
+            "place": "21",
+            "code": "Fort Atkinson RH",
+            "school": "Fort Atkinson",
+            "round_by_round": "27.5,27.7,28,27.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.70",
+              "Pts": "137.70",
+              "Pts -2HL": "27.50",
+              "Z2": "137.54"
+            },
+            "name": "AJ Reichert"
+          },
+          {
+            "place": "22",
+            "code": "Marquette FP",
+            "school": "Marquette",
+            "round_by_round": "27,28,27,28,26.9",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.00",
+              "Pts": "136.90",
+              "Pts -2HL": "27.00",
+              "Z2": "137.18"
+            },
+            "name": "Azlan Fonseca"
+          },
+          {
+            "place": "23",
+            "code": "Fort Atkinson RP",
+            "school": "Fort Atkinson",
+            "round_by_round": "27,28,26,28.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.00",
+              "Pts": "136.50",
+              "Pts -2HL": "27.00",
+              "Z2": "135.31"
+            },
+            "name": "Dencil Perez Ayala"
+          },
+          {
+            "place": "24",
+            "code": "Middleton NF",
+            "school": "Middleton",
+            "round_by_round": "27.5,27,27.5,26.5,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "82.00",
+              "Pts": "136.00",
+              "Pts -2HL": "27.50",
+              "Z2": "135.00"
+            },
+            "name": "Genesis Flores Lanzo"
+          },
+          {
+            "place": "25",
+            "code": "Middleton AK",
+            "school": "Middleton",
+            "round_by_round": "27.1,27,26,27.5,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.10",
+              "Pts": "134.60",
+              "Pts -2HL": "27.00",
+              "Z2": "131.21"
+            },
+            "name": "Isabella Albiter"
+          },
+          {
+            "place": "26",
+            "code": "Fort Atkinson RH",
+            "school": "Fort Atkinson",
+            "round_by_round": "26.5,27.5,28,27,26.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "135.50",
+              "Pts -2HL": "27.00",
+              "Z2": "135.20"
+            },
+            "name": "Bella Hoover"
+          },
+          {
+            "place": "27",
+            "code": "Whitefish Bay PH",
+            "school": "Whitefish Bay",
+            "round_by_round": "25,27,27,27,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "133.50",
+              "Pts -2HL": "27.00",
+              "Z2": "133.91"
+            },
+            "name": "Eadlyn Posard"
+          },
+          {
+            "place": "28",
+            "code": "Whitefish Bay PH",
+            "school": "Whitefish Bay",
+            "round_by_round": "25,26,27.5,27,28.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "80.50",
+              "Pts": "134.00",
+              "Pts -2HL": "27.00",
+              "Z2": "136.41"
+            },
+            "name": "Ella Hoagland"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Prelim Records",
+        "results": [
+          {
+            "name": "Lankella & Riley",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5298585",
+            "code": "Vel Phillips Memorial RL",
+            "school": "Vel Phillips Memorial",
+            "wins": "5",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Henry Riley & Thanish Lankella",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson CS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Middleton KY",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton KJ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson GG",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Edgewood BB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Calvert Minor & Szabo",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264585",
+            "code": "Fort Atkinson CS",
+            "school": "Fort Atkinson",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Cooper Calvert Minor & Eli Szabo",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Vel Phillips Memorial RL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay PH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton KY",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Marquette FP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Madison West BG",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Gehrenbeck & Guerra",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264582",
+            "code": "Fort Atkinson GG",
+            "school": "Fort Atkinson",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Henry Gehrenbeck & Walid Guerra",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton KJ",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Madison West BG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton NF",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Vel Phillips Memorial RL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Middleton AK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Rao & Perez Ayala",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264581",
+            "code": "Fort Atkinson RP",
+            "school": "Fort Atkinson",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Devan Rao & Dencil Perez Ayala",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton KY",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Middleton KJ",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Madison West BG",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay AO",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Middleton NF",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Bernstein & Garcete",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5298629",
+            "code": "Madison West BG",
+            "school": "Madison West",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Yonathan Bernstein & Camila Garcete",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Marquette FP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson GG",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton AK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson CS",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Jerin & Kandukuri",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5287833",
+            "code": "Middleton KJ",
+            "school": "Middleton",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Sai Kandukuri & Nathan Jerin",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson GG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Vel Phillips Memorial RL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood BB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Marquette FP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Kim & Yu",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264447",
+            "code": "Middleton KY",
+            "school": "Middleton",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Mark Kim & JaeMin Yu",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Vel Phillips Memorial RL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson CS",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay AO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Flores Lanzo & Nelson",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5261014",
+            "code": "Middleton NF",
+            "school": "Middleton",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Brady Nelson & Genesis Flores Lanzo",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay AO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson GG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay PH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Bruce & Buelling",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5300679",
+            "code": "Edgewood BB",
+            "school": "Edgewood",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Ella Buelling & Zach Bruce",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay AO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Middleton AK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay PH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton KJ",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Vel Phillips Memorial RL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Reichert & Hoover",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264588",
+            "code": "Fort Atkinson RH",
+            "school": "Fort Atkinson",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "AJ Reichert & Bella Hoover",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton NF",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Marquette FP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay AO",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton KY",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay PH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Fonseca & Perez-Reyes",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5279706",
+            "code": "Marquette FP",
+            "school": "Marquette",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Azlan Fonseca & Angel Perez-Reyes",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Madison West BG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson RH",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton AK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson CS",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Middleton KJ",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Posard & Hoagland",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290669",
+            "code": "Whitefish Bay PH",
+            "school": "Whitefish Bay",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Eadlyn Posard & Ella Hoagland",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton AK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson CS",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Edgewood BB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton NF",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Austin & Oates",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290615",
+            "code": "Whitefish Bay AO",
+            "school": "Whitefish Bay",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Cormac Austin & Peter Oates",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood BB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Middleton NF",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RP",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Middleton KY",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Albiter & Kim",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5275261",
+            "code": "Middleton AK",
+            "school": "Middleton",
+            "wins": "0",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Isabella Albiter & Audrey Kim",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay PH",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood BB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Marquette FP",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Madison West BG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson GG",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "event_name": "PFV",
+    "code_to_name_dict": {
+      "Madison West JC": "Joel Cho",
+      "Edgewood HB": "Bradley & Hope",
+      "Edgewood EB": "Bugni & Eckstein",
+      "Fort Atkinson RT": "Riedlinger & Tidberg",
+      "Marquette US": "Ubell & Shafiq",
+      "Middleton BK": "Brad Koeller",
+      "Middleton CD": "Chilakapati & Dileep",
+      "Middleton SL": "Sieun (Michelle) Lee",
+      "Whitefish Bay BL": "Boyden & Li",
+      "West Bend HB": "Bonlender & Hubert"
+    },
+    "name_to_school_dict": {
+      "Joel Cho": "Madison West",
+      "Bradley & Hope": "Edgewood",
+      "Ubell & Shafiq": "Marquette",
+      "Riedlinger & Tidberg": "Fort Atkinson",
+      "Bugni & Eckstein": "Edgewood",
+      "Sieun (Michelle) Lee": "Middleton",
+      "Brad Koeller": "Middleton",
+      "Chilakapati & Dileep": "Middleton",
+      "Boyden & Li": "Whitefish Bay",
+      "Bonlender & Hubert": "West Bend"
+    },
+    "name_to_full_name_dict": {
+      "Joel Cho": "Joel Cho",
+      "Bradley & Hope": "Gavin Hope & James Bradley",
+      "Bugni & Eckstein": "Abigail Eckstein & Lucy Bugni",
+      "Riedlinger & Tidberg": "Oisin Riedlinger & Joshua Tidberg",
+      "Ubell & Shafiq": "George Ubell & Ahsan Shafiq",
+      "Brad Koeller": "Brad Koeller",
+      "Chilakapati & Dileep": "Tarun Chilakapati & Rohan Dileep",
+      "Sieun (Michelle) Lee": "Sieun (Michelle) Lee",
+      "Boyden & Li": "Oliver Boyden & Daniel Li",
+      "Bonlender & Hubert": "Haley Hubert & Rowan Bonlender"
+    },
+    "result_list": [
+      {
+        "result_set_type": "Final Places",
+        "results": [
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Joel Cho",
+            "School": "Madison West",
+            "WinPm": "5",
+            "PtsPm": "291",
+            "PtsPm -1HL": "232.5",
+            "Pts -2HL": "174.5",
+            "OSdPm": "5.6",
+            "RandPm": "6.68",
+            "Z2": "292.86"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Bradley & Hope",
+            "School": "Edgewood",
+            "WinPm": "4",
+            "PtsPm": "288",
+            "PtsPm -1HL": "172.5",
+            "Pts -2HL": "57.5",
+            "OSdPm": "6",
+            "RandPm": "6.42",
+            "Z2": "287.13"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Ubell & Shafiq",
+            "School": "Marquette",
+            "WinPm": "3",
+            "PtsPm": "286.25",
+            "PtsPm -1HL": "172.25",
+            "Pts -2HL": "57.25",
+            "OSdPm": "4.25",
+            "RandPm": "7.35",
+            "Z2": "285.47"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Riedlinger & Tidberg",
+            "School": "Fort Atkinson",
+            "WinPm": "3",
+            "PtsPm": "284",
+            "PtsPm -1HL": "170",
+            "Pts -2HL": "56.5",
+            "OSdPm": "5.4",
+            "RandPm": "0.5",
+            "Z2": "286.44"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Bugni & Eckstein",
+            "School": "Edgewood",
+            "WinPm": "3",
+            "PtsPm": "284",
+            "PtsPm -1HL": "168.5",
+            "Pts -2HL": "56",
+            "OSdPm": "5.6",
+            "RandPm": "5.97",
+            "Z2": "284.88"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Sieun (Michelle) Lee",
+            "School": "Middleton",
+            "WinPm": "2",
+            "PtsPm": "291",
+            "PtsPm -1HL": "233",
+            "Pts -2HL": "174.5",
+            "OSdPm": "5.4",
+            "RandPm": "7.36",
+            "Z2": "287.71"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Brad Koeller",
+            "School": "Middleton",
+            "WinPm": "2",
+            "PtsPm": "290",
+            "PtsPm -1HL": "232",
+            "Pts -2HL": "174",
+            "OSdPm": "5.6",
+            "RandPm": "8.26",
+            "Z2": "291.53"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Chilakapati & Dileep",
+            "School": "Middleton",
+            "WinPm": "2",
+            "PtsPm": "270",
+            "PtsPm -1HL": "162",
+            "Pts -2HL": "54",
+            "OSdPm": "7",
+            "RandPm": "5.79",
+            "Z2": "270.28"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Boyden & Li",
+            "School": "Whitefish Bay",
+            "WinPm": "1",
+            "PtsPm": "273",
+            "PtsPm -1HL": "162.5",
+            "Pts -2HL": "54",
+            "OSdPm": "5.4",
+            "RandPm": "5.21",
+            "Z2": "273.79"
+          },
+          {
+            "round_by_round": [
+              { "round_name": "R1", "total_rank": "", "ranks": [] },
+              { "round_name": "R2", "total_rank": "", "ranks": [] },
+              { "round_name": "R3", "total_rank": "", "ranks": [] },
+              { "round_name": "R4", "total_rank": "", "ranks": [] },
+              { "round_name": "R5", "total_rank": "", "ranks": [] }
+            ],
+            "Place": "Prelim",
+            "Entry": "Bonlender & Hubert",
+            "School": "West Bend",
+            "WinPm": "0",
+            "PtsPm": "280.6",
+            "PtsPm -1HL": "168.5",
+            "Pts -2HL": "56",
+            "OSdPm": "4.8",
+            "RandPm": "1.23",
+            "Z2": "281.71"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Speaker Awards",
+        "results": [
+          {
+            "place": "1",
+            "code": "Middleton SL",
+            "school": "Middleton",
+            "round_by_round": "28.5,28,29,30,30",
+            "tiebreaker_data": {
+              "Pts -1HL": "87.50",
+              "Pts": "145.50",
+              "Pts -2HL": "29.00",
+              "Z2": "143.86"
+            },
+            "name": "Sieun (Michelle) Lee"
+          },
+          {
+            "place": "2",
+            "code": "Madison West JC",
+            "school": "Madison West",
+            "round_by_round": "29.5,29,29,29,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "87.00",
+              "Pts": "145.50",
+              "Pts -2HL": "29.00",
+              "Z2": "146.43"
+            },
+            "name": "Joel Cho"
+          },
+          {
+            "place": "3",
+            "code": "Middleton BK",
+            "school": "Middleton",
+            "round_by_round": "28.5,28,29.5,30,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "87.00",
+              "Pts": "145.00",
+              "Pts -2HL": "29.00",
+              "Z2": "145.77"
+            },
+            "name": "Brad Koeller"
+          },
+          {
+            "place": "4",
+            "code": "Marquette US",
+            "school": "Marquette",
+            "round_by_round": "29,28,29,29.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "87.00",
+              "Pts": "144.38",
+              "Pts -2HL": "0.00",
+              "Z2": "115.43"
+            },
+            "name": "George Ubell"
+          },
+          {
+            "place": "5",
+            "code": "Edgewood HB",
+            "school": "Edgewood",
+            "round_by_round": "29,28.5,29,28.5,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "86.50",
+              "Pts": "144.00",
+              "Pts -2HL": "29.00",
+              "Z2": "143.97"
+            },
+            "name": "James Bradley"
+          },
+          {
+            "place": "6",
+            "code": "Edgewood HB",
+            "school": "Edgewood",
+            "round_by_round": "29,28.5,28.5,28,30",
+            "tiebreaker_data": {
+              "Pts -1HL": "86.00",
+              "Pts": "144.00",
+              "Pts -2HL": "28.50",
+              "Z2": "143.16"
+            },
+            "name": "Gavin Hope"
+          },
+          {
+            "place": "7",
+            "code": "Fort Atkinson RT",
+            "school": "Fort Atkinson",
+            "round_by_round": "28.5,29,28.5,28,28.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "142.50",
+              "Pts -2HL": "28.50",
+              "Z2": "143.87"
+            },
+            "name": "Oisin Riedlinger"
+          },
+          {
+            "place": "8",
+            "code": "Marquette US",
+            "school": "Marquette",
+            "round_by_round": "28,27.5,29,29",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.50",
+              "Pts": "141.88",
+              "Pts -2HL": "0.00",
+              "Z2": "112.94"
+            },
+            "name": "Ahsan Shafiq"
+          },
+          {
+            "place": "9",
+            "code": "Edgewood EB",
+            "school": "Edgewood",
+            "round_by_round": "28.5,27.5,28.5,28,30",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.00",
+              "Pts": "142.50",
+              "Pts -2HL": "28.50",
+              "Z2": "143.03"
+            },
+            "name": "Lucy Bugni"
+          },
+          {
+            "place": "10",
+            "code": "Fort Atkinson RT",
+            "school": "Fort Atkinson",
+            "round_by_round": "28.5,28.5,28,28.5,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "85.00",
+              "Pts": "141.50",
+              "Pts -2HL": "28.50",
+              "Z2": "142.57"
+            },
+            "name": "Joshua Tidberg"
+          },
+          {
+            "place": "11",
+            "code": "West Bend HB",
+            "school": "West Bend",
+            "round_by_round": "28,28,28.6,29,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.60",
+              "Pts": "141.60",
+              "Pts -2HL": "28.00",
+              "Z2": "142.02"
+            },
+            "name": "Haley Hubert"
+          },
+          {
+            "place": "12",
+            "code": "Edgewood EB",
+            "school": "Edgewood",
+            "round_by_round": "28,28.5,27.5,27.5,30",
+            "tiebreaker_data": {
+              "Pts -1HL": "84.00",
+              "Pts": "141.50",
+              "Pts -2HL": "28.00",
+              "Z2": "141.85"
+            },
+            "name": "Abigail Eckstein"
+          },
+          {
+            "place": "13",
+            "code": "West Bend HB",
+            "school": "West Bend",
+            "round_by_round": "28,27.5,28.5,28,27",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.50",
+              "Pts": "139.00",
+              "Pts -2HL": "28.00",
+              "Z2": "139.70"
+            },
+            "name": "Rowan Bonlender"
+          },
+          {
+            "place": "14",
+            "code": "Whitefish Bay BL",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,28.5,29,26,27.5",
+            "tiebreaker_data": {
+              "Pts -1HL": "83.00",
+              "Pts": "138.00",
+              "Pts -2HL": "27.50",
+              "Z2": "138.85"
+            },
+            "name": "Oliver Boyden"
+          },
+          {
+            "place": "15",
+            "code": "Middleton CD",
+            "school": "Middleton",
+            "round_by_round": "27,27,27,28",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "136.25",
+              "Pts -2HL": "0.00",
+              "Z2": "136.07"
+            },
+            "name": "Rohan Dileep"
+          },
+          {
+            "place": "16",
+            "code": "Whitefish Bay BL",
+            "school": "Whitefish Bay",
+            "round_by_round": "27,26,28,28,26",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "135.00",
+              "Pts -2HL": "27.00",
+              "Z2": "134.95"
+            },
+            "name": "Daniel Li"
+          },
+          {
+            "place": "17",
+            "code": "Middleton CD",
+            "school": "Middleton",
+            "round_by_round": "27,27,27,26",
+            "tiebreaker_data": {
+              "Pts -1HL": "81.00",
+              "Pts": "133.75",
+              "Pts -2HL": "0.00",
+              "Z2": "134.21"
+            },
+            "name": "Tarun Chilakapati"
+          }
+        ]
+      },
+      {
+        "result_set_type": "Prelim Records",
+        "results": [
+          {
+            "name": "Joel Cho",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5298599",
+            "code": "Madison West JC",
+            "school": "Madison West",
+            "wins": "5",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Joel Cho",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton BK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Edgewood HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Marquette US",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "West Bend HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Middleton SL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Bradley & Hope",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5288227",
+            "code": "Edgewood HB",
+            "school": "Edgewood",
+            "wins": "4",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Gavin Hope & James Bradley",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "West Bend HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Madison West JC",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson RT",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton SL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay BL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Bugni & Eckstein",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5288230",
+            "code": "Edgewood EB",
+            "school": "Edgewood",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Abigail Eckstein & Lucy Bugni",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton SL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Middleton BK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Middleton CD",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Marquette US",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Riedlinger & Tidberg",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5264593",
+            "code": "Fort Atkinson RT",
+            "school": "Fort Atkinson",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Oisin Riedlinger & Joshua Tidberg",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay BL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Marquette US",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood HB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Edgewood EB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Middleton CD",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Ubell & Shafiq",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5281571",
+            "code": "Marquette US",
+            "school": "Marquette",
+            "wins": "3",
+            "scrape_entry_record_data": {
+              "full_entry_name": "George Ubell & Ahsan Shafiq",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Con",
+                  "opponent_code": "Middleton CD",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Fort Atkinson RT",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Madison West JC",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Middleton BK",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood EB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Brad Koeller",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5261017",
+            "code": "Middleton BK",
+            "school": "Middleton",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Brad Koeller",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Madison West JC",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood EB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay BL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Marquette US",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "West Bend HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "Chilakapati & Dileep",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5275264",
+            "code": "Middleton CD",
+            "school": "Middleton",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Tarun Chilakapati & Rohan Dileep",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Bye",
+                  "opponent_code": "Marquette US",
+                  "win_ballots": 0,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "West Bend HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Edgewood EB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Con",
+                  "opponent_code": "Whitefish Bay BL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Sieun (Michelle) Lee",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5261023",
+            "code": "Middleton SL",
+            "school": "Middleton",
+            "wins": "2",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Sieun (Michelle) Lee",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood EB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Whitefish Bay BL",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Pro",
+                  "opponent_code": "West Bend HB",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood HB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Madison West JC",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Boyden & Li",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5290629",
+            "code": "Whitefish Bay BL",
+            "school": "Whitefish Bay",
+            "wins": "1",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Oliver Boyden & Daniel Li",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Fort Atkinson RT",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Con",
+                  "opponent_code": "Middleton SL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton BK",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Middleton CD",
+                  "win_ballots": 1,
+                  "loss_ballots": 0
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood HB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "Bonlender & Hubert",
+            "entry_record_url": "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=29228&entry_id=5250557",
+            "code": "West Bend HB",
+            "school": "West Bend",
+            "wins": "0",
+            "scrape_entry_record_data": {
+              "full_entry_name": "Haley Hubert & Rowan Bonlender",
+              "round_by_round_results": [
+                {
+                  "round_name": "Round 5",
+                  "side": "Pro",
+                  "opponent_code": "Edgewood HB",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 4",
+                  "side": "Pro",
+                  "opponent_code": "Middleton CD",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 3",
+                  "side": "Con",
+                  "opponent_code": "Middleton SL",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 2",
+                  "side": "Pro",
+                  "opponent_code": "Madison West JC",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                },
+                {
+                  "round_name": "Round 1",
+                  "side": "Con",
+                  "opponent_code": "Middleton BK",
+                  "win_ballots": 0,
+                  "loss_ballots": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -15,6 +15,19 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+"""
+Returns a dictionary with the following keys:
+{
+        "results" - A JSON with results data, including 
+        "name_to_school_dict": name_to_school_dict_overall,
+        "code_to_name_dict": code_to_name_dict_overall,
+        "name_to_full_name_dict": name_to_full_name_dict_overall,
+        "entry_counter_by_school": entry_counter_by_school,
+        "school_set": school_set,
+        "state_set": state_set,
+    }
+"""
+
 
 def main(
     tournament_id,
@@ -23,7 +36,8 @@ def main(
         "Final Places",
         "Prelim Seeds",  # Sometimes need to parse the prelim seeds to scrape name/entry data
         "Prelim Records",  # Often Used in tournaments that don't have elim rounds
-    ],  # ["Speaker Awards", "Final Places"]
+        "Speaker Awards",  # API data doesn't differentiate individual speaker awards well
+    ],
     final_round_results_identifiers=["Finals Round results"],
 ):
     code_to_name_dict_overall = {}
@@ -32,6 +46,7 @@ def main(
     # Start a new browser session
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--log-file=output.log")
     chrome_options.add_experimental_option(
         "excludeSwitches", ["enable-logging"]
     )  # attempting to suppress the USB read errors on Windows

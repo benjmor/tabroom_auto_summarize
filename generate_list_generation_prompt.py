@@ -1,4 +1,4 @@
-def generate_list_generation_prompt():
+def generate_list_generation_prompt(headers: list[str]):
     return f"""
     This is a list of results from the speech and debate tournament.
     Create a numbered list of all the results, so that each event is a new number in the list, and each event contains results from all students in that event.
@@ -17,7 +17,10 @@ def generate_list_generation_prompt():
     Bold the name of the event by putting 2 asterisks around it.
     For example:
     1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
-    2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals. 
+    2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals.
+
+    SOURCE DATA:
+    {"|".join(headers)}
     """
 
 

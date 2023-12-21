@@ -5,18 +5,12 @@ import re
 def get_speech_results_from_rounds_only(
     # Event dictionary from the Tabroom data
     event: dict,
-    # Filters data to just top performances (80%ile) and school-specific performances
-    filtered: bool,
     # Dictionary of entries
-    ENTRY_DICTIONARY: dict,
+    entry_dictionary: dict,
     # Dictionary of codes
-    CODE_DICTIONARY: dict,
+    code_dictionary: dict,
     # Map of what school each entry is from
-    ENTRY_TO_SCHOOL_DICT_GLOBAL: dict,
-    # Name of the school, if filtering results
-    school_name: str = "",
-    # Minimum percentile threshold for including a result
-    PERCENTILE_MINIMUM: int = 10,
+    entry_to_school_dict: dict,
 ):
     """
     Assumes that the data is for a tournament that only publishes round results, not a 'Final Places' result.
@@ -59,16 +53,14 @@ def get_speech_results_from_rounds_only(
                     if not rank:
                         continue
                     try:
-                        entry_name = ENTRY_DICTIONARY[ballot["entry"]]
-                        entry_code = CODE_DICTIONARY[ballot["entry"]]
+                        entry_name = entry_dictionary[ballot["entry"]]
+                        entry_code = code_dictionary[ballot["entry"]]
                     except KeyError:
                         logging.error(
                             f"Could not find entry {ballot['entry']} in the global entry dictionaries, skipping. This may be the result of a bye or late-add."
                         )
                         continue
-                    entry_school_for_dict = ENTRY_TO_SCHOOL_DICT_GLOBAL.get(
-                        entry_name, ""
-                    )
+                    entry_school_for_dict = entry_to_school_dict.get(entry_name, "")
                     if not section_scoring.get(entry_name, ""):
                         section_scoring[entry_name] = {}
                         section_scoring[entry_name]["school"] = entry_school_for_dict
@@ -97,16 +89,18 @@ def get_speech_results_from_rounds_only(
                     )  # TODO - make this give a competition-wide percentile, based on the field size
 
                     entry_school = section_scoring[entry_name]["school"]
-                    # If filtering, and not in a top percentile or from the specific school, skip
-                    is_given_school = re.search(school_name, entry_school) or re.search(
-                        school_name, entry_code
-                    )
-                    if filtered and (
-                        (float(percentile) < PERCENTILE_MINIMUM)  # Below the threshold
-                        or not is_given_school
-                    ):
-                        continue
                     ret_val.append(
-                        f"{event_name}|speech|{label}|{entry_name}|{entry_code}|{entry_school}|{index}|{index}|{percentile}"
+                        {
+                            "event_name": event_name,
+                            "event_type": "speech",
+                            "result_set": "Scoring",
+                            "entry_name": entry_name,
+                            "entry_code": entry_code,
+                            "school_name": entry_school,
+                            "rank": index,
+                            "round_reached": "N/A",
+                            "percentile": percentile,
+                            "results_by_round": "N/A",
+                        }
                     )
     return ret_val

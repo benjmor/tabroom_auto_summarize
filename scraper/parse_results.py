@@ -11,6 +11,7 @@ import logging
 from time import sleep
 from scraper.parse_final_places_results import parse_final_places_results
 from scraper.parse_prelim_records_results import parse_prelim_records_results
+from scraper.parse_speaker_awards_results import parse_speaker_awards_results
 
 
 def parse_results(input_data):
@@ -103,9 +104,10 @@ def parse_results(input_data):
                     }
                 )
     for result_page_detail in result_page_details:
-        name_to_full_name_dict = (
-            {}
-        )  # Initialize this since not all paths will create it
+        # Initialize these since not all paths will create it
+        code_to_name_dict = {}
+        name_to_school_dict = {}
+        name_to_full_name_dict = {}
         driver.get(result_page_detail["result_url"])
         if result_page_detail["result_name"] == "Final Places":
             (
@@ -126,6 +128,8 @@ def parse_results(input_data):
                 driver,
                 scrape_entry_records,
             )
+        elif result_page_detail["result_name"] == "Speaker Awards":
+            result_table_content = parse_speaker_awards_results(driver)
         # TODO - Add support for more page types
         else:
             continue

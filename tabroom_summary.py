@@ -92,6 +92,7 @@ if __name__ == "__main__":
                         code_dictionary=entry_id_to_entry_code_dictionary,
                         entry_dictionary=entry_id_to_entry_entry_name_dictionary,
                         entry_to_school_dict=name_to_school_dict,
+                        scraped_data=scraped_results,
                         event_type=event["type"],
                     )
                 # TODO - add an option to enrich the results via scraped data - perhaps replacing rounds-only?
@@ -246,7 +247,7 @@ if __name__ == "__main__":
             result_for_numbered_list.pop("results_by_round")
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
         logging.info(f"Generating list of results for {school}")
-        list_generation_prompt = generate_list_generation_prompt()
+        list_generation_prompt = generate_list_generation_prompt(headers=data_labels)
         numbered_list_prompt = (
             list_generation_prompt
             + "\r\n"

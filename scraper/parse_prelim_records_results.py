@@ -13,30 +13,31 @@ def parse_prelim_records_results(driver, scrape_entry_record_data: bool):
     {
         "result_set_type": <result_set_type>,
         "results": [
-        {
-            name: <entry name>
-            code: <entry code>
-            school: <entry school>
-            wins: <win count>
-            # If we're scraping data
-            scrape_entry_record_data: {
-                full_entry_name: <full_entry_name>
-                round_by_round_results: [
-                    {
-                        round_name: <round name>
-                        side: <aff / neg >
-                        opponent_code: <opp code>
-                        win_ballots: <#>
-                        loss_ballots:  <#>
-                    },
-                    ...
-                    {...}
-                ]
-            }
-        },
-        ...
-        {...}
-    ]
+            {
+                name: <entry name>
+                code: <entry code>
+                school: <entry school>
+                wins: <win count>
+                # If we're scraping data
+                scrape_entry_record_data: {
+                    full_entry_name: <full_entry_name>
+                    round_by_round_results: [
+                        {
+                            round_name: <round name>
+                            side: <aff / neg >
+                            opponent_code: <opp code>
+                            win_ballots: <#>
+                            loss_ballots:  <#>
+                        },
+                        ...
+                        {...}
+                    ]
+                }
+            },
+            ...
+            {...}
+        ]
+    }
     2. A dict that maps codes to entry names
     3. A dict that maps entry names to school names
     4. A dict that maps entry short names to full names (eg. Smith and Jones -> Joseph Smith and Bob Jones). Will be blank if not scraping entry records.
