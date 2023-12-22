@@ -1,5 +1,3 @@
-# TODO - Results Sets are N/A currently, add something
-
 # tabroom_auto_summarize
 
 Generates AI-powered school-specific summaries of speech and debate competitions from Tabroom.com data
