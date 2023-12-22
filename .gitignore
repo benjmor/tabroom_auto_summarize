@@ -8,3 +8,4 @@ openAiAuthKey.txt
 *.png
 __pycache__
 __pycache__/**
+*.txt

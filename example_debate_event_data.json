@@ -1,0 +1,466 @@
+{
+  "result_sets": [
+    {
+      "label": "Final Places",
+      "published": 1,
+      "coach": "",
+      "generated": "2023-10-28 23:07:37",
+      "bracket": 0,
+      "results": [
+        {
+          "percentile": "100.00",
+          "values": [
+            {
+              "result_key": "1285281",
+              "priority": 1,
+              "protocol": 225662
+            },
+            {
+              "protocol": 225662,
+              "priority": 2,
+              "result_key": "1285282"
+            },
+            {
+              "result_key": "1285283",
+              "priority": 3,
+              "protocol": 225662
+            },
+            {
+              "result_key": "1285284",
+              "protocol": 225662,
+              "priority": 4
+            },
+            {
+              "result_key": "1285285",
+              "priority": 5,
+              "protocol": 225662
+            },
+            {
+              "result_key": "1285286",
+              "priority": 6,
+              "protocol": 225662
+            },
+            {
+              "protocol": 225662,
+              "priority": 7,
+              "value": "1.86",
+              "result_key": "1285287"
+            },
+            {
+              "result_key": "1285288",
+              "protocol": 225662,
+              "priority": 999
+            }
+          ],
+          "round": 1079965,
+          "entry": 5299296,
+          "rank": 1,
+          "place": "Prelim"
+        },
+        {
+          "place": "Prelim",
+          "rank": 2,
+          "entry": 5304538,
+          "round": 1079965,
+          "values": [
+            {
+              "result_key": "1285281",
+              "protocol": 225662,
+              "priority": 1
+            },
+            {
+              "result_key": "1285282",
+              "protocol": 225662,
+              "priority": 2
+            },
+            {
+              "protocol": 225662,
+              "priority": 3,
+              "result_key": "1285283"
+            },
+            {
+              "protocol": 225662,
+              "priority": 4,
+              "result_key": "1285284"
+            },
+            {
+              "result_key": "1285285",
+              "protocol": 225662,
+              "priority": 5
+            },
+            {
+              "protocol": 225662,
+              "priority": 6,
+              "result_key": "1285286"
+            },
+            {
+              "priority": 7,
+              "protocol": 225662,
+              "value": "3.57",
+              "result_key": "1285287"
+            },
+            {
+              "result_key": "1285288",
+              "protocol": 225662,
+              "priority": 999
+            }
+          ],
+          "percentile": "50.00"
+        }
+      ],
+      "result_keys": [
+        {
+          "description": "Wins",
+          "tag": "Win",
+          "id": "1285281",
+          "no_sort": "",
+          "sort_desc": 1
+        },
+        {
+          "description": " Points",
+          "tag": "Pts",
+          "no_sort": "",
+          "id": "1285282",
+          "sort_desc": 1
+        },
+        {
+          "sort_desc": 0,
+          "id": "1285283",
+          "no_sort": "",
+          "tag": "Rk",
+          "description": "Ranks"
+        },
+        {
+          "id": "1285284",
+          "no_sort": "",
+          "sort_desc": 1,
+          "description": " Points dropping 1 best & worst",
+          "tag": "Pts -1HL"
+        },
+        {
+          "tag": "Rk -1HL",
+          "description": "Ranks dropping 1 best & worst",
+          "sort_desc": 0,
+          "no_sort": "",
+          "id": "1285285"
+        },
+        {
+          "sort_desc": 0,
+          "no_sort": "",
+          "id": "1285286",
+          "tag": "OSd",
+          "description": "Opponent Average Seed"
+        },
+        {
+          "no_sort": "",
+          "id": "1285287",
+          "sort_desc": 0,
+          "description": "Random",
+          "tag": "Rand"
+        },
+        {
+          "description": "Unadjusted Raw Scores",
+          "tag": "Ballots",
+          "no_sort": 1,
+          "id": "1285288",
+          "sort_desc": ""
+        }
+      ]
+    },
+    {
+      "published": 1,
+      "label": "Speaker Awards",
+      "coach": "",
+      "results": [
+        {
+          "entry": 5299296,
+          "rank": 1,
+          "student": 1419715,
+          "place": "1-T",
+          "percentile": "100.00",
+          "values": [
+            {
+              "priority": 1,
+              "protocol": 225663,
+              "value": "0.00",
+              "result_key": "1289671"
+            },
+            {
+              "result_key": "1289672",
+              "value": "0.00",
+              "priority": 2,
+              "protocol": 225663
+            },
+            {
+              "result_key": "1289673",
+              "priority": 3,
+              "protocol": 225663,
+              "value": "0.00"
+            },
+            {
+              "result_key": "1289674",
+              "value": "0.00",
+              "protocol": 225663,
+              "priority": 4
+            },
+            {
+              "value": "0.00",
+              "priority": 5,
+              "protocol": 225663,
+              "result_key": "1289675"
+            },
+            {
+              "protocol": 225663,
+              "priority": 999,
+              "result_key": "1289676"
+            }
+          ]
+        },
+        {
+          "place": "1-T",
+          "entry": 5304538,
+          "student": 1421296,
+          "rank": 1,
+          "values": [
+            {
+              "value": "0.00",
+              "priority": 1,
+              "protocol": 225663,
+              "result_key": "1289671"
+            },
+            {
+              "protocol": 225663,
+              "priority": 2,
+              "value": "0.00",
+              "result_key": "1289672"
+            },
+            {
+              "result_key": "1289673",
+              "priority": 3,
+              "protocol": 225663,
+              "value": "0.00"
+            },
+            {
+              "result_key": "1289674",
+              "priority": 4,
+              "protocol": 225663,
+              "value": "0.00"
+            },
+            {
+              "priority": 5,
+              "protocol": 225663,
+              "value": "0.00",
+              "result_key": "1289675"
+            },
+            {
+              "result_key": "1289676",
+              "priority": 999,
+              "protocol": 225663
+            }
+          ],
+          "percentile": "100.00"
+        },
+        {
+          "percentile": "100.00",
+          "values": [
+            {
+              "result_key": "1289671",
+              "value": "0.00",
+              "protocol": 225663,
+              "priority": 1
+            },
+            {
+              "value": "0.00",
+              "protocol": 225663,
+              "priority": 2,
+              "result_key": "1289672"
+            },
+            {
+              "value": "0.00",
+              "priority": 3,
+              "protocol": 225663,
+              "result_key": "1289673"
+            },
+            {
+              "value": "0.00",
+              "protocol": 225663,
+              "priority": 4,
+              "result_key": "1289674"
+            },
+            {
+              "result_key": "1289675",
+              "value": "0.00",
+              "protocol": 225663,
+              "priority": 5
+            },
+            {
+              "protocol": 225663,
+              "priority": 999,
+              "result_key": "1289676"
+            }
+          ],
+          "student": 1419714,
+          "rank": 1,
+          "entry": 5299296,
+          "place": "1-T"
+        }
+      ],
+      "generated": "2023-10-31 15:19:59",
+      "bracket": 0,
+      "result_keys": [
+        {
+          "id": "1289671",
+          "no_sort": "",
+          "sort_desc": 1,
+          "description": "Speaker Points in All Rounds",
+          "tag": "Pts"
+        },
+        {
+          "sort_desc": 0,
+          "no_sort": "",
+          "id": "1289672",
+          "tag": "Rnk",
+          "description": "Ranks in All Rounds"
+        },
+        {
+          "tag": "Pts -1HL",
+          "description": "Speaker Points -1 Best & Worst in All Rounds",
+          "sort_desc": 1,
+          "no_sort": "",
+          "id": "1289673"
+        },
+        {
+          "tag": "Rnk -1HL",
+          "description": "Ranks -1 Best & Worst in All Rounds",
+          "sort_desc": 0,
+          "no_sort": "",
+          "id": "1289674"
+        },
+        {
+          "tag": "Z2",
+          "description": "Adjusted Judge Points Variance in All Rounds",
+          "sort_desc": 1,
+          "no_sort": "",
+          "id": "1289675"
+        },
+        {
+          "no_sort": 1,
+          "id": "1289676",
+          "sort_desc": "",
+          "description": "Unadjusted Raw Scores",
+          "tag": "Ballots"
+        }
+      ]
+    },
+    {
+      "result_keys": [
+        {
+          "id": "",
+          "no_sort": "",
+          "sort_desc": "",
+          "description": "",
+          "tag": ""
+        }
+      ],
+      "results": [{ "values": [{}] }],
+      "generated": "2023-10-31 15:20:30",
+      "bracket": 0,
+      "coach": "",
+      "published": 1,
+      "label": "Cume Sheet"
+    }
+  ],
+  "name": "CXN",
+  "id": "268114",
+  "abbr": "CXN",
+  "type": "debate",
+  "rounds": [
+    {
+      "sections": [
+        {
+          "ballots": [
+            {
+              "entry_name": "Cruz & Ward",
+              "panel": "6808384",
+              "judge_last": "Paredes",
+              "side": 1,
+              "judge": 2078795,
+              "judge_first": "Brenda",
+              "id": "39322539",
+              "entry": 5299296,
+              "entry_code": "Ronald Reagan WC"
+            },
+            {
+              "entry_name": "Kenadee Donald",
+              "judge_last": "Paredes",
+              "panel": "6808384",
+              "side": 2,
+              "judge": 2078795,
+              "id": "39322540",
+              "judge_first": "Brenda",
+              "entry": 5304538,
+              "entry_code": "Rufus King KD"
+            }
+          ],
+          "id": "6808384",
+          "room": "244",
+          "letter": "1",
+          "round": "1079964",
+          "flight": "1"
+        }
+      ],
+      "start_time": "2023-10-28 13:35:00",
+      "protocol_name": "Policy Teams",
+      "name": 1,
+      "id": "1079964",
+      "flights": 1,
+      "type": "prelim"
+    },
+    {
+      "sections": [
+        {
+          "ballots": [
+            {
+              "judge_started": "2023-10-28 18:05:07",
+              "judge_last": "Erickson",
+              "panel": "6813517",
+              "entry_name": "Kenadee Donald",
+              "judge": 2076969,
+              "side": 1,
+              "started_by": 27816,
+              "judge_first": "Brooke",
+              "id": "39357395",
+              "entry": 5304538,
+              "entry_code": "Rufus King KD"
+            },
+            {
+              "entry": 5299296,
+              "entry_code": "Ronald Reagan WC",
+              "started_by": 27816,
+              "judge_first": "Brooke",
+              "id": "39357396",
+              "judge": 2076969,
+              "side": 2,
+              "judge_started": "2023-10-28 18:05:07",
+              "judge_last": "Erickson",
+              "panel": "6813517",
+              "entry_name": "Cruz & Ward"
+            }
+          ],
+          "id": "6813517",
+          "room": "244",
+          "letter": "1",
+          "flight": "1",
+          "round": "1079965"
+        }
+      ],
+      "name": 2,
+      "id": "1079965",
+      "protocol_name": "Policy Teams",
+      "start_time": "2023-10-28 18:00:00",
+      "flights": 1,
+      "type": "prelim"
+    }
+  ],
+  "fee": "30.00"
+}

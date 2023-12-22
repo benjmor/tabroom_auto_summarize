@@ -1,423 +1,35 @@
 # Note: you need to be using OpenAI Python v0.27.0+ for the code below to work, with a
 import openai
-import argparse
-from datetime import datetime
 import json
 import urllib.request
 import logging
 import os
-import re
 import ssl
-import tabroom_scrape
-import generate_website
-
-
-ENTRY_DICTIONARY = {}  # Global context
-CODE_DICTIONARY = {}
-STUDENT_NAME_DICTIONARY = {}
-ENTRY_TO_SCHOOL_DICT_GLOBAL = {}
-PERCENTILE_MINIMUM = (
-    10  # Being a bit generous here -- anyone not in the bottom 10% gets included
-)
-RESULTS_TO_PASS_TO_GPT = 15
-HEADER_STRING = "Event|Event Type|Result Set|Entry Names|Entry Code|School|Rank|Place|Percentile|Results By Round"
-SCHOOL_INDEX = HEADER_STRING.split("|").index("School")
-EVENT_TYPE_INDEX = HEADER_STRING.split("|").index("Event Type")
-
-
-def update_global_entry_dictionary(sections):
-    # Update entry dictionary by scraping an event's section data
-    for section in sections:
-        for ballot in section["ballots"]:
-            entry_id = ballot["entry"]
-            entry_name = ballot["entry_name"]
-            entry_code = ballot["entry_code"]
-            logging.debug(f"{entry_id}|{entry_name}")
-            ENTRY_DICTIONARY[entry_id] = entry_name
-            CODE_DICTIONARY[entry_id] = entry_code
-
-
-def scrape_entries_page():
-    """
-    This will eventually scrape the entries page to give us an idea of how many students are present and from which states.
-    """
-    pass
-
-
-def get_speech_results_from_final_places(
-    # Results array from the event's Final Places page
-    final_results_result_set: dict,
-    # Name of the speech event
-    event_name: str,
-    # Filters data to just top performances (80%ile) and school-specific performances
-    filtered: bool,
-    # Name of the school, if filtering results
-    school_name: str = "",
-):
-    """
-    Assumes there is a Final Places result published for a speech event.
-    Returns a list of pipe-delimited strings with results to append to the ChatGPT prompt.
-    """
-    ret_val = []
-    event_name = event["name"]
-    unique_entries = set()
-    for result in final_results_result_set:
-        unique_entries.add(result["entry"])
-    unique_entry_count = len(unique_entries)
-    for result in final_results_result_set:
-        # Check if the values is a dummy value, continue if it is.
-        if not result["values"][0]:
-            continue
-        entry_name = ENTRY_DICTIONARY[result["entry"]].strip()  # Remove whitespace
-        entry_code = ""  # CODE_DICTIONARY["entry"] # This is honestly pretty useless for speech, will omit.
-        try:
-            entry_school = ENTRY_TO_SCHOOL_DICT_GLOBAL[entry_name]
-        except KeyError:
-            logging.error(
-                f"Could not find {entry_name} in ENTRY_TO_SCHOOL_DICT_GLOBAL."
-            )
-            entry_school = "UNKNOWN"
-        rank = result["rank"]
-        place = result["place"]
-        percentile = result["percentile"]
-        # Palmer likes to hide round-by-round results in this very low-priority column.
-        # Might as well include it to give a summary of how each round went.
-        ranks_by_round = ""
-        for value in result["values"]:
-            if value["priority"] == 999:
-                ranks_by_round = value["value"]
-                break
-        is_given_school = re.search(school_name, entry_school) or re.search(
-            school_name, entry_code
-        )
-        if filtered and (
-            (float(percentile) < PERCENTILE_MINIMUM)  # Below the threshold
-            or not is_given_school
-        ):
-            continue
-        ret_val.append(
-            f"{event_name}|speech|Final Places|{entry_name}|{entry_code}|{entry_school}|{rank}/{unique_entry_count}|{place}|{percentile}|{ranks_by_round}"
-        )
-    # Return the results sorted with best-percentile results at the top, so ChatGPT focuses on those
-    return ret_val
-
-
-def get_speech_results_from_rounds_only(
-    # Event dictionary from the Tabroom data
-    event: dict,
-    # Filters data to just top performances (80%ile) and school-specific performances
-    filtered: bool,
-    # Name of the school, if filtering results
-    school_name: str = "",
-):
-    """
-    Assumes that the data is for a tournament that only publishes round results, not a 'Final Places' result.
-    Returns a list of pipe-delimited results strings to append to the ChatGPT prompt
-
-    The string will be a list of individual performances, summarized by their final rank.
-
-    This data is much harder to process than result_sets and may be inaccurate.
-    """
-    ret_val = []
-    event_name = event["name"]
-    for round in event.get("rounds", []):
-        label = round.get(
-            "label", round.get("name", "")
-        )  # Fall back to name if no label
-        logging.debug(f"Parsing results from event {event_name} round {label}...")
-        # For now, only concerned with Finals
-        if label == "Finals":
-            for section in round["sections"]:
-                section_scoring = {}
-                logging.debug(
-                    f"Parsing results from section {section['letter']} in event {event_name} round {label}..."
-                )
-                for ballot in section["ballots"]:
-                    rank = [
-                        score["value"]
-                        for score in ballot["scores"]
-                        if score["tag"] == "rank"
-                    ][0]
-
-                    try:
-                        points = [
-                            score["value"]
-                            for score in ballot["scores"]
-                            if score["tag"] == "points"
-                        ][0]
-
-                    except Exception:
-                        points = 0
-                    if not rank:
-                        continue
-                    try:
-                        entry_name = ENTRY_DICTIONARY[ballot["entry"]]
-                        entry_code = CODE_DICTIONARY[ballot["entry"]]
-                    except KeyError:
-                        logging.error(
-                            f"Could not find entry {ballot['entry']} in the global entry dictionaries, skipping. This may be the result of a bye or late-add."
-                        )
-                        continue
-                    entry_school_for_dict = ENTRY_TO_SCHOOL_DICT_GLOBAL.get(
-                        entry_name, ""
-                    )
-                    if not section_scoring.get(entry_name, ""):
-                        section_scoring[entry_name] = {}
-                        section_scoring[entry_name]["school"] = entry_school_for_dict
-                        section_scoring[entry_name]["score_list"] = [
-                            {"rank": rank, "points": points}
-                        ]
-                        section_scoring[entry_name]["rank_total"] = rank
-                    else:
-                        section_scoring[entry_name]["score_list"].append(
-                            {"rank": rank, "points": points}
-                        )
-                        section_scoring[entry_name]["rank_total"] += rank
-                # Sort the section_scoring dictionary by rank total
-                section_scoring = dict(
-                    sorted(
-                        section_scoring.items(),
-                        key=lambda item: item[1]["rank_total"],
-                        reverse=False,
-                    )
-                )
-                for index, (entry_name, scoring) in enumerate(
-                    section_scoring.items(), start=1
-                ):
-                    percentile = (
-                        100 * (len(section_scoring) - index + 1) / len(section_scoring)
-                    )  # TODO - make this give a competition-wide percentile, based on the field size
-
-                    entry_school = section_scoring[entry_name]["school"]
-                    # If filtering, and not in a top percentile or from the specific school, skip
-                    is_given_school = re.search(school_name, entry_school) or re.search(
-                        school_name, entry_code
-                    )
-                    if filtered and (
-                        (float(percentile) < PERCENTILE_MINIMUM)  # Below the threshold
-                        or not is_given_school
-                    ):
-                        continue
-                    ret_val.append(
-                        f"{event_name}|speech|{label}|{entry_name}|{entry_code}|{entry_school}|{index}|{index}|{percentile}"
-                    )
-    return ret_val
-
-
-def get_debate_results(
-    # Event dictionary from the Tabroom data
-    event: dict,
-    # Filters data to just top performances (80%ile) and school-specific performances
-    filtered: bool,
-    # Name of the school, if filtering results
-    school_name: str = "",
-):
-    """
-    Used for parsing Debate results data.
-    Takes in an event and returns a list of pipe-delimited strings with results data
-    Each string represents an individual result (eg. speaker points ranking, final place, etc)
-    """
-    ret_val = []
-    event_name = event["name"]
-    for r_set in event.get("result_sets", []):
-        if r_set.get("bracket") == 1:
-            continue  # No brackets -- doesn't translate well to text
-        label = r_set["label"]
-        if re.search(r"NDCA Dukes and Bailey Points", label) or re.search(
-            r"NDCA Baker Points", label
-        ):
-            continue  # These points are some real inside baseball that no one cares about
-        try:
-            total_entries = len(
-                r_set["results"]
-            )  # TODO - figure out total entries in cases where partial results are published
-        except:
-            total_entries = 0  # couldn't find the entry count
-        for result in r_set["results"]:
-            if "entry" not in result:
-                continue  # Handling a strange case for blank results
-            if result["values"] == [{}]:
-                continue  # Sometimes Palmer populates a duplicate entry with blank 'values'. Skip it.
-            results_by_round = ""  # Palmer likes to hide round-by-round results in this very low-priority column.
-            for value in result["values"]:
-                if value["priority"] == 999:
-                    results_by_round = value["value"]
-                    break
-            if label == "Speaker Awards":
-                try:
-                    # Try to get the individual student name from the Speaker Awards
-                    # TODO - This needs a lot of work -- probably need to scrape the table not use API
-                    entry_name = STUDENT_NAME_DICTIONARY["BLAH"]  # noqa - TODO
-                except Exception:
-                    # Fall back to parsing the entry dictionary
-                    entry_name = ENTRY_DICTIONARY[result["entry"]]
-            else:
-                entry_name = ENTRY_DICTIONARY[result["entry"]]
-            entry_code = CODE_DICTIONARY[result["entry"]]
-            rank = (
-                f"{result.get('rank')}/{total_entries}"
-                if total_entries > 0
-                else result.get("rank")
-            )
-            round_reached = result.get("place")
-            result_school = result.get(
-                "school", ENTRY_TO_SCHOOL_DICT_GLOBAL.get(entry_name, "UNKNOWN")
-            )
-            percentile = result.get("percentile", "0")
-            if (
-                filtered
-                and (float(percentile) < PERCENTILE_MINIMUM)
-                and (not re.search(school_name, entry_code))
-            ):
-                continue
-            ret_val.append(
-                f"{event_name}|debate|{label}|{entry_name}|{entry_code}|{result_school}|{rank}|{round_reached}|{percentile}|{results_by_round}"
-            )
-    return ret_val
-
-
-def generate_chat_gpt_prompt(
-    tournament_data,
-    school_name,
-    school_count,
-    custom_url=None,
-    state_count=1,
-    has_speech=False,
-    has_debate=False,
-):
-    """
-    Generates a text prompt to send to ChatGPT, telling it what to create. Does not contain the results, but does contain a header.
-
-    Just add results data and this baby is ready to send to ChatGPT.
-
-    Returns a list of strings with ChatGPT prompt pieces.
-    """
-    start_date = datetime.strptime(
-        tournament_data["start"].split(" ")[0], "%Y-%m-%d"
-    ).strftime(
-        "%B %d, %Y",
-    )  # The start time is useless and inaccurate, just use the date
-    if custom_url:
-        follow_up_url = custom_url
-    else:
-        follow_up_url = f"{tournament_data['webname']}.tabroom.com"
-    if state_count > 1:
-        state_detail = f" from {state_count} states."
-    else:
-        state_detail = "."
-    chat_gpt_basic_prompt = f"""
-    The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}.
-    
-    The tournament was attended by {len(ENTRY_DICTIONARY)} student entries and {school_count} schools{state_detail}
-
-    Write a 3 paragraph summary for the {school_name} team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely.
-    At the end, indicate that additional information (including how to compete, judge, or volunteer) can be found at {follow_up_url}.
-    
-    Include individuals' rankings and statistics, such as number of wins. When referencing results, you should include the total number of entries in the event. Don't include raw percentile information in the output.
-
-    Do not use the definite article 'the' before the names of events.
-    """
-    chat_gpt_debate_prompt = f"""
-    Final Places and Speaker Awards are more important than Prelim seeds. Ignore entries below the {PERCENTILE_MINIMUM}th percentile.
-
-    Wins should be listed earlier than other achievements. Varsity results should be listed before Novice or Junior Varsity (JV) results.
-
-    Terms like 'Doubles', 'Octos', and 'Quarters' may be used to indicate the elimination round a team reached.
-    Doubles refers to the Round of 32 (also known as double-octofinals), Octos refers to the Round of 16 (octofinals), and Quarters refers to the Round of 8 (quarterfinals), respectively.
-    Use these terms to describe the elimination round a debater reached.
-
-    PF is an abbreviation for Public Forum, a 2-on-2 style of debate.
-    LD is an abbreviation for Lincoln-Douglas, a 1-on-1 style of debate.
-    CX is an abbreviation for Cross-examination (aka Policy), a 2-on-2 style of debate.
-    These abbreviations may be prefixed with V, JV, or N, indicating Varsity, Junior Varsity, or Novice level.
-
-    Winning a first place speaker award should be referred to as winning top speaker for the tournament.
-
-    Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
-
-    Results may include round-by-round results, delimited by a "|" character or &nbsp string to demarcate each round, which represent how a student performed in a single round.
-    Single round results will include a W or L or B to indicate a win or a loss or bye.
-    They will also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent). If referencing speaker points, mention that the score is out of 30.
-    You may see summed speaker points, representing scores added between teammates. These combined speaker points are instead out of a maximum of 60.
-    You can reference these single round results when summarizing an individual's performance.
-
-    """
-    chat_gpt_speech_prompt = f"""
-    Speech events involve acting, prepared speeches, and improvisational speeches.
-
-    Results may include round-by-round results, which represent how a student was ranked in a given room of competition (1 is best). You can reference these when summarizing an individual's performance.
-
-    Some round-by-round results will have multiple scores: these represent scores from a panel of several judges, as opposed to a single judge.
-    If a student receives all 1s from a panel of judges, that can be called out as a "picket fence", which is a positive achievement in speech.
-    """
-
-    chat_gpt_payload = [chat_gpt_basic_prompt]
-    if has_debate:
-        chat_gpt_payload.append(chat_gpt_debate_prompt)
-    if has_speech:
-        chat_gpt_payload.append(chat_gpt_speech_prompt)
-    chat_gpt_payload.append(HEADER_STRING)
-    return chat_gpt_payload
-
-
-def generate_list_generation_prompt():
-    return f"""
-    This is a list of results from the speech and debate tournament.
-    Create a numbered list of all the results, so that each event is a new number in the list, and each event contains results from all students in that event.
-    Because these are all results for a single team, do not include the school name in the individual results entry.
-    Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
-
-    PF is an abbreviation for Public Forum, a 2-on-2 style of debate.
-    LD is an abbreviation for Lincoln-Douglas, a 1-on-1 style of debate.
-    CX is an abbreviation for Cross-examination (aka Policy), a 2-on-2 style of debate.
-    These abbreviations may be prefixed with V, JV, or N, indicating Varsity, Junior Varsity, or Novice level.
-
-    Don't create separate line-items for different types of results. For example, PF Speaker Awards and PF Final Places should both appear on the same numbered line.
-
-    Bold the name of the event by putting 2 asterisks around it.
-    For example:
-    1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
-    2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals. 
-    """
-
+import scraper.tabroom_scrape as tabroom_scrape
+from generate_chat_gpt_prompt import generate_chat_gpt_prompt
+from generate_list_generation_prompt import generate_list_generation_prompt
+from get_debate_or_congress_results import get_debate_or_congress_results
+from get_debate_results_from_rounds_only import get_debate_results_from_rounds_only
+from get_speech_results_from_final_places import get_speech_results_from_final_places
+from get_speech_results_from_rounds_only import get_speech_results_from_rounds_only
+from update_global_entry_dictionary import update_global_entry_dictionary
+from parse_arguments import parse_arguments
+from group_data_by_school import group_data_by_school
+from create_data_strings import create_data_strings
 
 if __name__ == "__main__":
-    # PARSE INPUT FROM USER
-    parser = argparse.ArgumentParser(
-        prog="tabroom_summary",
-        description="Uses ChatGPT to create summaries of Tabroom results",
-    )
-    school_args = parser.add_mutually_exclusive_group(required=True)
-    school_args.add_argument(
-        "-s",
-        "--school-name",
-        help="Name of the school that your article will focus on.",
-        required=False,
-    )
-    school_args.add_argument(
-        "--all-schools",
-        action="store_true",
-        help="Generate summaries for all schools in the Tabroom data.",
-    )
-    parser.add_argument(
-        "-t",
-        "--tournament-id",
-        help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
-        required=True,
-    )
-    parser.add_argument(
-        "-u",
-        "--custom-url",
-        help="Custom URL of the tournament you want to generate results for. For example, a league website.",
-        required=False,
-    )
-    args = parser.parse_args()
+    # Get arguments (no pun intended)
+    args = parse_arguments()
     school_name = args.school_name
     tournament_id = args.tournament_id
-    all_schools = args.all_schools
+    all_schools = bool(args.all_schools)
     custom_url = args.custom_url
+    read_only = bool(args.read_only)
+    percentile_minimum = int(args.percentile_minimum)
+    max_results_to_pass_to_gpt = int(args.max_results)
+    scrape_entry_records_bool = True
 
-    # DOWNLOAD DATA FROM THE TABROOM API
+    # DOWNLOAD DATA FROM THE TABROOM API - We'll use a combination of this and scraping
     response = urllib.request.urlopen(  # nosec - uses http
         url=f"http://www.tabroom.com/api/download_data.mhtml?tourn_id={tournament_id}",
         context=ssl._create_unverified_context(),  # nosec - data is all public
@@ -426,38 +38,64 @@ if __name__ == "__main__":
     data = json.loads(html)
 
     # SCRAPE TABROOM FOR ALL THE GOOD DATA NOT PRESENT IN THE API
-    scrape_output = tabroom_scrape.main(tournament_id=tournament_id)
+    scrape_output = tabroom_scrape.main(
+        tournament_id=tournament_id, scrape_entry_records=scrape_entry_records_bool
+    )
     scraped_results = scrape_output["results"]
-    ENTRY_TO_SCHOOL_DICT_GLOBAL = scrape_output["entry_to_school_dict"]
+    name_to_school_dict = scrape_output["name_to_school_dict"]
+    code_to_name_dict = scrape_output["code_to_name_dict"]
+    name_to_full_name_dict = scrape_output["name_to_full_name_dict"]
+    entry_counter_by_school = scrape_output["entry_counter_by_school"]
     school_set = scrape_output["school_set"]
     state_set = scrape_output["state_set"]
 
-    # School Set isn't guaranteed to exist, so approximate it if needed.
-    if not school_set:
-        school_set = set()
-        for value in ENTRY_TO_SCHOOL_DICT_GLOBAL.values():
-            school_set.add(value)
-    if all_schools:
-        schools_to_write_up = school_set
-    else:
-        schools_to_write_up = set([school_name])
-
     # WALK THROUGH EACH EVENT AND PARSE RESULTS
+    data_labels = [
+        "event_name",
+        "event_type",
+        "result_set",
+        "entry_name",
+        "entry_code",
+        "school_name",
+        "rank",
+        "place",
+        "percentile",
+        "results_by_round",
+    ]
     tournament_results = []
+    entry_id_to_entry_code_dictionary = {}
+    entry_id_to_entry_entry_name_dictionary = {}
     has_speech = False
     has_debate = False
     for category in data["categories"]:
         for event in category["events"]:
+            # Create dictionaries to map the entry ID to an Entry Code and Entry Name
             update_global_entry_dictionary(
-                sections=event.get("rounds", [{}])[0].get("sections", [])
+                sections=event.get("rounds", [{}])[0].get("sections", []),
+                code_dictionary=entry_id_to_entry_code_dictionary,
+                entry_dictionary=entry_id_to_entry_entry_name_dictionary,
             )
 
             # Parse results sets
-            if event["type"] == "debate":
+            if event["type"] in ["debate", "congress"]:
                 has_debate = True
-                tournament_results += get_debate_results(
-                    event=event, filtered=False  # , school_name=school_name
-                )
+                if "result_sets" not in event:
+                    tournament_results += get_debate_results_from_rounds_only(
+                        code_dictionary=entry_id_to_entry_code_dictionary,
+                        entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                        entry_to_school_dict=name_to_school_dict,
+                        event=event,
+                    )
+                else:
+                    tournament_results += get_debate_or_congress_results(
+                        event=event,
+                        code_dictionary=entry_id_to_entry_code_dictionary,
+                        entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                        entry_to_school_dict=name_to_school_dict,
+                        scraped_data=scraped_results,
+                        event_type=event["type"],
+                    )
+                # TODO - add an option to enrich the results via scraped data - perhaps replacing rounds-only?
             elif event["type"] == "speech":
                 has_speech = True
                 # If Final Places is published as a result set...
@@ -474,15 +112,41 @@ if __name__ == "__main__":
                     tournament_results += get_speech_results_from_final_places(
                         final_results_result_set=final_results_result_set,
                         event_name=event["name"],
-                        filtered=False,  # , school_name=school_name
+                        entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                        entry_to_school_dict=name_to_school_dict,
                     )
                 else:
                     tournament_results += get_speech_results_from_rounds_only(
-                        event=event, filtered=False  # , school_name=school_name
+                        event=event,
+                        code_dictionary=entry_id_to_entry_code_dictionary,
+                        entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                        entry_to_school_dict=name_to_school_dict,
                     )
+                    # TODO - add an option to enrich the results via scraped data - perhaps replacing rounds-only?
+
+    # Check if a result name has a 'full name' in the full name dictionary (scraped from Tabroom.com)
+    # If it exists, replace the short name with the full name
+    # Full name can only be ascertained from web scraping
+    if scrape_entry_records_bool:
+        for result in tournament_results:
+            if result["entry_name"] in name_to_full_name_dict:
+                result["entry_name"] = name_to_full_name_dict[result["entry_name"]]
+
+    # Select the schools to write up reports on
+    if all_schools:
+        schools_to_write_up = school_set
+        grouped_data = group_data_by_school(
+            results=tournament_results, all_schools=all_schools
+        )
+    else:
+        schools_to_write_up = set([school_name])
+        grouped_data = group_data_by_school(
+            results=tournament_results, school_name=school_name
+        )
 
     # FOR EACH SCHOOL, GENERATE A SUMMARY AND SAVE IT TO DISK
     os.makedirs(f"{data['name']}_summaries", exist_ok=True)
+    data_labels.remove("entry_code")  # At this point, code is useless
     for school in schools_to_write_up:
         logging.info(f"Starting results generation for {school}...")
         chat_gpt_payload = generate_chat_gpt_prompt(
@@ -493,106 +157,128 @@ if __name__ == "__main__":
             state_count=len(state_set),
             has_speech=has_speech,
             has_debate=has_debate,
+            entry_dictionary=name_to_school_dict,
+            header_string="|".join(data_labels),
         )
-        filtered_tournament_results = [
-            result
-            for result in tournament_results
-            if re.match(result.split("|")[SCHOOL_INDEX], school)
-            # TODO - This produces some false positives
-            or (
-                result.split("|")[EVENT_TYPE_INDEX] == "debate"
-                and result.split("|")[SCHOOL_INDEX][:-3]
-                == school  # cut off 2 letter ID
-            )
-            or (
-                False  # TODO - add a case for checking the entry in the school dict directly
-            )
-        ]
-        if not filtered_tournament_results:
+        school_filtered_tournament_results = grouped_data[school]
+        if not school_filtered_tournament_results:
             logging.warning(f"No results found for {school}")
             continue
-        sorted_filtered_school_results = sorted(
-            filtered_tournament_results,
-            key=lambda x: float(
-                x.split("|")[HEADER_STRING.split("|").index("Percentile")]
-            ),
+        sorted_school_results = sorted(
+            school_filtered_tournament_results,
+            key=lambda x: float(x["percentile"]),
             reverse=True,
         )
+        # If there is at least one result above the percentile minimum, filter out any results below the percentile minimum
+        if int(float(sorted_school_results[0]["percentile"])) > percentile_minimum:
+            logging.info(
+                "Found a result above the percentile minimum, filtering out results below threshold"
+            )
+            threshold_school_results = filter(
+                lambda x: float(x["percentile"]) > percentile_minimum,
+                sorted_school_results,
+            )
+            sorted_filtered_school_results = list(threshold_school_results)
+        else:
+            sorted_filtered_school_results = sorted_school_results
+
         # Filter down to just the top 15 results (based on percentile) to get better results for large schools
-        if len(sorted_filtered_school_results) > RESULTS_TO_PASS_TO_GPT:
+        if len(sorted_filtered_school_results) > max_results_to_pass_to_gpt:
             top_sorted_filtered_school_results = sorted_filtered_school_results[
-                0 : RESULTS_TO_PASS_TO_GPT - 1
+                0 : max_results_to_pass_to_gpt - 1
             ]
         else:
             top_sorted_filtered_school_results = sorted_filtered_school_results
         logging.info(
-            f"School specific results without truncating low percentiles: {sorted_filtered_school_results}"
+            f"School specific results without any filtering:\r\n{json.dumps(sorted_school_results, indent=4)}"
         )
-        chat_gpt_payload += top_sorted_filtered_school_results
+        chat_gpt_payload += create_data_strings(
+            data_objects=top_sorted_filtered_school_results,
+            data_labels=data_labels,
+        )
         final_gpt_payload = "\r\n".join(chat_gpt_payload)
         openai.api_key_path = "openAiAuthKey.txt"
         logging.info(f"Generating summary for {school}")
         logging.info(f"GPT Prompt: {final_gpt_payload}")
-        body_response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": final_gpt_payload},
-            ],
-        )["choices"][0]["message"]["content"]
-        headline_response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Generate a headline for the article. The response should be just a single headline",
-                },
-                {"role": "user", "content": body_response},
-            ],
-        )["choices"][0]["message"]["content"]
+        if read_only:
+            logging.info(
+                f"Skipping summary generation for {school} due to read-only mode"
+            )
+            continue
+        else:
+            body_response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": final_gpt_payload},
+                ],
+            )["choices"][0]["message"]["content"]
+            editor_payload = (
+                "You are the editor of a local newspaper. Keep the tone factual and concise. Edit the following article improve its flow and grammar:\r\n"
+                + body_response
+            )
+            editor_response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": editor_payload},
+                ],
+            )["choices"][0]["message"]["content"]
+            headline_response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
+                    },
+                    {"role": "user", "content": editor_response},
+                ],
+            )["choices"][0]["message"]["content"]
 
         sorted_by_event = sorted(
-            filtered_tournament_results,
-            key=lambda x: x.split("|")[HEADER_STRING.split("|").index("Event")],
+            school_filtered_tournament_results,
+            key=lambda x: x["event_name"],
             reverse=False,
         )
         sorted_by_event_without_round_by_round = []
+        # Reduce to just the essentials
         for result_for_numbered_list in sorted_by_event:
             # Remove round-by-round results from the numbered list -- not required
-            result_for_numbered_list = "|".join(
-                result_for_numbered_list.split("|")[
-                    0 : HEADER_STRING.split("|").index("Place")
-                ]
-            )
+            result_for_numbered_list.pop("results_by_round")
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
-        logging.info(f"Generating listed results for {school}")
-        list_generation_prompt = generate_list_generation_prompt()
+        logging.info(f"Generating list of results for {school}")
+        list_generation_prompt = generate_list_generation_prompt(headers=data_labels)
         numbered_list_prompt = (
             list_generation_prompt
             + "\r\n"
-            + "\r\n".join(sorted_by_event_without_round_by_round)
+            + "\r\n".join(
+                create_data_strings(
+                    data_objects=sorted_by_event_without_round_by_round,
+                    data_labels=data_labels,
+                )
+            )
         )
 
         logging.info(f"GPT Prompt: {numbered_list_prompt}")
-        numbered_response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": numbered_list_prompt},
-            ],
-        )["choices"][0]["message"]["content"]
+        if read_only:
+            logging.info(f"Skipping list generation for {school} due to read-only mode")
+            continue
+        else:
+            numbered_response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": numbered_list_prompt},
+                ],
+            )["choices"][0]["message"]["content"]
 
-        # school_state = # TODO - get the state for each school
-        with open(f"{data['name']}_summaries/{school}_summary.txt", "w") as f:
-            f.write(
-                headline_response
-                + "\r\n"
-                + body_response
-                + "\r\n"
-                + "Event-by-Event Results"
-                + "\r\n"
-                + numbered_response
-            )
-
-    # GENERATE A SIMPLE HTML WEBPAGE WITH THE RESULTS
-    generate_website.main(input_directory=f"{data['name']}_summaries")
+            with open(f"{data['name']}_summaries/{school}_summary.txt", "w") as f:
+                f.write(
+                    headline_response
+                    + "\r\n"
+                    + editor_response
+                    + "\r\n"
+                    + "Event-by-Event Results"
+                    + "\r\n"
+                    + numbered_response
+                )
