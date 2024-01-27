@@ -9,3 +9,10 @@ openAiAuthKey.txt
 __pycache__
 __pycache__/**
 *.txt
+
+*.zip
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+**/.terraform
+**/.terraform/*
