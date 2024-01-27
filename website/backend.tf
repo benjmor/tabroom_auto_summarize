@@ -1,0 +1,1 @@
+# Assumes that DDB and S3 have been bootstrapped for TF usage

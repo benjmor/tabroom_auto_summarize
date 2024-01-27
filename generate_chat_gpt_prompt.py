@@ -11,6 +11,7 @@ def generate_chat_gpt_prompt(
     state_count=1,
     has_speech=False,
     has_debate=False,
+    context="",
 ):
     """
     Generates a text prompt to send to ChatGPT, telling it what to create. Does not contain the results, but does contain a header.
@@ -33,11 +34,11 @@ def generate_chat_gpt_prompt(
     else:
         state_detail = "."
     chat_gpt_basic_prompt = f"""
-    The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}.
+    The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}. {context}
     
     The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail}
 
-    Write a 3 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely.
+    Write a 3 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely and professionally.
     At the end, indicate that general information about forensics (including how to compete, judge, or volunteer) can be found at {follow_up_url}.
     
     Include individuals' rankings and statistics, such as number of wins. When referencing results, you should include the total number of entries in the event. Don't include raw percentile information in the output.
@@ -67,6 +68,7 @@ def generate_chat_gpt_prompt(
     You may see summed speaker points, representing scores added between teammates. These combined speaker points are instead out of a maximum of 60.
     You can reference these single round results when summarizing an individual's performance.
 
+    Avoid referencing speaker point scores from individual rounds unless necessary.
     """
     chat_gpt_speech_prompt = f"""
     Speech events involve acting, prepared speeches, and improvisational speeches.

@@ -52,4 +52,11 @@ def parse_arguments():
         type=int,
         default=15,
     )
+    parser.add_argument(
+        "-c",
+        "--context",
+        help="An additional phrase of context to add about the tournament. YEAH THERE'S PROMPT INJECTION RISK HERE, BUT YOU'RE RUNNING THIS ON YOUR OWN INFRASTRUCTURE.",
+        required=False,
+        default="",
+    )
     return parser.parse_args()

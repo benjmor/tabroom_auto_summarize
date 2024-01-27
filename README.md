@@ -43,3 +43,32 @@ python tabroom_summary.py --tournament-id 11111 --school-name "The Milford Schoo
 It will take approximately 5 minutes for a typical local tournament. The output will be a folder of text files and a folder of webpages with a summary/summary webpage for each school.
 
 After generating the content, feel free to edit it as needed and post it to social media. And tell your friends if you like the project!
+
+# Example Output
+
+This is a sample output from Middleton High School's performance at the 2024 Wisconsin State Debate Tournament.
+
+```
+Middleton High School Stars Shine at Wisconsin State Debate Tournament
+
+The Middleton High School Speech and Debate team delivered outstanding performances at the prestigious Wisconsin State Debate Tournament in West Bend, securing top-tier rankings. The powerful partnership of Nathan Kwon and Ben Pralat prevailed in the Varsity Public Forum (PF) rounds, maintaining a flawless victory record. Remarkably, they even accrued speaker points as high as 59 out of 60. Ben Pralat notched the top speaker position of the tournament, a significant accomplishment.
+
+Alexa Garber and Shelley Yang also triumphed, securing second place with their series of victories and high speaker rating of 59 in the final round. Alexa Garber was a stand-out performer, earning the third position in the speaker awards for the Varsity PF category.
+
+Vivian Liang deserves recognition for securing second place in the Speaker Awards, notable for high speaker points in Varsity PF. Andrew Wang also distinguished himself, nabbing second place in the Junior Varsity Public Forum Speaker Awards, testament to his commendable oratory skills.
+
+Vivian Liang and Crystal Huang secured a respectable third place in Varsity PF Prelim Seeds with a perfect 60 speaker score. Additional notable achievements came from the teams of Noah Lucchesi and Brad Koeller, as well Ethan Sanders and Patrick DeCabooter, who placed fifth and sixth respectively in the Varsity PF Prelim Seeds. Crystal Huang, Nathan Kwon, Shelley Yang, Patrick DeCabooter, and Rishika Kommuri also earned recognition in the Speaker Awards line-up.
+
+For information about how to participate, judge or volunteer in forensics, visit [here](https://wdca.org/). Keep the momentum going, Middleton!
+
+Event-by-Event Results
+
+1. **JV Public Forum**:
+   - In Prelim Seeds, the team of Audrey Kim & Ananya Subramanian ranked 6th, Andrew Wang & Sai Kandukuri ranked 8th, Brady Nelson & Genesis Flores Lanzo ranked 12th, Akankshya Swain & Nathan Jerin ranked 15th, and Isabella Albiter & Zaima Haq ranked 16th.
+   - In Speaker Awards, Andrew Wang came 2nd out of 32, Audrey Kim came 10th, Sai Kandukuri came 17th, Akankshya Swain was 22nd, Genesis Flores Lanzo came 25th, Ananya Subramanian was 26th, Brady Nelson secured 27th place, Isabella Albiter came 28th, Nathan Jerin was 29th, and Zaima Haq got 30th place.
+   - In Final Places, the team of Audrey Kim & Ananya Subramanian secured 6th place, Andrew Wang & Sai Kandukuri came 8th, Brady Nelson & Genesis Flores Lanzo secured 12th place, Akankshya Swain & Nathan Jerin got 15th place, and Isabella Albiter & Zaima Haq secured 16th place.
+
+2. **Varsity PF**:
+   - In Prelim Seeds, the team of Nathan Kwon & Ben Pralat ranked 1st, Alexa Garber & Shelley Yang ranked 2nd, Vivian Liang & Crystal Huang ranked 3rd, Noah Lucchesi & Brad Koeller ranked 5th, Ethan Sanders & Patrick DeCabooter ranked 6th, Rishika Kommuri & Sieun (Michelle) Lee ranked 7th, Rhea Dalvie & Ria Karthik came 11th, Radhika Gupta & Sharmili Karthik ranked 23rd, and Ethan Yang & Tarun Chilakapati ranked 24th.
+   - In Speaker Awards, Ben Pralat was 1st out of 48, Vivian Liang was 2nd, Alexa Garber and Nathan Kwon both tied for 3rd, Shelley Yang came 5th, Patrick DeCabooter came 6th, Crystal Huang came 7th, Rishika Kommuri was 10th, Ria Karthik was 11th, Brad Koeller came 15th, Rhea Dalvie secured 17th place, Noah Lucchesi secured 20th place, Ethan Sanders came 25th, Sieun (Michelle) Lee was 30th, Sharmili Karthik was 36th, Tarun Chilakapati was 38th, Radhika Gupta was 39th, and Ethan Yang was 46th.
+```

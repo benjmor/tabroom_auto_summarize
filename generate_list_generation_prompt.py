@@ -19,6 +19,8 @@ def generate_list_generation_prompt(headers: list[str]):
     1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
     2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals.
 
+    Don't include placement data (just names) if a debater is in the bottom 40th percentile.
+
     SOURCE DATA:
     {"|".join(headers)}
     """
