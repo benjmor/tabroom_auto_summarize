@@ -9,9 +9,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from urllib.parse import urlparse, parse_qs
 import logging
 from time import sleep
-from scraper.parse_final_places_results import parse_final_places_results
-from scraper.parse_prelim_records_results import parse_prelim_records_results
-from scraper.parse_speaker_awards_results import parse_speaker_awards_results
+from .parse_final_places_results import parse_final_places_results
+from .parse_prelim_records_results import parse_prelim_records_results
+from .parse_speaker_awards_results import parse_speaker_awards_results
 
 
 def parse_results(input_data):

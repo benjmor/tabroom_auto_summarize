@@ -2,9 +2,13 @@ provider "aws" {
   region = "us-east-1" # Replace with your desired AWS region
 }
 
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 locals {
   website_bucket_name = "tabroom-summaries-website-bucket"
   data_bucket_name    = "tabroom-summaries-data-bucket"
+  summary_lambda_function_name = "summary_generator"
 }
 
 data "archive_file" "lambda_source" {
@@ -45,6 +49,14 @@ data "aws_iam_policy_document" "lambda_s3_writes" {
     resources = [
       aws_s3_bucket.data_bucket.arn,
       "${aws_s3_bucket.data_bucket.arn}/*",
+    ]
+  }
+  statement {
+    actions = [
+      "lambda:InvokeFunction",
+    ]
+    resources = [
+      "arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:${local.summary_lambda_function_name}",
     ]
   }
 }
@@ -91,6 +103,23 @@ resource "aws_s3_bucket_policy" "public_access_to_website" {
   policy     = data.aws_iam_policy_document.public_website_access.json
 }
 
+resource "aws_s3_bucket_cors_configuration" "example" {
+  bucket = aws_s3_bucket.website_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
+}
+
 # S3 Bucket for the underlying data
 resource "aws_s3_bucket" "data_bucket" {
   bucket = local.data_bucket_name
@@ -128,7 +157,7 @@ resource "aws_iam_role_policy" "lambda_s3_writes" {
 # Lambda function to handle API Gateway requests
 resource "aws_lambda_function" "api_lambda_function" {
   function_name = "api_lambda_function"
-  runtime       = "python3.11"
+  runtime       = "python3.12"
   handler       = "lambda_handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
   filename      = data.archive_file.lambda_source.output_path
@@ -138,6 +167,7 @@ resource "aws_lambda_function" "api_lambda_function" {
     }
   }
   source_code_hash = data.archive_file.lambda_source.output_base64sha256
+  timeout = 10
 }
 
 # API Gateway
@@ -163,6 +193,18 @@ resource "aws_api_gateway_method" "api_method" {
   authorization = "NONE"
 }
 
+resource "aws_api_gateway_method_response" "method_response" {
+  rest_api_id = aws_api_gateway_rest_api.website_api.id
+  resource_id = aws_api_gateway_resource.api_resource.id
+  http_method = aws_api_gateway_method.api_method.http_method
+  status_code = "200"
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
 resource "aws_api_gateway_integration" "api_integration" {
   rest_api_id             = aws_api_gateway_rest_api.website_api.id
   resource_id             = aws_api_gateway_resource.api_resource.id
@@ -170,6 +212,19 @@ resource "aws_api_gateway_integration" "api_integration" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.api_lambda_function.invoke_arn
+}
+
+resource "aws_api_gateway_integration_response" "api_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.website_api.id
+  resource_id = aws_api_gateway_resource.api_resource.id
+  http_method = aws_api_gateway_method.api_method.http_method
+  status_code = aws_api_gateway_method_response.method_response.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
 }
 
 resource "aws_lambda_permission" "api_lambda_permission" {
@@ -186,6 +241,75 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   rest_api_id = aws_api_gateway_rest_api.website_api.id
   stage_name  = "prod"
 }
+
+
+data "archive_file" "summary_lambda_source" {
+  type        = "zip"
+  source_file = "${path.module}/summary_lambda/summary_generator.py"
+  output_path = "${path.module}/summary_lambda/summary_generator.zip"
+}
+
+# TODO - Figure out asynchronous invocation!
+# Asynchronous Lambda function to handle summary generation
+resource "aws_lambda_function" "summary_lambda_function" {
+  function_name = local.summary_lambda_function_name
+  runtime       = "python3.12"
+  handler       = "summary_generator.lambda_handler"
+  role          = aws_iam_role.lambda_role.arn # TODO - new role for this?
+  filename      = data.archive_file.summary_lambda_source.output_path
+  environment {
+    variables = {
+      DATA_BUCKET_NAME = local.data_bucket_name
+    }
+  }
+  source_code_hash = data.archive_file.summary_lambda_source.output_base64sha256
+  timeout = 900
+}
+
+# Consider implementing if we want a DLQ, etc
+# resource "aws_lambda_function_event_invoke_config" "example" {
+#   function_name = aws_lambda_alias.example.function_name
+
+#   destination_config {
+#     on_failure {
+#       destination = aws_sqs_queue.example.arn
+#     }
+
+#     on_success {
+#       destination = aws_sns_topic.example.arn
+#     }
+#   }
+# }
+
+# TODO - get the lambda layer to work
+# resource "null_resource" "main" {
+# 	  triggers = {
+# 	    updated_at = timestamp()
+# 	  }
+	
+
+# 	  provisioner "local-exec" {
+# 	    command = <<EOF
+# 	    yarn config set no-progress
+# 	    yarn
+# 	    mkdir -p nodejs
+# 	    cp -r node_modules nodejs/
+# 	    rm -r node_modules
+# 	    EOF
+	
+
+# 	    working_dir = "${path.module}/${var.code_location}"
+# 	  }
+# }        
+
+# resource "aws_lambda_layer_version" "tabroom_summary_layer" {
+#   filename   = "${path.module}/lambda_layer/tabroom_summary_layer.zip"
+#   layer_name = "python"
+#   compatible_runtimes = [
+#     "python3.12",
+#   ]
+# }
+
 
 # Outputs
 output "website_url" {

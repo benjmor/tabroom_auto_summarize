@@ -1,10 +1,12 @@
+import boto3
 import json
 import logging
-import openai
-from generate_chat_gpt_prompt import generate_chat_gpt_prompt
-from create_data_strings import create_data_strings
-from generate_list_generation_prompt import generate_list_generation_prompt
-from resolve_longname_to_shortname import resolve_longname_to_shortname
+import os
+from openai import OpenAI
+from .generate_chat_gpt_prompt import generate_chat_gpt_prompt
+from .create_data_strings import create_data_strings
+from .generate_list_generation_prompt import generate_list_generation_prompt
+from .resolve_longname_to_shortname import resolve_longname_to_shortname
 
 
 def generate_chat_gpt_paragraphs(
@@ -23,8 +25,22 @@ def generate_chat_gpt_paragraphs(
     max_results_to_pass_to_gpt: int,
     read_only: bool,
     data_labels: list[str],
+    open_ai_key_path: str = None,
+    open_ai_key_secret_name: str = None,
 ):
+    all_schools_dict = {}
+    # Read the OpenAI API key from a file or AWS Secrets Manager
+    if open_ai_key_path:
+        with open(open_ai_key_path, "r") as f:
+            api_key = f.read()
+    else:
+        secrets_client = boto3.client("secretsmanager")
+        api_key = secrets_client.get_secret_value(SecretId=open_ai_key_secret_name)[
+            "SecretString"
+        ]
+    client = OpenAI(api_key=api_key)
     for school in schools_to_write_up:
+        all_schools_dict[school] = {}
         logging.info(f"Starting results generation for {school}...")
         chat_gpt_payload = generate_chat_gpt_prompt(
             tournament_data=tournament_data,
@@ -80,7 +96,8 @@ def generate_chat_gpt_paragraphs(
             data_labels=data_labels,
         )
         final_gpt_payload = "\r\n".join(chat_gpt_payload)
-        openai.api_key_path = "openAiAuthKey.txt"
+        all_schools_dict[school]["gpt_prompt"] = final_gpt_payload
+
         logging.info(f"Generating summary for {school}")
         logging.info(f"GPT Prompt: {final_gpt_payload}")
         if read_only:
@@ -89,34 +106,49 @@ def generate_chat_gpt_paragraphs(
             )
             continue
         else:
-            body_response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": final_gpt_payload},
-                ],
-            )["choices"][0]["message"]["content"]
+            body_response = (
+                client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": final_gpt_payload},
+                    ],
+                )
+                .choices[0]
+                .message.content
+            )
+            all_schools_dict[school]["unedited_response"] = body_response
             editor_payload = (
                 "You are the editor of a local newspaper. Keep the tone factual and concise. Edit the following article improve its flow and grammar:\r\n"
                 + body_response
             )
-            editor_response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": editor_payload},
-                ],
-            )["choices"][0]["message"]["content"]
-            headline_response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
-                    },
-                    {"role": "user", "content": editor_response},
-                ],
-            )["choices"][0]["message"]["content"]
+            editor_response = (
+                client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": editor_payload},
+                    ],
+                )
+                .choices[0]
+                .message.content
+            )
+            all_schools_dict[school]["edited_response"] = editor_response
+            headline_response = (
+                client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
+                        },
+                        {"role": "user", "content": editor_response},
+                    ],
+                )
+                .choices[0]
+                .message.content
+            )
+            all_schools_dict[school]["headline_response"] = headline_response
 
         sorted_by_event = sorted(
             school_filtered_tournament_results,
@@ -141,6 +173,7 @@ def generate_chat_gpt_paragraphs(
                 )
             )
         )
+        all_schools_dict[school]["numbered_list_prompt"] = numbered_list_prompt
 
         # Provide Coach Information and Contact Information
 
@@ -151,14 +184,19 @@ def generate_chat_gpt_paragraphs(
             logging.info(f"Skipping list generation for {school} due to read-only mode")
             continue
         else:
-            numbered_response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": numbered_list_prompt},
-                ],
-            )["choices"][0]["message"]["content"]
+            numbered_response = (
+                client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": numbered_list_prompt},
+                    ],
+                )
+                .choices[0]
+                .message.content
+            )
 
+            # TODO - This should only be run if we're on a filesystem, not Lambda
             with open(
                 f"{tournament_data['name']}_summaries/{school}_summary.txt", "w"
             ) as f:
@@ -171,3 +209,5 @@ def generate_chat_gpt_paragraphs(
                     + "\r\n"
                     + numbered_response
                 )
+            all_schools_dict[school]["numbered_list_response"] = numbered_response
+    return all_schools_dict

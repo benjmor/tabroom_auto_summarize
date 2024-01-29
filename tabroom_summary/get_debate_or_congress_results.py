@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-from get_debate_speaker_awards_from_scraped_data import (
+from .get_debate_speaker_awards_from_scraped_data import (
     get_debate_speaker_awards_from_scraped_data,
 )
 

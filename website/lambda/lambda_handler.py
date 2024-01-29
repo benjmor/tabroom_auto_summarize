@@ -5,6 +5,12 @@ import os
 
 def lambda_handler(event, context):
     print(event)
+    cors_headers = {
+        "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    }
+
     # Do some data validation -- ensure that the number is 5 digits and the school name is 50 characters or less
     s3_client = boto3.client("s3")
     parsed_body = json.loads(event["body"])
@@ -20,11 +26,11 @@ def lambda_handler(event, context):
         file_content = s3_client.get_object(
             Bucket=bucket_name, Key=file_path_to_find_or_create
         )
-        gpt_content = s3_client.get_object(
-            Bucket=bucket_name, Key=raw_gpt_submission
-        )
+        gpt_content = s3_client.get_object(Bucket=bucket_name, Key=raw_gpt_submission)
         return {
+            "isBase64Encoded": False,
             "statusCode": 200,
+            "headers": cors_headers,
             "body": json.dumps(
                 {
                     "file_content": file_content["Body"].read().decode("utf-8"),
@@ -33,16 +39,40 @@ def lambda_handler(event, context):
             ),
         }
     else:
+        # Fail early if tournament's end date is in the future or there are no results
+        # TODO
+
         # Check if there are any files in the path bucket_name/tournament_id
-        all_objects=s3_client.list_objects_v2(
-            Bucket=bucket_name, Prefix=tournament_id,
+        all_objects = s3_client.list_objects_v2(
+            Bucket=bucket_name,
+            Prefix=tournament_id,
         )
         if all_objects["KeyCount"] > 0:
             return {
+                "isBase64Encoded": False,
                 "statusCode": 200,
-                "body": json.dumps("Tournament exists, but school does not. Check that your school name matches the official name."),
+                "headers": cors_headers,
+                "body": json.dumps(
+                    {
+                        "file_content": "Tournament exists, but school does not. Check that your school name matches the official name.",
+                        "gpt_content": "N/A",
+                    }
+                ),
             }
+        lambda_client = boto3.client("lambda")
+        lambda_client.invoke(
+            FunctionName="summary_generator",
+            InvocationType="Event",
+            Payload=json.dumps(parsed_body),
+        )
         return {
+            "isBase64Encoded": False,
             "statusCode": 200,
-            "body": json.dumps("File does not exist, consider generating it"),
+            "headers": cors_headers,
+            "body": json.dumps(
+                {
+                    "file_content": "File does not exist, will attempt to generate it. Check back in about 15 minutes.",
+                    "gpt_content": "N/A",
+                }
+            ),
         }

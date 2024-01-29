@@ -8,7 +8,7 @@ import json
 import logging
 import re
 import selenium
-from scraper.parse_hidden_string import parse_hidden_string
+from .parse_hidden_string import parse_hidden_string
 
 
 def parse_final_places_results(driver, result_id):

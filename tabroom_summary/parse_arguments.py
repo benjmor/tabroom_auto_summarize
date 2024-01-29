@@ -59,4 +59,21 @@ def parse_arguments():
         required=False,
         default="",
     )
+    parser.add_argument(
+        "--scrape-entry-records-bool",
+        help="If true, scrape the entry records from Tabroom.com. If false, will only use the data from the Tabroom API.",
+        action="store_true",
+        required=False,
+    )
+    key_source = parser.add_mutually_exclusive_group(required=True)
+    key_source.add_argument(
+        "--open-ai-key-path",
+        help="If provided, will read the OpenAI API key from this local file instead of AWS Secrets Manager.",
+        required=False,
+    )
+    key_source.add_argument(
+        "--open-ai-key-secret-name",
+        help="If provided, will read the OpenAI API key from AWS Secrets Manager using this secret name.",
+        required=False,
+    )
     return parser.parse_args()

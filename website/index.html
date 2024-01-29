@@ -9,7 +9,7 @@
 
     <h1>Tabroom Summarizer</h1>
 
-    Enter the following information for the results you want to summarize.
+    Enter the following information for the results you want to summarize.<br><br>
 
     <form id="myForm">
         <label for="tournamentNumber">Tournament Number:</label>
@@ -23,7 +23,7 @@
 
     <div id="responseContainer"></div>
 
-    You can report issues with this service at <a href="https://github.com/benjmor/tabroom_auto_summarize/issues">the Issues page</a>.
+    <br>You can report issues with this service at <a href="https://github.com/benjmor/tabroom_auto_summarize/issues">the Issues page</a>.
 
     <script>
         function submitForm() {
@@ -45,8 +45,8 @@
 
             // Create a JSON object with the form data
             const formData = {
-                tournamentNumber: tournamentNumber,
-                schoolName: schoolName
+                tournament: tournamentNumber,
+                school: schoolName
             };
 
             // Perform a POST request to the API Gateway endpoint
@@ -60,7 +60,10 @@
             .then(response => response.json())
             .then(data => {
                 // Display the response
-                document.getElementById('responseContainer').innerText = JSON.stringify(data, null, 2);
+                file_content = data['file_content'];
+                gpt_content = data['gpt_content'];
+                display_html = "<h2>Tournament Summary:</h2>" + file_content + "<h2>Prompt passed to ChatGPT:</h2>" + gpt_content + "<br>";
+                document.getElementById('responseContainer').innerHTML = display_html;
             })
             .catch(error => {
                 console.error('Error:', error);

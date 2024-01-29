@@ -1,5 +1,3 @@
-# TODO - Results Sets are N/A currently, add something
-
 # tabroom_auto_summarize
 
 Generates AI-powered school-specific summaries of speech and debate competitions from Tabroom.com data
@@ -14,16 +12,26 @@ This project is not directly affiliated with the NSDA, which you probably could 
 
 I wish this project were affiliated with NSDA, so if you've got any ins with them, hit me up!
 
-# Prerequisites
+# Website!
+
+I now host a web version of this tool. You can specify a tournament ID and a school name and it will return your summary (it may ask for a little bit of time to generate it first).
+
+The website does have a significant cost to me, so please USE the results you generate! Edit them and put them on social media, school newsletters, and local papers. Email them to principals, parents, and school board members! I'm fine with the costs as long as it's going to a good purpose.
+
+# Instructions for running locally
+
+This section is mostly for the nerds who don't want to use the website.
+
+## Prerequisites
 
 Python 3.7+ installed.
 
-# Installation
+## Installation
 
 1. Install the required Python libraries: `pip install -r requirements.txt`
 2. Create an [OpenAI key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) and save the key to `openAiAuthKey.txt` in the same folder as the script. Remember never to upload this key anywhere (except a password manager, if you use one)! Treat it like a password.
 
-# Example Usage (single school)
+## Example Usage (single school)
 
 First, find the tournament ID from the Tabroom URL of the tournament you are interested in (these examples use `11111`).
 
@@ -44,7 +52,7 @@ It will take approximately 5 minutes for a typical local tournament. The output 
 
 After generating the content, feel free to edit it as needed and post it to social media. And tell your friends if you like the project!
 
-# Example Output
+## Example Output
 
 This is a sample output from Middleton High School's performance at the 2024 Wisconsin State Debate Tournament.
 

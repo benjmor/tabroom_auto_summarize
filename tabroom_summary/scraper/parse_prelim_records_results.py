@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from scraper.scrape_entry_record import scrape_entry_record
+from .scrape_entry_record import scrape_entry_record
 import json
 
 

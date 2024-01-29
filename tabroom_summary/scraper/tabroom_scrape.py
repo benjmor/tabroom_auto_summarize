@@ -5,8 +5,8 @@ from selenium.webdriver.chrome.options import Options
 import json
 import logging
 from concurrent import futures
-from scraper.get_schools_and_states import get_schools_and_states
-from scraper.parse_results import parse_results
+from .get_schools_and_states import get_schools_and_states
+from .parse_results import parse_results
 from collections import Counter
 
 logging.basicConfig(

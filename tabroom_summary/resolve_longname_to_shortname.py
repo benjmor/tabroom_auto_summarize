@@ -82,6 +82,8 @@ def resolve_longname_to_shortname(long_name: str):
         "of Math and Science",
         "Academy",
         "Regional High School",
+        "Middle School",
+        "Junior High School",
         "High School",
         "Colleges",
         "School",
@@ -165,4 +167,4 @@ def resolve_longname_to_shortname(long_name: str):
             long_name = long_name.replace(bad_beginning, "")
             break
 
-    return long_name
+    return long_name.strip()
