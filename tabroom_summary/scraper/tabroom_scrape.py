@@ -52,7 +52,8 @@ def main(
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    browser = webdriver.Chrome(options=chrome_options)
+    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    browser = webdriver.Chrome(options=chrome_options, service=service)
 
     # Navigate to the page with the dropdown menu
     base_url = f"https://www.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"

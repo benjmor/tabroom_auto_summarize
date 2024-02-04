@@ -1,67 +1,6 @@
-provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-locals {
-  website_bucket_name = "tabroom-summaries-website-bucket"
-  data_bucket_name    = "tabroom-summaries-data-bucket"
-  summary_lambda_function_name = "summary_generator"
-}
-
-data "archive_file" "lambda_source" {
-  type        = "zip"
-  source_file = "${path.module}/lambda/lambda_handler.py"
-  output_path = "${path.module}/lambda/lambda_handler.zip"
-
-}
-
-data "aws_iam_policy_document" "public_website_access" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      aws_s3_bucket.website_bucket.arn,
-      "${aws_s3_bucket.website_bucket.arn}/*",
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "lambda_s3_writes" {
-  statement {
-
-    actions = [
-      "s3:GetObject",
-      "s3:PutObject",
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      aws_s3_bucket.data_bucket.arn,
-      "${aws_s3_bucket.data_bucket.arn}/*",
-    ]
-  }
-  statement {
-    actions = [
-      "lambda:InvokeFunction",
-    ]
-    resources = [
-      "arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:${local.summary_lambda_function_name}",
-    ]
-  }
-}
-
-# S3 Bucket for the website
+#########################################################
+# WEBSITE BUCKET - S3 Bucket for the website content
+#########################################################
 resource "aws_s3_bucket" "website_bucket" {
   bucket = local.website_bucket_name
 }
@@ -77,14 +16,9 @@ resource "aws_s3_bucket_public_access_block" "website_bucket" {
 
 resource "aws_s3_bucket_website_configuration" "website_bucket" {
   bucket = aws_s3_bucket.website_bucket.id
-
   index_document {
     suffix = "index.html"
   }
-
-  #   error_document {
-  #     key = "error.html"
-  #   }
 }
 
 resource "aws_s3_object" "website_homepage" {
@@ -120,11 +54,16 @@ resource "aws_s3_bucket_cors_configuration" "example" {
   }
 }
 
-# S3 Bucket for the underlying data
+#########################################################
+# DATA BUCKET - S3 Bucket for the underlying data
+#########################################################
 resource "aws_s3_bucket" "data_bucket" {
   bucket = local.data_bucket_name
 }
 
+#############################################################
+# Synchronous Lambda function to handle API Gateway requests
+#############################################################
 # IAM Role for Lambda function
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_execution_role"
@@ -153,11 +92,9 @@ resource "aws_iam_role_policy" "lambda_s3_writes" {
   policy = data.aws_iam_policy_document.lambda_s3_writes.json
 }
 
-
-# Lambda function to handle API Gateway requests
 resource "aws_lambda_function" "api_lambda_function" {
   function_name = "api_lambda_function"
-  runtime       = "python3.12"
+  runtime       = "python3.11"
   handler       = "lambda_handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
   filename      = data.archive_file.lambda_source.output_path
@@ -170,7 +107,6 @@ resource "aws_lambda_function" "api_lambda_function" {
   timeout = 10
 }
 
-# API Gateway
 resource "aws_api_gateway_rest_api" "website_api" {
   name        = "website_api"
   description = "API for the website"
@@ -242,80 +178,41 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   stage_name  = "prod"
 }
 
-
-data "archive_file" "summary_lambda_source" {
-  type        = "zip"
-  source_file = "${path.module}/summary_lambda/summary_generator.py"
-  output_path = "${path.module}/summary_lambda/summary_generator.zip"
-}
-
-# TODO - Figure out asynchronous invocation!
+#########################################################
 # Asynchronous Lambda function to handle summary generation
+#########################################################
 resource "aws_lambda_function" "summary_lambda_function" {
   function_name = local.summary_lambda_function_name
-  runtime       = "python3.12"
+  runtime       = "python3.11"
   handler       = "summary_generator.lambda_handler"
   role          = aws_iam_role.lambda_role.arn # TODO - new role for this?
   filename      = data.archive_file.summary_lambda_source.output_path
   environment {
     variables = {
       DATA_BUCKET_NAME = local.data_bucket_name
+      OPEN_AI_KEY_SECRET_NAME = local.openai_auth_key_secret_name
     }
   }
   source_code_hash = data.archive_file.summary_lambda_source.output_base64sha256
   timeout = 900
-}
-
-# Consider implementing if we want a DLQ, etc
-# resource "aws_lambda_function_event_invoke_config" "example" {
-#   function_name = aws_lambda_alias.example.function_name
-
-#   destination_config {
-#     on_failure {
-#       destination = aws_sqs_queue.example.arn
-#     }
-
-#     on_success {
-#       destination = aws_sns_topic.example.arn
-#     }
-#   }
-# }
-
-# TODO - get the lambda layer to work
-# resource "null_resource" "main" {
-# 	  triggers = {
-# 	    updated_at = timestamp()
-# 	  }
-	
-
-# 	  provisioner "local-exec" {
-# 	    command = <<EOF
-# 	    yarn config set no-progress
-# 	    yarn
-# 	    mkdir -p nodejs
-# 	    cp -r node_modules nodejs/
-# 	    rm -r node_modules
-# 	    EOF
-	
-
-# 	    working_dir = "${path.module}/${var.code_location}"
-# 	  }
-# }        
+  layers = [ "arn:aws:lambda:us-east-1:238589881750:layer:tabroom_layer:4"	 ]
+}      
 
 # resource "aws_lambda_layer_version" "tabroom_summary_layer" {
-#   filename   = "${path.module}/lambda_layer/tabroom_summary_layer.zip"
+#   # depends_on = [ data.archive_file.tabroom_summary_layer, null_resource.install_requirements ]
+#   filename   = "${path.module}/tabroom_summary_layer.zip"
+#   # source_code_hash = filebase64sha256("${path.module}/tabroom_summary_layer.zip")
+#   description = "A layer for the tabroom summary generator"
 #   layer_name = "python"
 #   compatible_runtimes = [
 #     "python3.12",
 #   ]
 # }
 
-
-# Outputs
-output "website_url" {
-  value = aws_s3_bucket_website_configuration.website_bucket.website_endpoint
-}
-
-output "api_gateway_url" {
-  value = aws_api_gateway_deployment.api_gateway_deployment.invoke_url
+resource "aws_secretsmanager_secret" "openai_auth_key" {
+  name = local.openai_auth_key_secret_name
+  # Must update manually
+  lifecycle {
+    ignore_changes = all
+  }
 }

@@ -62,7 +62,8 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    browser = webdriver.Chrome(options=chrome_options)
+    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
         json.dumps(

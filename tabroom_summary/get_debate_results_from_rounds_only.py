@@ -1,5 +1,4 @@
 import logging
-import pandas as pd
 import re
 
 
@@ -49,10 +48,11 @@ def get_debate_results_from_rounds_only(
                         for score in ballot["scores"]
                         if score["tag"] == "winloss"
                     ][0]
-                except KeyError:
+                except (KeyError, IndexError):
                     # Treat nonexistent scores like forfeits for now, unless bye
                     if ballot["entry"] == "bye":
                         did_student_win_round = 1
+                    # Congress will also land here -- you can't really win or lose a congress round so it's ok
                     else:
                         did_student_win_round = 0
 
@@ -122,14 +122,20 @@ def get_debate_results_from_rounds_only(
             f"No results found for event {event_name} in the rounds only mode, skipping."
         )
         return ret_val
-    df = pd.DataFrame.from_dict(overall_scoring_sorted, orient="index")
-    df["rank"] = df["win_total"].rank(ascending=False, method="min")
 
-    for entry_name in overall_scoring.keys():
+    # This is a bit of a hack to get the rank of each entry, assuming that all entries with the same win total are tied
+    # eg. if 3 entries have 4 wins (in a 4 round tournament), they are all tied for 1st place
+    current_entry_rank = 1
+    current_win_loss = -1
+    for iterator, entry_name in enumerate(overall_scoring.keys(), start=1):
         entry_school = overall_scoring[entry_name]["school"]
         entry_code = overall_scoring[entry_name]["code"]
         loss_count = round_count - overall_scoring[entry_name]["win_total"]
         win_loss = f"{overall_scoring[entry_name]['win_total']}W{loss_count}L"
+        # If the win/loss count has changed, update the rank
+        if win_loss != current_win_loss:
+            current_entry_rank = iterator
+            current_win_loss = win_loss
         results_by_round = overall_scoring[entry_name]["score_list"]
         ret_val.append(
             {
@@ -139,10 +145,11 @@ def get_debate_results_from_rounds_only(
                 "entry_name": entry_name,
                 "entry_code": entry_code,
                 "school_name": entry_school,
-                "rank": f"{int(df.loc[entry_name]['rank'])}/{len(df)}",
-                "total_entries": len(df),
+                "rank": current_entry_rank,
+                "total_entries": len(overall_scoring_sorted),
                 "round_reached": "N/A",
-                "percentile": int(100 - 100 * (df.loc[entry_name]["rank"] / len(df))),
+                "percentile": 100
+                - ((current_entry_rank - 1) * 100 / len(overall_scoring_sorted)),
                 "place": win_loss,
                 "results_by_round": results_by_round,
             }

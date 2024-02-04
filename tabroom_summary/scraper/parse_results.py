@@ -66,7 +66,8 @@ def parse_results(input_data):
         logging.error("Error when attempting to load value.")
     link = f"{base_url}&event_id={value}"
     logging.info(f"Link to results for {event_name}: {link}")
-    driver = webdriver.Chrome(options=chrome_options)
+    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    driver = webdriver.Chrome(options=chrome_options, service=service)
     wait = WebDriverWait(driver, 5)
     try:
         driver.get(link)

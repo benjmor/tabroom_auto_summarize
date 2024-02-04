@@ -16,3 +16,5 @@ terraform.tfstate
 terraform.tfstate.backup
 **/.terraform
 **/.terraform/*
+
+tabroom_summary/lambda_layer/python/**

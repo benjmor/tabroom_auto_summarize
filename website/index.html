@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        #dots {
+            animation-name: blink;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabroom Summarizer</title>
@@ -21,6 +35,7 @@
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
 
+    <div id="loadingMessage" style="display: none;">Loading<span id="dots"></span></div>
     <div id="responseContainer"></div>
 
     <br>You can report issues with this service at <a href="https://github.com/benjmor/tabroom_auto_summarize/issues">the Issues page</a>.
@@ -70,6 +85,23 @@
                 document.getElementById('responseContainer').innerText = 'Error occurred. Please try again.';
             });
         }
+    </script>
+    <script>
+        document.querySelector('#myForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Show the loading message
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            // Add the dots
+            let dots = window.setInterval( function() {
+                let wait = document.getElementById("dots");
+                if ( wait.innerHTML.length > 3 ) 
+                    wait.innerHTML = "";
+                else 
+                    wait.innerHTML += ".";
+            }, 300);
+        });
     </script>
 
 </body>

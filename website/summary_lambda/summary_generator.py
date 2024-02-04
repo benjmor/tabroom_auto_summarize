@@ -6,13 +6,23 @@ from tabroom_summary import tabroom_summary
 def lambda_handler(event, context):
     # This function will query Tabroom.com for the tournament results and then
     # return a summary of the results using ChatGPT.
+    # This Lambda will run asynchronously and will not return the results directly.
+    open_ai_key_secret_name = os.environ["OPEN_AI_KEY_SECRET_NAME"]
     tournament_id = event["tournament"]
-    open_ai_key_path = event.get("open_ai_key_path")
-    response = tabroom_summary.main(
-        all_schools=True, tournament_id=tournament_id, open_ai_key_path=open_ai_key_path
-    )
-    if event["debug"]:
+    if event.get("debug", False):
+        # For debugging, we will run the function locally and return the results to the user
+        response = tabroom_summary.main(
+            all_schools=True,
+            tournament_id=tournament_id,
+            open_ai_key_path=event["open_ai_key_path"],
+        )
+        print(response)
         return response
+    response = tabroom_summary.main(
+        all_schools=True,
+        tournament_id=tournament_id,
+        open_ai_key_secret_name=open_ai_key_secret_name,
+    )
     # Save the tournament results to S3
     s3_client = boto3.client("s3")
     bucket_name = os.environ["DATA_BUCKET_NAME"]
