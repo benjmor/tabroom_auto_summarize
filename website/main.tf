@@ -101,10 +101,11 @@ resource "aws_lambda_function" "api_lambda_function" {
   environment {
     variables = {
       DATA_BUCKET_NAME = local.data_bucket_name
+      TABROOM_SUMMARY_LAMBDA_NAME = local.summary_lambda_function_name
     }
   }
   source_code_hash = data.archive_file.lambda_source.output_base64sha256
-  timeout = 10
+  timeout          = 10
 }
 
 resource "aws_api_gateway_rest_api" "website_api" {
@@ -181,22 +182,54 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
 #########################################################
 # Asynchronous Lambda function to handle summary generation
 #########################################################
-resource "aws_lambda_function" "summary_lambda_function" {
-  function_name = local.summary_lambda_function_name
-  runtime       = "python3.11"
-  handler       = "summary_generator.lambda_handler"
-  role          = aws_iam_role.lambda_role.arn # TODO - new role for this?
-  filename      = data.archive_file.summary_lambda_source.output_path
-  environment {
-    variables = {
-      DATA_BUCKET_NAME = local.data_bucket_name
-      OPEN_AI_KEY_SECRET_NAME = local.openai_auth_key_secret_name
-    }
-  }
-  source_code_hash = data.archive_file.summary_lambda_source.output_base64sha256
-  timeout = 900
-  layers = [ "arn:aws:lambda:us-east-1:238589881750:layer:tabroom_layer:4"	 ]
-}      
+
+# This is now deployed via Serverless but we still need the role
+  resource "aws_iam_role" "summary_lambda_role" {
+  name = "summary_lambda_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "lambda.amazonaws.com",
+        },
+      },
+    ],
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "summary_lambda_role" {
+  role       = aws_iam_role.summary_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "summary_lambda_role" {
+  role   = aws_iam_role.summary_lambda_role.id
+  policy = data.aws_iam_policy_document.summmarizer_role.json
+}
+
+# resource "aws_lambda_function" "summary_lambda_function" {
+#   function_name = local.summary_lambda_function_name
+#   runtime       = "python3.11"
+#   handler       = "summary_generator.lambda_handler"
+#   role          = aws_iam_role.lambda_role.arn # TODO - new role for this?
+#   filename      = data.archive_file.summary_lambda_source.output_path
+#   environment {
+#     variables = {
+#       DATA_BUCKET_NAME        = local.data_bucket_name
+#       OPEN_AI_KEY_SECRET_NAME = local.openai_auth_key_secret_name
+#     }
+#   }
+#   source_code_hash = data.archive_file.summary_lambda_source.output_base64sha256
+#   timeout          = 900
+#   layers = [
+#     "arn:aws:lambda:us-east-1:238589881750:layer:tabroom_layer:7",
+#     "arn:aws:lambda:us-east-1:238589881750:layer:chromium:1"
+#   ]
+# }
 
 # resource "aws_lambda_layer_version" "tabroom_summary_layer" {
 #   # depends_on = [ data.archive_file.tabroom_summary_layer, null_resource.install_requirements ]

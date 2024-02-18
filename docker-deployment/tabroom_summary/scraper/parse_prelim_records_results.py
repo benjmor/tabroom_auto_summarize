@@ -1,11 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver import Chrome
 from .scrape_entry_record import scrape_entry_record
 import json
+import time
 
 
-def parse_prelim_records_results(driver, scrape_entry_record_data: bool):
+def parse_prelim_records_results(
+    browser: Chrome,
+    scrape_entry_record_data: bool,
+    result_url: str,
+):
     """
     Walk through the results table.
     Returns 4 items in a tuple:
@@ -47,6 +54,9 @@ def parse_prelim_records_results(driver, scrape_entry_record_data: bool):
     name_to_school_dict = {}
     name_to_full_name_dict = {}
 
+    driver = browser
+    driver.get(result_url)
+    driver.implicitly_wait(1)
     table = driver.find_element(By.ID, f"ranked_list")
 
     # Find the table headers
@@ -96,10 +106,11 @@ def parse_prelim_records_results(driver, scrape_entry_record_data: bool):
         name_to_school_dict[entry_result["name"]] = entry_result["school"]
 
     if scrape_entry_record_data:
-        # TODO - Verify whether this updates in place
         for entry_result_dict in results_list:
+            time.sleep(1)  # Sleep for a bit to avoid rate limiting
             entry_result_dict["scrape_entry_record_data"] = scrape_entry_record(
-                driver, entry_result_dict["entry_record_url"]
+                entry_record_url=entry_result_dict["entry_record_url"],
+                browser=browser,
             )
             name_to_full_name_dict[entry_result_dict["name"]] = entry_result_dict[
                 "scrape_entry_record_data"
@@ -126,7 +137,7 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    service = webdriver.ChromeService(executable_path="/opt/chromedriver")
     browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
@@ -135,3 +146,4 @@ if __name__ == "__main__":
             indent=4,
         )
     )
+    browser.quit()

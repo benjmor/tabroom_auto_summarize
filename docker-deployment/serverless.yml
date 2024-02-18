@@ -1,0 +1,25 @@
+service: docker-selenium-lambda
+
+provider:
+  name: aws
+  timeout: 900
+  stage: ${opt:stage, 'prod'}
+  region: ${env:AWS_REGION, 'us-east-1'}
+  ecr:
+    images:
+      img:
+        path: ./
+        platform: linux/amd64
+
+functions:
+  demo:
+    timeout: 60
+    # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function. See #102
+    memorySize: 2048
+    image:
+      name: img
+    environment:
+      DATA_BUCKET_NAME: "tabroom-summaries-data-bucket"
+      OPEN_AI_KEY_SECRET_NAME: "openai_auth_key"
+    role: arn:aws:iam::238589881750:role/summary_lambda_role
+    

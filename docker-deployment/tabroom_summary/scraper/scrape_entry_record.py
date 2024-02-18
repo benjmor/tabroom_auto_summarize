@@ -5,7 +5,7 @@ import json
 import logging
 
 
-def scrape_entry_record(driver, entry_record_url):
+def scrape_entry_record(browser, entry_record_url):
     """
     Returns a representation of an entry record.
 
@@ -24,14 +24,14 @@ def scrape_entry_record(driver, entry_record_url):
         ]
     }
     """
-    driver.get(entry_record_url)
+    browser.get(entry_record_url)
     results_list = []
     full_entry_name = (
-        driver.find_element(By.CLASS_NAME, "main")
+        browser.find_element(By.CLASS_NAME, "main")
         .find_element(By.CSS_SELECTOR, "h4")
         .text
     )
-    rows = driver.find_elements(By.CLASS_NAME, "row")
+    rows = browser.find_elements(By.CLASS_NAME, "row")
     logging.info(f"Grabbing entry record results for {full_entry_name}")
     for row in rows:
         visible_results = [
@@ -62,8 +62,7 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
-    browser = webdriver.Chrome(options=chrome_options, service=service)
+    browser = webdriver.Chrome(options=chrome_options)
     browser.get(test_url)
     print(
         json.dumps(
@@ -71,3 +70,4 @@ if __name__ == "__main__":
             indent=4,
         )
     )
+    browser.quit()

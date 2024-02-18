@@ -2,6 +2,8 @@ import json
 import urllib.request
 import os
 import ssl
+from selenium import webdriver
+from tempfile import mkdtemp
 from .scraper import tabroom_scrape as tabroom_scrape
 from .update_global_entry_dictionary import update_global_entry_dictionary
 from .parse_arguments import parse_arguments
@@ -16,12 +18,13 @@ def main(
     all_schools: bool = False,
     custom_url: str = "",
     read_only: bool = False,
-    percentile_minimum: int = 50,
+    percentile_minimum: int = 40,
     max_results_to_pass_to_gpt: int = 15,
     context: str = "",
     scrape_entry_records_bool: bool = True,
     open_ai_key_path: str = None,
     open_ai_key_secret_name: str = None,
+    debug: bool = False,
 ):
     # DOWNLOAD DATA FROM THE TABROOM API - We'll use a combination of this and scraping
     response = urllib.request.urlopen(  # nosec - uses http
@@ -30,10 +33,39 @@ def main(
     )
     html = response.read()
     data = json.loads(html)
+    data["id"] = tournament_id
+
+    options = webdriver.ChromeOptions()
+
+    if debug is True:
+        service = webdriver.ChromeService()
+        options.binary_location = (
+            "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        )
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    else:
+        service = webdriver.ChromeService("/opt/chromedriver")
+        options.binary_location = "/opt/chrome/chrome"
+        options.add_argument("--single-process")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1280x1696")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-dev-tools")
+        options.add_argument("--no-zygote")
+        options.add_argument(f"--user-data-dir={mkdtemp()}")
+        options.add_argument(f"--data-path={mkdtemp()}")
+        options.add_argument(f"--disk-cache-dir={mkdtemp()}")
+        options.add_argument("--remote-debugging-port=9222")
+
+    options.add_argument("--headless=new")
 
     # SCRAPE TABROOM FOR ALL THE GOOD DATA NOT PRESENT IN THE API
     scrape_output = tabroom_scrape.main(
-        tournament_id=tournament_id, scrape_entry_records=scrape_entry_records_bool
+        tournament_id=tournament_id,
+        scrape_entry_records=scrape_entry_records_bool,
+        chrome_options=options,
+        chrome_service=service,
     )
     scraped_results = scrape_output["results"]
     name_to_school_dict = scrape_output["name_to_school_dict"]
@@ -105,10 +137,7 @@ def main(
             results=tournament_results, school_name=school_name
         )
 
-    all_schools_dict = {}
-    # FOR EACH SCHOOL, GENERATE A SUMMARY AND SAVE IT TO DISK
-    os.makedirs(f"{data['name']}_summaries", exist_ok=True)
-    generate_chat_gpt_paragraphs(
+    all_schools_dict = generate_chat_gpt_paragraphs(
         tournament_data=data,
         custom_url=custom_url,
         school_count=len(school_set),
@@ -116,7 +145,6 @@ def main(
         has_speech=has_speech,
         has_debate=has_debate,
         entry_dictionary=name_to_school_dict,
-        header_string="|".join(data_labels),
         context=context,
         schools_to_write_up=schools_to_write_up,
         grouped_data=grouped_data,
@@ -124,8 +152,10 @@ def main(
         max_results_to_pass_to_gpt=max_results_to_pass_to_gpt,
         read_only=read_only,
         data_labels=data_labels,
+        judge_map=scrape_output["judge_map"],
         open_ai_key_path=open_ai_key_path,
         open_ai_key_secret_name=open_ai_key_secret_name,
+        debug=debug,
     )
     # return a dictionary of schools with the summary text and all GPT prompts
     return all_schools_dict

@@ -71,9 +71,9 @@ def parse_speaker_awards_results(driver):
                     index_dict[header_map[header_expected_name_key]]["index"]
                 ]
             except KeyError:
-                entry_result["tiebreaker_data"][
-                    header_expected_name_key
-                ] = visible_results[iterator]
+                entry_result["tiebreaker_data"][header_expected_name_key] = (
+                    visible_results[iterator]
+                )
         # Get the hidden data which contains speaker points by round
         try:
             entry_result["round_by_round"] = (
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    service = webdriver.ChromeService(executable_path="/opt/chromedriver")
     browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
@@ -126,3 +126,4 @@ if __name__ == "__main__":
             indent=4,
         )
     )
+    browser.quit()

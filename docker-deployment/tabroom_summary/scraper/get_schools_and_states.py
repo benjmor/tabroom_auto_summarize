@@ -1,16 +1,16 @@
 import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver import Chrome
 
 
-def get_schools_and_states(tournament_id, chrome_options):
+def get_schools_and_states(tournament_id, browser: Chrome):
     """
     Parses the "Institutions in Attendance" table to get stats
     """
     school_set = set({})
     state_set = set({})
     url = f"https://www.tabroom.com/index/tourn/schools.mhtml?tourn_id={tournament_id}"
-    browser = webdriver.Chrome(options=chrome_options)
     try:
         browser.get(url)
     except:

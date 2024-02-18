@@ -75,8 +75,8 @@
             .then(response => response.json())
             .then(data => {
                 // Display the response
-                file_content = data['file_content'];
-                gpt_content = data['gpt_content'];
+                file_content = data['file_content'].replace(/\n/g, '<br>');
+                gpt_content = data['gpt_content'].replace(/\n/g, '<br>');
                 display_html = "<h2>Tournament Summary:</h2>" + file_content + "<h2>Prompt passed to ChatGPT:</h2>" + gpt_content + "<br>";
                 document.getElementById('responseContainer').innerHTML = display_html;
             })

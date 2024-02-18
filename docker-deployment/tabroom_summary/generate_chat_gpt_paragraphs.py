@@ -17,7 +17,6 @@ def generate_chat_gpt_paragraphs(
     has_speech: bool,
     has_debate: bool,
     entry_dictionary: dict,
-    header_string: str,
     context: str,
     schools_to_write_up: list[str],
     grouped_data: dict,
@@ -25,8 +24,10 @@ def generate_chat_gpt_paragraphs(
     max_results_to_pass_to_gpt: int,
     read_only: bool,
     data_labels: list[str],
+    judge_map: dict,
     open_ai_key_path: str = None,
     open_ai_key_secret_name: str = None,
+    debug: bool = False,
 ):
     all_schools_dict = {}
     # Read the OpenAI API key from a file or AWS Secrets Manager
@@ -34,7 +35,7 @@ def generate_chat_gpt_paragraphs(
         with open(open_ai_key_path, "r") as f:
             api_key = f.read()
     else:
-        secrets_client = boto3.client("secretsmanager")
+        secrets_client = boto3.client("secretsmanager", region_name="us-east-1")
         api_key = secrets_client.get_secret_value(SecretId=open_ai_key_secret_name)[
             "SecretString"
         ]
@@ -42,18 +43,6 @@ def generate_chat_gpt_paragraphs(
     for school in schools_to_write_up:
         all_schools_dict[school] = {}
         logging.info(f"Starting results generation for {school}...")
-        chat_gpt_payload = generate_chat_gpt_prompt(
-            tournament_data=tournament_data,
-            school_name=school,
-            custom_url=custom_url,
-            school_count=school_count,
-            state_count=state_count,
-            has_speech=has_speech,
-            has_debate=has_debate,
-            entry_dictionary=entry_dictionary,
-            header_string=header_string,
-            context=context,
-        )
         try:
             school_filtered_tournament_results = grouped_data[school]
         except KeyError:
@@ -91,10 +80,26 @@ def generate_chat_gpt_paragraphs(
         logging.info(
             f"School specific results without any filtering:\r\n{json.dumps(sorted_school_results, indent=4)}"
         )
-        chat_gpt_payload += create_data_strings(
+        data_labels_without_percentile = [
+            label for label in data_labels if label != "percentile"
+        ]
+        data_strings = create_data_strings(
             data_objects=top_sorted_filtered_school_results,
-            data_labels=data_labels,
+            data_labels=data_labels_without_percentile,
         )
+        chat_gpt_payload = generate_chat_gpt_prompt(
+            tournament_data=tournament_data,
+            school_name=school,
+            school_count=school_count,
+            state_count=state_count,
+            has_speech=has_speech,
+            has_debate=has_debate,
+            entry_dictionary=entry_dictionary,
+            header_string="|".join(data_labels_without_percentile),
+            context=context,
+            data_strings=data_strings,
+        )
+        chat_gpt_payload += data_strings
         final_gpt_payload = "\r\n".join(chat_gpt_payload)
         all_schools_dict[school]["gpt_prompt"] = final_gpt_payload
 
@@ -110,45 +115,62 @@ def generate_chat_gpt_paragraphs(
                 client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
+                        {
+                            "role": "system",
+                            "content": "You are concise, professional newspaper editor.",
+                        },
                         {"role": "user", "content": final_gpt_payload},
                     ],
                 )
                 .choices[0]
                 .message.content
             )
+            if judge_map.get(school, []):
+                judge_string = (
+                    f"\r\nThis tournament was made possible with the help of the following judges from {school}:"
+                    + ", ".join(judge_map.get(school, []))
+                )
+            else:
+                judge_string = ""
+            body_response = (
+                body_response
+                + "\r\n"
+                + "More information about forensics (including how to compete, judge, or volunteer) can be found at www.speechanddebate.org, or by reaching out to the schools' coach."
+                + judge_string
+            )
+
             all_schools_dict[school]["unedited_response"] = body_response
-            editor_payload = (
-                "You are the editor of a local newspaper. Keep the tone factual and concise. Edit the following article improve its flow and grammar:\r\n"
-                + body_response
-            )
-            editor_response = (
-                client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": editor_payload},
-                    ],
-                )
-                .choices[0]
-                .message.content
-            )
-            all_schools_dict[school]["edited_response"] = editor_response
-            headline_response = (
-                client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
-                        },
-                        {"role": "user", "content": editor_response},
-                    ],
-                )
-                .choices[0]
-                .message.content
-            )
-            all_schools_dict[school]["headline_response"] = headline_response
+            # editor_payload = (
+            #     "You are the editor of a local newspaper. Keep the tone factual and concise. Edit the following article improve its flow and grammar:\r\n"
+            #     + body_response
+            # )
+            # editor_response = (
+            #     client.chat.completions.create(
+            #         model="gpt-4",
+            #         messages=[
+            #             {"role": "system", "content": "You are a helpful assistant."},
+            #             {"role": "user", "content": editor_payload},
+            #         ],
+            #     )
+            #     .choices[0]
+            #     .message.content
+            # )
+            # all_schools_dict[school]["edited_response"] = editor_response
+            # headline_response = (
+            #     client.chat.completions.create(
+            #         model="gpt-4",
+            #         messages=[
+            #             {
+            #                 "role": "system",
+            #                 "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
+            #             },
+            #             {"role": "user", "content": editor_response},
+            #         ],
+            #     )
+            #     .choices[0]
+            #     .message.content
+            # )
+            # all_schools_dict[school]["headline_response"] = headline_response
 
         sorted_by_event = sorted(
             school_filtered_tournament_results,
@@ -160,6 +182,8 @@ def generate_chat_gpt_paragraphs(
         for result_for_numbered_list in sorted_by_event:
             # Remove round-by-round results from the numbered list -- not required
             result_for_numbered_list.pop("results_by_round")
+            if result_for_numbered_list["percentile"] < percentile_minimum:
+                continue
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
         logging.info(f"Generating list of results for {school}")
         list_generation_prompt = generate_list_generation_prompt(headers=data_labels)
@@ -174,10 +198,6 @@ def generate_chat_gpt_paragraphs(
             )
         )
         all_schools_dict[school]["numbered_list_prompt"] = numbered_list_prompt
-
-        # Provide Coach Information and Contact Information
-
-        # Provide Judge Thank Yous
 
         logging.info(f"GPT Prompt: {numbered_list_prompt}")
         if read_only:
@@ -196,18 +216,15 @@ def generate_chat_gpt_paragraphs(
                 .message.content
             )
 
-            # TODO - This should only be run if we're on a filesystem, not Lambda
-            with open(
-                f"{tournament_data['name']}_summaries/{school}_summary.txt", "w"
-            ) as f:
-                f.write(
-                    headline_response
-                    + "\r\n"
-                    + editor_response
-                    + "\r\n"
-                    + "Event-by-Event Results"
-                    + "\r\n"
-                    + numbered_response
-                )
-            all_schools_dict[school]["numbered_list_response"] = numbered_response
+        full_response = (
+            # headline_response
+            # + "\r\n"
+            # + editor_response
+            body_response
+            + "\r\n"
+            + "Event-by-Event Results"
+            + "\r\n"
+            + numbered_response
+        )
+        all_schools_dict[school]["full_response"] = full_response
     return all_schools_dict

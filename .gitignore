@@ -18,3 +18,7 @@ terraform.tfstate.backup
 **/.terraform/*
 
 tabroom_summary/lambda_layer/python/**
+
+# Downloaded files for testing
+**/test_pages
+**/test_pages/**

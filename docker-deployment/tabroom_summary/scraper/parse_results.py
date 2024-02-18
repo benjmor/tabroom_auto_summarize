@@ -45,40 +45,39 @@ def parse_results(input_data):
     (
         option,
         base_url,
-        chrome_options,
+        browser,
         final_results_identifiers,
         final_round_results_identifiers,
         scrape_entry_records,
     ) = input_data
-    csv_map = {}
     code_to_name_dict_overall = {}
     name_to_school_dict_overall = {}
     name_to_full_name_dict_overall = {}
     result_contents = []
-    try:
-        event_name = option.get_attribute("innerHTML")
-        csv_map[event_name] = {}
-    except StaleElementReferenceException:
-        logging.error("Error when attempting to load inner HTML.")
-    try:
-        value = option.get_attribute("value")
-    except StaleElementReferenceException:
-        logging.error("Error when attempting to load value.")
+    if isinstance(option, tuple):
+        # unpack the tuple
+        event_name, value = option
+    else:
+        try:
+            event_name = option.get_attribute("innerHTML")
+            value = option.get_attribute("value")
+        except StaleElementReferenceException:
+            logging.error("Error when attempting to load option value.")
     link = f"{base_url}&event_id={value}"
     logging.info(f"Link to results for {event_name}: {link}")
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
-    driver = webdriver.Chrome(options=chrome_options, service=service)
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(browser, 3)
     try:
-        driver.get(link)
+        logging.info(f"Attempting to load {link}")
+        browser.get(url=link)
+        logging.info(f"Loaded {link}")
     except WebDriverException:
-        sleep_time = 5
+        sleep_time = 3
         logging.error(
             f"Error when attempting to load {link}. Sleeping for {sleep_time} seconds before trying again."
         )
         sleep(sleep_time)
-        driver.get(link)
-    driver.find_elements(By.CSS_SELECTOR, "div.sidenote a")
+        browser.get(link)
+    browser.find_elements(By.CSS_SELECTOR, "div.sidenote a")
     result_pages = wait.until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.sidenote a"))
     )
@@ -109,14 +108,14 @@ def parse_results(input_data):
         code_to_name_dict = {}
         name_to_school_dict = {}
         name_to_full_name_dict = {}
-        driver.get(result_page_detail["result_url"])
+        browser.get(result_page_detail["result_url"])
         if result_page_detail["result_name"] == "Final Places":
             (
                 result_table_content,
                 code_to_name_dict,
                 name_to_school_dict,
             ) = parse_final_places_results(
-                driver,
+                browser,
                 result_page_detail["result_id"],
             )
         elif result_page_detail["result_name"] == "Prelim Records":
@@ -126,11 +125,12 @@ def parse_results(input_data):
                 name_to_school_dict,
                 name_to_full_name_dict,
             ) = parse_prelim_records_results(
-                driver,
-                scrape_entry_records,
+                scrape_entry_record_data=scrape_entry_records,
+                browser=browser,
+                result_url=result_page_detail["result_url"],
             )
         elif result_page_detail["result_name"] == "Speaker Awards":
-            result_table_content = parse_speaker_awards_results(driver)
+            result_table_content = parse_speaker_awards_results(browser)
         # TODO - Add support for more page types
         else:
             continue
@@ -138,7 +138,7 @@ def parse_results(input_data):
         code_to_name_dict_overall.update(code_to_name_dict)
         name_to_school_dict_overall.update(name_to_school_dict)
         name_to_full_name_dict_overall.update(name_to_full_name_dict)
-    driver.quit()
+    logging.info(f"Finished parsing {event_name}!")
     return {
         "event_name": event_name,
         "code_to_name_dict": code_to_name_dict_overall,

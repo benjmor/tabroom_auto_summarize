@@ -6,7 +6,8 @@ import json
 import logging
 from concurrent import futures
 from .get_schools_and_states import get_schools_and_states
-from .parse_results import parse_results
+from .parse_results_wrapper import parse_results_wrapper
+from .get_judge_map import get_judge_map
 from collections import Counter
 
 logging.basicConfig(
@@ -32,6 +33,8 @@ Returns a dictionary with the following keys:
 def main(
     tournament_id,
     scrape_entry_records,
+    chrome_options,
+    chrome_service,
     final_results_identifiers=[
         "Final Places",
         "Prelim Seeds",  # Sometimes need to parse the prelim seeds to scrape name/entry data
@@ -43,17 +46,9 @@ def main(
     code_to_name_dict_overall = {}
     name_to_school_dict_overall = {}
     name_to_full_name_dict_overall = {}
-    # Start a new browser session
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--log-file=output.log")
-    chrome_options.add_experimental_option(
-        "excludeSwitches", ["enable-logging"]
-    )  # attempting to suppress the USB read errors on Windows
-    # chrome_options.add_argument("--disable-logging")
-    # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
-    browser = webdriver.Chrome(options=chrome_options, service=service)
+    # This browser will be the ONLY browser if running in single-process mode
+    browser = webdriver.Chrome(options=chrome_options, service=chrome_service)
+    logging.debug("Starting browser session")
 
     # Navigate to the page with the dropdown menu
     base_url = f"https://www.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"
@@ -62,30 +57,60 @@ def main(
     # Find the dropdown menu element and get its options
     dropdown = browser.find_element(By.NAME, "event_id")
     # select = Select(WebDriverWait(browser, 2).until(EC.visibility_of_any_elements_located((By.NAME, "event_id"))))
-    options = dropdown.find_elements(By.TAG_NAME, "option")
+    event_options = dropdown.find_elements(By.TAG_NAME, "option")
 
-    thread_arguments = []
-    for option in options:
-        # Add the value and text to the thread arguments
-        thread_arguments.append(
-            (
-                option,
-                base_url,
-                chrome_options,
-                final_results_identifiers,
-                final_round_results_identifiers,
-                scrape_entry_records,
+    results = []
+    if "--single-process" in chrome_options.arguments:
+        # Grab the options data so that we don't have to loop over the dropdown again, which would require multiple browser windows
+        event_options_tuples = []
+        for event_option in event_options:
+            event_options_tuples.append(
+                (
+                    event_option.get_attribute("innerHTML"),
+                    event_option.get_attribute("value"),
+                )
             )
+        for event_option in event_options_tuples:
+            # If we're running in single-process mode, we don't want to open multiple browser windows
+            # So we'll just run the parse_results function in the main thread
+            results.append(
+                parse_results_wrapper(
+                    event_option=event_option,
+                    base_url=base_url,
+                    browser=browser,
+                    final_results_identifiers=final_results_identifiers,
+                    final_round_results_identifiers=final_round_results_identifiers,
+                    scrape_entry_records=scrape_entry_records,
+                )
+            )
+    else:
+        thread_arguments = []
+        # Pass options so that parallel processes can create their own browser sessions
+        chrome_options_tuple = (
+            chrome_options,
+            chrome_service,
         )
-
-    # Loop through the options and scrape their child links
-    with futures.ThreadPoolExecutor(10) as executor:
-        results = list(executor.map(parse_results, thread_arguments))
+        for event_option in event_options:
+            # Add the value and text to the thread arguments
+            thread_arguments.append(
+                (
+                    event_option,
+                    base_url,
+                    chrome_options_tuple,
+                    final_results_identifiers,
+                    final_round_results_identifiers,
+                    scrape_entry_records,
+                )
+            )
+        with futures.ThreadPoolExecutor(max_workers=len(thread_arguments)) as executor:
+            results = list(
+                executor.map(parse_results_wrapper, thread_arguments, timeout=60)
+            )
 
     # Get attendee data
     school_set, state_set = get_schools_and_states(
         tournament_id=tournament_id,
-        chrome_options=chrome_options,
+        browser=browser,
     )
 
     # Get a counter with how many entries were from each school, for funsies
@@ -103,6 +128,11 @@ def main(
         logging.warning("No schools found -- aggregating data from results")
         school_set = set(entry_schools)
 
+    # Get a map of judges to schools
+    judge_map = get_judge_map(
+        tournament_id=tournament_id,
+        browser=browser,
+    )
     # Close the browser session
     browser.quit()
     return {
@@ -113,6 +143,7 @@ def main(
         "entry_counter_by_school": entry_counter_by_school,
         "school_set": school_set,
         "state_set": state_set,
+        "judge_map": judge_map,
     }
 
 

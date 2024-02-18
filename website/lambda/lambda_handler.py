@@ -61,9 +61,15 @@ def lambda_handler(event, context):
             }
         lambda_client = boto3.client("lambda")
         lambda_client.invoke(
-            FunctionName="summary_generator",
+            FunctionName=os.environ["TABROOM_SUMMARY_LAMBDA_NAME"],
             InvocationType="Event",
             Payload=json.dumps(parsed_body),
+        )
+        # Write a placeholder file to S3
+        s3_client.put_object(
+            Body="Placeholder during generation.",
+            Bucket=bucket_name,
+            Key=f"{tournament_id}/placeholder.txt",
         )
         return {
             "isBase64Encoded": False,

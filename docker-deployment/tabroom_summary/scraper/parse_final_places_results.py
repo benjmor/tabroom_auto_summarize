@@ -99,12 +99,12 @@ def parse_final_places_results(driver, result_id):
             results_list.append(result)
             # Skip if Code is not defined
             if index_dict["code"]["index"] != -1:
-                code_to_name_dict[
-                    visible_results[index_dict["code"]["index"]]
-                ] = visible_results[index_dict["name"]["index"]]
-            name_to_school_dict[
-                visible_results[index_dict["name"]["index"]]
-            ] = visible_results[index_dict["school"]["index"]]
+                code_to_name_dict[visible_results[index_dict["code"]["index"]]] = (
+                    visible_results[index_dict["name"]["index"]]
+                )
+            name_to_school_dict[visible_results[index_dict["name"]["index"]]] = (
+                visible_results[index_dict["school"]["index"]]
+            )
     results_dict = {
         "result_set_type": "Final Places",
         "results": results_list,
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+    service = webdriver.ChromeService(executable_path="/opt/chromedriver")
     browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
