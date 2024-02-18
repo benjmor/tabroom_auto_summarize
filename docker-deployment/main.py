@@ -1,4 +1,5 @@
 import boto3
+import logging
 import os
 from tabroom_summary import tabroom_summary
 
@@ -21,19 +22,23 @@ def handler(event, context):
             tournament_id=tournament_id,
             open_ai_key_path=event["open_ai_key_path"],
             debug=debug,
+            read_only=event.get("read_only", False),
         )
     response = tabroom_summary.main(
         all_schools=True,
         tournament_id=tournament_id,
         open_ai_key_secret_name=open_ai_key_secret_name,
         debug=debug,
+        read_only=event.get("read_only", False),
     )
-    if debug:
+    # If we're not in Lambda, assume we're in Windows
+    if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         # Make the directories as needed
         for school_name in response.keys():
             os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
-            with open(f"{tournament_id}/{school_name}/results.txt", "w") as f:
-                f.write(response[school_name]["full_response"])
+            if not event.get("read_only", False):
+                with open(f"{tournament_id}/{school_name}/results.txt", "w") as f:
+                    f.write(response[school_name]["full_response"])
             with open(f"{tournament_id}/{school_name}/gpt_prompt.txt", "w") as f:
                 f.write(response[school_name]["gpt_prompt"])
     else:
@@ -41,6 +46,9 @@ def handler(event, context):
         s3_client = boto3.client("s3")
         bucket_name = os.environ["DATA_BUCKET_NAME"]
         for school_name in response.keys():
+            if "full_response" not in response[school_name]:
+                logging.warning(f"No GPT response found for {school_name}")
+                continue
             s3_client.put_object(
                 Body=response[school_name]["full_response"],
                 Bucket=bucket_name,
@@ -55,8 +63,9 @@ def handler(event, context):
 
 if __name__ == "__main__":
     event = {
-        "tournament": "29810",  # "20134",
-        "debug": True,
+        "tournament": "98765",  # "29810",  # "20134",
+        "debug": False,
         "open_ai_key_path": "./openAiAuthKey.txt",  # Lives in root of the project
+        "read_only": False,
     }
     handler(event, {})

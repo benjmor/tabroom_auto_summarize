@@ -1,7 +1,10 @@
+import boto3
 import json
+import logging
 import urllib.request
 import os
 import ssl
+import datetime
 from selenium import webdriver
 from tempfile import mkdtemp
 from .scraper import tabroom_scrape as tabroom_scrape
@@ -10,6 +13,8 @@ from .parse_arguments import parse_arguments
 from .group_data_by_school import group_data_by_school
 from .generate_chat_gpt_paragraphs import generate_chat_gpt_paragraphs
 from .parse_result_sets import parse_result_sets
+from .save_scraped_results import save_scraped_results
+from .find_or_download_api_response import find_or_download_api_response
 
 
 def main(
@@ -26,26 +31,36 @@ def main(
     open_ai_key_secret_name: str = None,
     debug: bool = False,
 ):
-    # DOWNLOAD DATA FROM THE TABROOM API - We'll use a combination of this and scraping
-    response = urllib.request.urlopen(  # nosec - uses http
-        url=f"http://www.tabroom.com/api/download_data.mhtml?tourn_id={tournament_id}",
-        context=ssl._create_unverified_context(),  # nosec - data is all public
-    )
-    html = response.read()
-    data = json.loads(html)
-    data["id"] = tournament_id
+    response_data = find_or_download_api_response(tournament_id)
+    response_data["id"] = tournament_id
+
+    # Fail early if tournament's end date is in the future or there are no results
+    if (
+        "end_date" in response_data
+        and response_data["end_date"] > datetime.datetime.now().isoformat()
+    ):
+        logging.warning(
+            f"Tournament end date is in the future: {response_data['end_date']}"
+        )
+        raise ValueError("Tournament has not ended yet")
 
     options = webdriver.ChromeOptions()
+    # If we're not in Lambda, assume we're in Windows
+    if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
+        chrome_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+        driver_location = None  # Use default
+    # If we are in Lambda, assume we're in Linux
+    else:
+        chrome_location = "/opt/chrome/chrome"
+        driver_location = "/opt/chrome/chromedriver"
 
     if debug is True:
         service = webdriver.ChromeService()
-        options.binary_location = (
-            "C:\Program Files\Google\Chrome\Application\chrome.exe"
-        )
+        options.binary_location = chrome_location
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
     else:
-        service = webdriver.ChromeService("/opt/chromedriver")
-        options.binary_location = "/opt/chrome/chrome"
+        service = webdriver.ChromeService(driver_location)
+        options.binary_location = chrome_location
         options.add_argument("--single-process")
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1280x1696")
@@ -61,19 +76,53 @@ def main(
     options.add_argument("--headless=new")
 
     # SCRAPE TABROOM FOR ALL THE GOOD DATA NOT PRESENT IN THE API
-    scrape_output = tabroom_scrape.main(
-        tournament_id=tournament_id,
-        scrape_entry_records=scrape_entry_records_bool,
-        chrome_options=options,
-        chrome_service=service,
-    )
+    # Check if we need to scrape the entry records
+    must_scrape = True
+    if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
+        file_location = f"{tournament_id}/scraped_results.json"
+        if os.path.exists(file_location):
+            try:
+                with open(file_location, "r") as f:
+                    scrape_output = json.load(f)
+                must_scrape = False
+            except json.JSONDecodeError:
+                logging.info("Scraped results file is corrupted. Scraping tabroom.com")
+                must_scrape = True
+        else:
+            logging.info(
+                "No scraped results found in the local directory. Scraping tabroom.com"
+            )
+            must_scrape = True
+    else:
+        # Check S3 for the scraped data
+        s3_client = boto3.client("s3")
+        try:
+            scrape_output = json.loads(
+                s3_client.get_object(
+                    Bucket=os.environ["DATA_BUCKET_NAME"],
+                    Key=f"{tournament_id}/scraped_results.json",
+                )["Body"]
+            )
+            must_scrape = False
+        except s3_client.exceptions.NoSuchKey:
+            logging.info("No scraped results found in S3. Scraping tabroom.com")
+            must_scrape = True
+    if must_scrape:
+        scrape_output = tabroom_scrape.main(
+            tournament_id=tournament_id,
+            scrape_entry_records=scrape_entry_records_bool,
+            chrome_options=options,
+            chrome_service=service,
+        )
+        save_scraped_results(scrape_output, tournament_id)
     scraped_results = scrape_output["results"]
     name_to_school_dict = scrape_output["name_to_school_dict"]
     code_to_name_dict = scrape_output["code_to_name_dict"]
     name_to_full_name_dict = scrape_output["name_to_full_name_dict"]
     entry_counter_by_school = scrape_output["entry_counter_by_school"]
     school_set = scrape_output["school_set"]
-    state_set = scrape_output["state_set"]
+    state_set_list = scrape_output["state_set"]
+    school_short_name_dict = scrape_output["school_short_name_dict"]
 
     # WALK THROUGH EACH EVENT AND PARSE RESULTS
     data_labels = [
@@ -92,7 +141,7 @@ def main(
     entry_id_to_entry_entry_name_dictionary = {}
     has_speech = False
     has_debate = False
-    for category in data["categories"]:
+    for category in response_data["categories"]:
         for event in category["events"]:
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
             update_global_entry_dictionary(
@@ -129,19 +178,24 @@ def main(
     if all_schools:
         schools_to_write_up = school_set
         grouped_data = group_data_by_school(
-            results=tournament_results, all_schools=all_schools
+            school_short_name_dict=school_short_name_dict,
+            results=tournament_results,
+            all_schools=all_schools,
         )
     else:
         schools_to_write_up = set([school_name])
         grouped_data = group_data_by_school(
-            results=tournament_results, school_name=school_name
+            school_short_name_dict=school_short_name_dict,
+            results=tournament_results,
+            school_name=school_name,
         )
-
+    # Generate a school-keyed dict of all the GPT prompts and responses for each school
+    # Use the school SHORTNAME as the key
     all_schools_dict = generate_chat_gpt_paragraphs(
-        tournament_data=data,
+        tournament_data=response_data,
         custom_url=custom_url,
         school_count=len(school_set),
-        state_count=len(state_set),
+        state_count=len(state_set_list),
         has_speech=has_speech,
         has_debate=has_debate,
         entry_dictionary=name_to_school_dict,
@@ -152,6 +206,7 @@ def main(
         max_results_to_pass_to_gpt=max_results_to_pass_to_gpt,
         read_only=read_only,
         data_labels=data_labels,
+        school_short_name_dict=school_short_name_dict,
         judge_map=scrape_output["judge_map"],
         open_ai_key_path=open_ai_key_path,
         open_ai_key_secret_name=open_ai_key_secret_name,

@@ -5,7 +5,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
 
 
-def get_judge_map(tournament_id, browser: Chrome, unit_test=False):
+def get_judge_map(
+    tournament_id,
+    browser: Chrome,
+    school_short_name_dict: dict,
+    unit_test=False,
+):
     """
     Parses the "Judges" table and return a map of schools to judges
 
@@ -28,7 +33,6 @@ def get_judge_map(tournament_id, browser: Chrome, unit_test=False):
         url = (
             f"https://www.tabroom.com/index/tourn/judges.mhtml?tourn_id={tournament_id}"
         )
-    browser = webdriver.Chrome(options=chrome_options, service=chrome_service)
     try:
         browser.get(url)
     except:
@@ -51,11 +55,14 @@ def get_judge_map(tournament_id, browser: Chrome, unit_test=False):
         for row in judge_rows:
             row_data = row.find_elements(By.TAG_NAME, "td")
             judge_name = row_data[1].text + " " + row_data[2].text
-            school = row_data[3].text
-            if school in judge_map:
-                judge_map[school].append(judge_name)
+            school_long_name = row_data[3].text
+            school_short_name = school_short_name_dict.get(
+                school_long_name, school_long_name
+            )
+            if school_short_name in judge_map:
+                judge_map[school_short_name].append(judge_name)
             else:
-                judge_map[school] = [judge_name]
+                judge_map[school_short_name] = [judge_name]
     return judge_map
 
 
@@ -64,10 +71,13 @@ if __name__ == "__main__":
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_service = webdriver.ChromeService()
+    browser = webdriver.Chrome(options=chrome_options, service=chrome_service)
     print(
         json.dumps(
             get_judge_map(
-                tournament_id, chrome_options, chrome_service, unit_test=False
+                tournament_id,
+                browser=browser,
+                unit_test=False,
             ),
             indent=4,
         )

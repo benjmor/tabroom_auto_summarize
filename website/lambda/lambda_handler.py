@@ -39,45 +39,50 @@ def lambda_handler(event, context):
             ),
         }
     else:
-        # Fail early if tournament's end date is in the future or there are no results
-        # TODO
-
         # Check if there are any files in the path bucket_name/tournament_id
         all_objects = s3_client.list_objects_v2(
             Bucket=bucket_name,
             Prefix=tournament_id,
         )
         if all_objects["KeyCount"] > 0:
+            school_set = set()
+            for obj in all_objects["Contents"]:
+                school_set.add(obj["Key"].split("/")[1])
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,
                 "headers": cors_headers,
                 "body": json.dumps(
                     {
-                        "file_content": "Tournament exists, but school does not. Check that your school name matches the official name.",
+                        "file_content": (
+                            "Tournament exists, but school does not. "
+                            + "Check that your school name matches the official name. "
+                            + f"Schools with results: {list(school_set)}"
+                        ),
                         "gpt_content": "N/A",
                     }
                 ),
             }
+        # Put a placeholder file in the S3 bucket and then trigger the Lambda to generate the file
+        s3_client.put_object(
+            Body="Placeholder during generation.",
+            Bucket=bucket_name,
+            Key=f"{tournament_id}/placeholder.txt",
+        )
         lambda_client = boto3.client("lambda")
         lambda_client.invoke(
             FunctionName=os.environ["TABROOM_SUMMARY_LAMBDA_NAME"],
             InvocationType="Event",
             Payload=json.dumps(parsed_body),
         )
-        # Write a placeholder file to S3
-        s3_client.put_object(
-            Body="Placeholder during generation.",
-            Bucket=bucket_name,
-            Key=f"{tournament_id}/placeholder.txt",
-        )
+
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": "File does not exist, will attempt to generate it. Check back in about 15 minutes.",
+                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes.",
                     "gpt_content": "N/A",
                 }
             ),

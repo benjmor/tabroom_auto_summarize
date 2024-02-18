@@ -8,6 +8,7 @@ from concurrent import futures
 from .get_schools_and_states import get_schools_and_states
 from .parse_results_wrapper import parse_results_wrapper
 from .get_judge_map import get_judge_map
+from .resolve_longname_to_shortname import resolve_longname_to_shortname
 from collections import Counter
 
 logging.basicConfig(
@@ -128,10 +129,14 @@ def main(
         logging.warning("No schools found -- aggregating data from results")
         school_set = set(entry_schools)
 
+    school_short_name_dict = {
+        school: resolve_longname_to_shortname(school) for school in school_set
+    }
     # Get a map of judges to schools
     judge_map = get_judge_map(
         tournament_id=tournament_id,
         browser=browser,
+        school_short_name_dict=school_short_name_dict,
     )
     # Close the browser session
     browser.quit()
@@ -140,10 +145,11 @@ def main(
         "name_to_school_dict": name_to_school_dict_overall,
         "code_to_name_dict": code_to_name_dict_overall,
         "name_to_full_name_dict": name_to_full_name_dict_overall,
-        "entry_counter_by_school": entry_counter_by_school,
-        "school_set": school_set,
-        "state_set": state_set,
+        "entry_counter_by_school": dict(entry_counter_by_school),
+        "school_set": list(school_set),
+        "state_set": list(state_set),
         "judge_map": judge_map,
+        "school_short_name_dict": school_short_name_dict,
     }
 
 

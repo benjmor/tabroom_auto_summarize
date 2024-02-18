@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
     <style>
+        body {
+            background: linear-gradient(to bottom, white, lightblue);
+            text-align: left;
+        }
         @keyframes blink {
             0% { opacity: 0; }
             50% { opacity: 1; }
@@ -21,17 +25,17 @@
 </head>
 <body>
 
-    <h1>Tabroom Summarizer</h1>
+    <h1>TABROOM SUMMARIZER</h1>
 
     Enter the following information for the results you want to summarize.<br><br>
 
     <form id="myForm">
         <label for="tournamentNumber">Tournament Number:</label>
         <input type="text" id="tournamentNumber" name="tournamentNumber" required>
-
+        <br><br>
         <label for="schoolName">School Name:</label>
         <input type="text" id="schoolName" name="schoolName" required>
-
+        <br><br>
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
 

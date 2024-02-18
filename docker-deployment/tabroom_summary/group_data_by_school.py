@@ -1,15 +1,31 @@
 import json
 
 
-def group_data_by_school(results, all_schools: bool = False, school_name: str = ""):
+def group_data_by_school(
+    results,
+    school_short_name_dict: dict,
+    all_schools: bool = False,
+    school_name: str = "",
+):
+    """
+    Given a list of results and a dictionary that maps long school names to short school names
+    Group the results by the school's short name.
+    Returns a dict keyed by short school name, containing a list of results for that school
+    """
     grouped_data = {}
     for result in results:
+        # Skip results that don't match the school name, unless we're looking for all schools
         if not all_schools and result["school_name"] != school_name:
             continue
-        school_name = result["school_name"]
-        if school_name not in grouped_data:
-            grouped_data[school_name] = []
-        grouped_data[school_name].append(result)
+        school_long_name = result["school_name"]
+        try:
+            school_short_name = school_short_name_dict[school_long_name]
+        except KeyError:
+            # Assume the long name is the short name if it's not in the dict
+            school_short_name = school_long_name
+        if school_short_name not in grouped_data:
+            grouped_data[school_short_name] = []
+        grouped_data[school_short_name].append(result)
     return grouped_data
 
 
@@ -18,10 +34,18 @@ if __name__ == "__main__":
         {"foo": "bar", "school_name": "aliceschool"},
         {"foo": "bad", "school_name": "bobschool"},
     ]
+    school_short_name_dict = {
+        "aliceschool": "alice",
+        "bobschool": "bob",
+    }
 
     print(
         json.dumps(
-            group_data_by_school(results=results, all_schools=True),
+            group_data_by_school(
+                results=results,
+                school_short_name_dict=school_short_name_dict,
+                all_schools=True,
+            ),
             indent=4,
         )
     )
