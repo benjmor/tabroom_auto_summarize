@@ -33,7 +33,6 @@ def main(
 ):
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
-
     # Fail early if tournament's end date is in the future or there are no results
     if (
         "end_date" in response_data
@@ -101,7 +100,7 @@ def main(
                 s3_client.get_object(
                     Bucket=os.environ["DATA_BUCKET_NAME"],
                     Key=f"{tournament_id}/scraped_results.json",
-                )["Body"]
+                )["Body"].read()
             )
             must_scrape = False
         except s3_client.exceptions.NoSuchKey:

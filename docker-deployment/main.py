@@ -3,6 +3,9 @@ import logging
 import os
 from tabroom_summary import tabroom_summary
 
+# Set log level
+logging.basicConfig(level=logging.INFO)
+
 
 def handler(event, context):
     print(event)

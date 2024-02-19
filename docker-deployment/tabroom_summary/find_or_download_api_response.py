@@ -21,10 +21,12 @@ def find_or_download_api_response(tournament_id):
     else:
         s3_client = boto3.client("s3")
         try:
-            return s3_client.get_object(
-                Bucket=os.environ["DATA_BUCKET_NAME"],
-                Key=f"{tournament_id}/api_response.json",
-            )["Body"]
+            return json.loads(
+                s3_client.get_object(
+                    Bucket=os.environ["DATA_BUCKET_NAME"],
+                    Key=f"{tournament_id}/api_response.json",
+                )["Body"].read()
+            )
 
         except s3_client.exceptions.NoSuchKey:
             logging.info(

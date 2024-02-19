@@ -53,7 +53,13 @@ def lambda_handler(event, context):
             if len(school_set) > 0:
                 school_data = list(school_set)
             else:
-                school_data = "No schools found"
+                school_data = "No schools found; will attempt to regenerate."
+                lambda_client = boto3.client("lambda")
+                lambda_client.invoke(
+                    FunctionName=os.environ["TABROOM_SUMMARY_LAMBDA_NAME"],
+                    InvocationType="Event",
+                    Payload=json.dumps(parsed_body),
+                )
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,
