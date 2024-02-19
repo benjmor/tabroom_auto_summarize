@@ -43,6 +43,7 @@ def resolve_longname_to_shortname(long_name: str):
         "air academy hs": "Air Academy",
         "college prep school": "College Prep",
         "college prep hs": "College Prep",
+        "st. paul academy and summit school": "St. Paul Academy and Summit",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]
@@ -117,6 +118,7 @@ def resolve_longname_to_shortname(long_name: str):
         "Schools",
         "schools",
         "Sr",
+        "Sr High School",
         "sr",
         "Club",
         "Team",

@@ -101,7 +101,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
-                "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:167fd3a57763f120872583d5ec10864228607e829a6fd30b9921c80b0134ece9"
+                "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:e8bf22919a0f19c6410874bbff2b42292514aa2240ef74487cee6c2d22b6ea19"
               },
               "PackageType": "Image",
               "FunctionName": "docker-selenium-lambda-prod-demo",
@@ -119,14 +119,14 @@
               "DemoLogGroup"
             ]
           },
-          "DemoLambdaVersionKZVyOWjl6RnNq3BBhDeiOx9b4YqZV3cdAnbmO2qfw": {
+          "DemoLambdaVersionoP8VHBGJeE7rpo5RNvtnbdmWCUmAuTw0PNCyXnTFD4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DemoLambdaFunction"
               },
-              "CodeSha256": "167fd3a57763f120872583d5ec10864228607e829a6fd30b9921c80b0134ece9"
+              "CodeSha256": "e8bf22919a0f19c6410874bbff2b42292514aa2240ef74487cee6c2d22b6ea19"
             }
           }
         },
@@ -142,7 +142,7 @@
           "DemoLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DemoLambdaVersionKZVyOWjl6RnNq3BBhDeiOx9b4YqZV3cdAnbmO2qfw"
+              "Ref": "DemoLambdaVersionoP8VHBGJeE7rpo5RNvtnbdmWCUmAuTw0PNCyXnTFD4"
             },
             "Export": {
               "Name": "sls-docker-selenium-lambda-prod-DemoLambdaFunctionQualifiedArn"
@@ -252,7 +252,7 @@
         "package": {},
         "memory": 2048,
         "vpc": {},
-        "versionLogicalId": "DemoLambdaVersionKZVyOWjl6RnNq3BBhDeiOx9b4YqZV3cdAnbmO2qfw"
+        "versionLogicalId": "DemoLambdaVersionoP8VHBGJeE7rpo5RNvtnbdmWCUmAuTw0PNCyXnTFD4"
       }
     },
     "configValidationMode": "warn",
@@ -270,7 +270,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/docker-selenium-lambda/prod/1708324907760-2024-02-19T06:41:47.760Z",
+    "artifactDirectoryName": "serverless/docker-selenium-lambda/prod/1708329495471-2024-02-19T07:58:15.471Z",
     "artifact": ""
   }
 }
