@@ -131,7 +131,7 @@ def generate_chat_gpt_paragraphs(
             body_response = (
                 body_response
                 + "\r\n"
-                + "More information about forensics (including how to compete, judge, or volunteer) can be found at www.speechanddebate.org, or by reaching out to the schools' coach."
+                + "More information about forensics (including how to compete, judge, or volunteer) can be found at www.speechanddebate.org, or by reaching out to the school's coach."
                 + judge_string
             )
 
@@ -181,50 +181,66 @@ def generate_chat_gpt_paragraphs(
             if float(result_for_numbered_list["percentile"]) < percentile_minimum:
                 continue
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
-        logging.info(f"Generating list of results for {short_school_name}")
-        list_generation_prompt = generate_list_generation_prompt(headers=data_labels)
-        numbered_list_prompt = (
-            list_generation_prompt
-            + "\r\n"
-            + "\r\n".join(
-                create_data_strings(
-                    data_objects=sorted_by_event_without_round_by_round,
-                    data_labels=data_labels,
-                )
+        if len(sorted_by_event_without_round_by_round) == 0:
+            logging.warning(
+                f"No results found for {short_school_name} above the percentile minimum, returning just the summary paragraph."
             )
-        )
-        all_schools_dict[short_school_name][
-            "numbered_list_prompt"
-        ] = numbered_list_prompt
-
-        logging.info(f"GPT Prompt: {numbered_list_prompt}")
-        if read_only:
-            logging.info(
-                f"Skipping list generation for {short_school_name} due to read-only mode"
+            full_response = (
+                # headline_response
+                # + "\r\n"
+                # + editor_response
+                body_response
             )
-            continue
         else:
-            numbered_response = (
-                client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": numbered_list_prompt},
-                    ],
-                )
-                .choices[0]
-                .message.content
+            logging.info(f"Generating list of results for {short_school_name}")
+            list_generation_prompt = generate_list_generation_prompt(
+                headers=data_labels
             )
+            numbered_list_prompt = (
+                list_generation_prompt
+                + "\r\n"
+                + "\r\n".join(
+                    create_data_strings(
+                        data_objects=sorted_by_event_without_round_by_round,
+                        data_labels=data_labels_without_percentile,
+                    )
+                )
+            )
+            all_schools_dict[short_school_name][
+                "numbered_list_prompt"
+            ] = numbered_list_prompt
 
-        full_response = (
-            # headline_response
-            # + "\r\n"
-            # + editor_response
-            body_response
-            + "\r\n"
-            + "Event-by-Event Results"
-            + "\r\n"
-            + numbered_response
-        )
+            logging.info(f"GPT Prompt: {numbered_list_prompt}")
+            if read_only:
+                logging.info(
+                    f"Skipping list generation for {short_school_name} due to read-only mode"
+                )
+                continue
+            else:
+                numbered_response = (
+                    client.chat.completions.create(
+                        model="gpt-4",
+                        messages=[
+                            {
+                                "role": "system",
+                                "content": "You are a helpful assistant.",
+                            },
+                            {"role": "user", "content": numbered_list_prompt},
+                        ],
+                    )
+                    .choices[0]
+                    .message.content
+                )
+
+            full_response = (
+                # headline_response
+                # + "\r\n"
+                # + editor_response
+                body_response
+                + "\r\n"
+                + "Event-by-Event Results"
+                + "\r\n"
+                + numbered_response
+            )
         all_schools_dict[short_school_name]["full_response"] = full_response
     return all_schools_dict

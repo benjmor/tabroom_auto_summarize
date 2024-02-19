@@ -21,12 +21,11 @@ def find_or_download_api_response(tournament_id):
     else:
         s3_client = boto3.client("s3")
         try:
-            return json.loads(
-                s3_client.get_object(
-                    Bucket=os.environ["DATA_BUCKET_NAME"],
-                    Key=f"{tournament_id}/api_response.json",
-                )["Body"]
-            )
+            return s3_client.get_object(
+                Bucket=os.environ["DATA_BUCKET_NAME"],
+                Key=f"{tournament_id}/api_response.json",
+            )["Body"]
+
         except s3_client.exceptions.NoSuchKey:
             logging.info(
                 "No API response found in S3. Will attempt to download from tabroom.com"
@@ -50,7 +49,8 @@ def find_or_download_api_response(tournament_id):
             f.write(response)
     else:
         s3_client.put_object(
-            Body=response,
+            Body=json.dumps(response),
             Bucket=os.environ["DATA_BUCKET_NAME"],
             Key=f"{tournament_id}/api_response.json",
         )
+    return response

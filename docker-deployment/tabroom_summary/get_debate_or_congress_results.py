@@ -26,6 +26,15 @@ def get_debate_or_congress_results(
     for r_set in event.get("result_sets", []):
         if r_set.get("bracket") == 1:
             continue  # No brackets for now -- doesn't translate well to text
+        # Get total entry count
+        try:
+            total_entries = len(
+                r_set["results"]
+            )  # TODO - figure out total entries in cases where partial results are published
+        except:
+            total_entries = 0  # couldn't find the entry count
+
+        # Take action based on the type of result set
         label = r_set["label"]
         # Separate function to handle speaker awards.
         if label == "Speaker Awards":
@@ -51,12 +60,6 @@ def get_debate_or_congress_results(
         ):
             # These points are some real inside baseball that no one cares about
             continue
-        try:
-            total_entries = len(
-                r_set["results"]
-            )  # TODO - figure out total entries in cases where partial results are published
-        except:
-            total_entries = 0  # couldn't find the entry count
         for result in r_set["results"]:
             if "entry" not in result:
                 continue  # Handling a strange case for blank results

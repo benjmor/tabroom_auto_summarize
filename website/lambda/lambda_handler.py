@@ -47,7 +47,13 @@ def lambda_handler(event, context):
         if all_objects["KeyCount"] > 0:
             school_set = set()
             for obj in all_objects["Contents"]:
-                school_set.add(obj["Key"].split("/")[1])
+                # Don't include files in the root of the tournament
+                if len(obj["Key"].split("/")) > 2:
+                    school_set.add(obj["Key"].split("/")[1])
+            if len(school_set) > 0:
+                school_data = list(school_set)
+            else:
+                school_data = "No schools found"
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,
@@ -57,7 +63,7 @@ def lambda_handler(event, context):
                         "file_content": (
                             "Tournament exists, but school does not. "
                             + "Check that your school name matches the official name. "
-                            + f"Schools with results: {list(school_set)}"
+                            + f"Schools with results: {school_data}"
                         ),
                         "gpt_content": "N/A",
                     }

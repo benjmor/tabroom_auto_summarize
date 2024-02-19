@@ -52,7 +52,7 @@ def main(
     # If we are in Lambda, assume we're in Linux
     else:
         chrome_location = "/opt/chrome/chrome"
-        driver_location = "/opt/chrome/chromedriver"
+        driver_location = "/opt/chromedriver"
 
     if debug is True:
         service = webdriver.ChromeService()

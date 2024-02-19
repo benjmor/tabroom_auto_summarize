@@ -3,6 +3,7 @@ import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Chrome
+from selenium.common.exceptions import NoSuchElementException
 
 
 def get_judge_map(
@@ -50,7 +51,13 @@ def get_judge_map(
 
     for href in href_list:
         browser.get(href)
-        judge_table = browser.find_element(By.TAG_NAME, "tbody")
+        try:
+            judge_table = browser.find_element(By.TAG_NAME, "tbody")
+        except NoSuchElementException:
+            logging.error(
+                "Error when attempting to load a specific judge page, probably because the tournament does not have any judges in this category."
+            )
+            continue
         judge_rows = judge_table.find_elements(By.TAG_NAME, "tr")
         for row in judge_rows:
             row_data = row.find_elements(By.TAG_NAME, "td")
