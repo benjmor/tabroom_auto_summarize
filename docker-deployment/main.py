@@ -1,3 +1,4 @@
+import argparse
 import boto3
 import logging
 import os
@@ -68,10 +69,34 @@ def handler(event, context):
 
 
 if __name__ == "__main__":
+    # Create an argparse for tournament ID and readonly
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-t",
+        "--tournament-id",
+        help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
+        required=True,
+        default="29810",
+    )
+    parser.add_argument(
+        "-r",
+        "--read-only",
+        help="If this flag is set, the Lambda will not write to the S3 bucket.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--open-ai-key-path",
+        help="Path to the OpenAI key file. This is only used for local testing.",
+        default="./openAiAuthKey.txt",  # Default to same folder as main.py
+    )
+    args = parser.parse_args()
+    tournament_id = args.tournament_id
+    read_only = args.read_only
+    open_ai_key_path = args.open_ai_key_path
     event = {
-        "tournament": "30799",  # "29810",  # "20134",
-        "debug": True,
-        "open_ai_key_path": "./openAiAuthKey.txt",  # Lives in root of the project
-        "read_only": True,
+        "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
+        "debug": True,  # Will always be true for local testing
+        "open_ai_key_path": open_ai_key_path,
+        "read_only": read_only,
     }
     handler(event, {})
