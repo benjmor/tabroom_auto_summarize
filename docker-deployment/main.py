@@ -40,10 +40,12 @@ def handler(event, context):
         for school_name in response.keys():
             os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
             if not event.get("read_only", False):
-                with open(f"{tournament_id}/{school_name}/results.txt", "w") as f:
-                    f.write(response[school_name]["full_response"])
-            with open(f"{tournament_id}/{school_name}/gpt_prompt.txt", "w") as f:
-                f.write(response[school_name]["gpt_prompt"])
+                if "full_response" in response[school_name]:
+                    with open(f"{tournament_id}/{school_name}/results.txt", "w") as f:
+                        f.write(response[school_name]["full_response"])
+            if "gpt_prompt" in response[school_name]:
+                with open(f"{tournament_id}/{school_name}/gpt_prompt.txt", "w") as f:
+                    f.write(response[school_name]["gpt_prompt"])
     else:
         # Save the tournament results to S3
         s3_client = boto3.client("s3")
@@ -57,18 +59,19 @@ def handler(event, context):
                 Bucket=bucket_name,
                 Key=f"{tournament_id}/{school_name}/results.txt",
             )
-            s3_client.put_object(
-                Body=response[school_name]["gpt_prompt"],
-                Bucket=bucket_name,
-                Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
-            )
+            if "gpt_prompt" in response[school_name]:
+                s3_client.put_object(
+                    Body=response[school_name]["gpt_prompt"],
+                    Bucket=bucket_name,
+                    Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
+                )
 
 
 if __name__ == "__main__":
     event = {
-        "tournament": "98765",  # "29810",  # "20134",
-        "debug": False,
+        "tournament": "30799",  # "29810",  # "20134",
+        "debug": True,
         "open_ai_key_path": "./openAiAuthKey.txt",  # Lives in root of the project
-        "read_only": False,
+        "read_only": True,
     }
     handler(event, {})

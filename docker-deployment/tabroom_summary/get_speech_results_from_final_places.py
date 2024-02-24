@@ -17,6 +17,11 @@ def get_speech_results_from_final_places(
     ret_val = []
     unique_entries = set()
     for result in final_results_result_set:
+        if "entry" not in result:
+            logging.error(
+                f"Could not find 'entry' in result {result} for {event_name}. Skipping."
+            )
+            continue
         unique_entries.add(result["entry"])
     unique_entry_count = len(unique_entries)
     for result in final_results_result_set:

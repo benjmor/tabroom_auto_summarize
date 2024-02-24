@@ -47,8 +47,8 @@ def find_or_download_api_response(tournament_id):
     # Store the response for next time
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         os.makedirs(tournament_id, exist_ok=True)
-        with open(file_location, "wb") as f:
-            f.write(response)
+        with open(file_location, "w") as f:
+            f.write(json.dumps(response))
     else:
         s3_client.put_object(
             Body=json.dumps(response),

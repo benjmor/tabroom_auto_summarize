@@ -24,6 +24,8 @@ def get_debate_or_congress_results(
     ret_val = []
     event_name = event["name"]
     for r_set in event.get("result_sets", []):
+        if "results" not in r_set:
+            continue  # Skip empty result sets
         if r_set.get("bracket") == 1:
             continue  # No brackets for now -- doesn't translate well to text
         # Get total entry count
@@ -73,8 +75,14 @@ def get_debate_or_congress_results(
                 if label == "TOC Qualifying Bids" and value["priority"] == 1:
                     results_by_round = value["value"]
 
-            entry_name = entry_dictionary[result["entry"]]
-            entry_code = code_dictionary[result["entry"]]
+            try:
+                entry_name = entry_dictionary[result["entry"]]
+                entry_code = code_dictionary[result["entry"]]
+            except KeyError:
+                logging.warning(
+                    f"Could not find entry name or code for {result['entry']}. Skipping."
+                )
+                continue
             rank = result.get("rank", "N/A")
             round_reached = result.get("place", "N/A")
             result_school = result.get(
