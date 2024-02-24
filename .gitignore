@@ -26,3 +26,9 @@ tabroom_summary/lambda_layer/python/**
 # Cached local files
 api_response.json
 scraped_results.json
+
+# Serverless caches
+
+.serverless/**
+**/.serverless
+**/.serverless/**
