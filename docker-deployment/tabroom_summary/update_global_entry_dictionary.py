@@ -6,6 +6,8 @@ def update_global_entry_dictionary(
 ):
     # Update entry dictionary by scraping an event's section data
     for section in sections:
+        if "ballots" not in section:
+            continue
         for ballot in section["ballots"]:
             entry_id = ballot["entry"]
             entry_name = ballot["entry_name"]

@@ -81,7 +81,7 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:b0264a5782b323451b2f98dbef0f093a4b094b5e479da66d1aef01006c6736c5"
+          "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:f52657f16a95e0e456e3891b598dc561415abccc2092e2b4cc3870c969e9bcc3"
         },
         "PackageType": "Image",
         "FunctionName": "docker-selenium-lambda-prod-demo",
@@ -90,7 +90,8 @@
         "Environment": {
           "Variables": {
             "DATA_BUCKET_NAME": "tabroom-summaries-data-bucket",
-            "OPEN_AI_KEY_SECRET_NAME": "openai_auth_key"
+            "OPEN_AI_KEY_SECRET_NAME": "openai_auth_key",
+            "SNS_TOPIC_ARN": "arn:aws:sns:us-east-1:238589881750:summary_generation_topic"
           }
         },
         "Role": "arn:aws:iam::238589881750:role/summary_lambda_role"
@@ -99,14 +100,14 @@
         "DemoLogGroup"
       ]
     },
-    "DemoLambdaVersionIcIsNJ5S80EBkrMrlyoxXQhIHO3cqOHBNbha7pq6g": {
+    "DemoLambdaVersionCj5dlZZKZyyGFkOS5IcmmPn8szb2S8mIgh3ffnVff8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "DemoLambdaFunction"
         },
-        "CodeSha256": "b0264a5782b323451b2f98dbef0f093a4b094b5e479da66d1aef01006c6736c5"
+        "CodeSha256": "f52657f16a95e0e456e3891b598dc561415abccc2092e2b4cc3870c969e9bcc3"
       }
     }
   },
@@ -122,7 +123,7 @@
     "DemoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "DemoLambdaVersionIcIsNJ5S80EBkrMrlyoxXQhIHO3cqOHBNbha7pq6g"
+        "Ref": "DemoLambdaVersionCj5dlZZKZyyGFkOS5IcmmPn8szb2S8mIgh3ffnVff8"
       },
       "Export": {
         "Name": "sls-docker-selenium-lambda-prod-DemoLambdaFunctionQualifiedArn"

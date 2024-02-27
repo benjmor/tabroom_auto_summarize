@@ -28,7 +28,13 @@ def get_speech_results_from_final_places(
         # Check if the values is a dummy value, continue if it is.
         if not result["values"][0]:
             continue
-        entry_name = entry_dictionary[result["entry"]].strip()  # Remove whitespace
+        try:
+            entry_name = entry_dictionary[result["entry"]].strip()  # Remove whitespace
+        except KeyError:
+            logging.error(
+                f"Could not find entry name for {result['entry']} in ENTRY_DICTIONARY_GLOBAL in event {event_name}. Skipping. This may be due to a late add or potentially a round 1 bye."
+            )
+            continue
         entry_code = ""  # CODE_DICTIONARY["entry"] # This is honestly pretty useless for speech, will omit.
         try:
             entry_school = entry_to_school_dict[entry_name]

@@ -249,3 +249,8 @@ resource "aws_secretsmanager_secret" "openai_auth_key" {
     ignore_changes = all
   }
 }
+
+# Topic that notifies subscribers when a summary is requested
+resource "aws_sns_topic" "summary_generation_topic" {
+  name = "summary_generation_topic"
+}

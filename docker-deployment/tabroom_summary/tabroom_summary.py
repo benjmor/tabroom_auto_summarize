@@ -143,6 +143,7 @@ def main(
     for category in response_data["categories"]:
         for event in category["events"]:
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
+            # This only looks at the first round of the event -- theoretically that could be a problem for late adds
             update_global_entry_dictionary(
                 sections=event.get("rounds", [{}])[0].get("sections", []),
                 code_dictionary=entry_id_to_entry_code_dictionary,

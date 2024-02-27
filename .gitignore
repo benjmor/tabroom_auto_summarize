@@ -28,7 +28,10 @@ api_response.json
 scraped_results.json
 
 # Serverless caches
-
+.serverless
 .serverless/**
 **/.serverless
 **/.serverless/**
+
+cloudformation-template-update-stack.json
+serverless-state.json

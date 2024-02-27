@@ -73,6 +73,15 @@ data "aws_iam_policy_document" "summmarizer_role" {
       "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:${local.openai_auth_key_secret_name}*",
     ]
   }
+
+  statement {
+    actions = [
+      "sns:Publish",
+    ]
+    resources = [
+      "*",
+    ]
+  }
 }
 
 # data "archive_file" "summary_lambda_source" {

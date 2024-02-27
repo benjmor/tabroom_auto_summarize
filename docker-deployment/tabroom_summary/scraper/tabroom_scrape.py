@@ -105,7 +105,7 @@ def main(
             )
         with futures.ThreadPoolExecutor(max_workers=len(thread_arguments)) as executor:
             results = list(
-                executor.map(parse_results_wrapper, thread_arguments, timeout=60)
+                executor.map(parse_results_wrapper, thread_arguments, timeout=600)
             )
 
     # Get attendee data

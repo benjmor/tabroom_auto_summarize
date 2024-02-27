@@ -14,11 +14,12 @@ RUN pip install selenium==4.17.2
 COPY --from=build /opt/chrome-linux64 /opt/chrome
 COPY --from=build /opt/chromedriver-linux64 /opt/
 COPY main.py ./
+COPY requirements.txt ./
 COPY __init__.py ./
 COPY ./tabroom_summary ./tabroom_summary
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r ./tabroom_summary/requirements.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 # Make sure Python scripts in ./tabroom_summary are executable
 # RUN chmod -R +x ./tabroom_summary
 

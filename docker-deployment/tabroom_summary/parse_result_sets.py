@@ -13,8 +13,9 @@ def parse_result_sets(
 ):
     has_debate = False
     has_speech = False
+    tournament_results = []
     # Parse results sets
-    if event["type"] in ["debate", "congress"]:
+    if event["type"] in ["debate", "congress", "wsdc"]:
         has_debate = True
         if "result_sets" not in event:
             tournament_results = get_debate_results_from_rounds_only(

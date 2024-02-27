@@ -10,6 +10,13 @@ logging.basicConfig(level=logging.INFO)
 
 def handler(event, context):
     print(event)
+    try:
+        boto3.client("sns").publish(
+            TopicArn=os.environ["SNS_TOPIC_ARN"],
+            Message=f"Running tabroom_summary for {event['tournament']}",
+        )
+    except Exception:
+        logging.error("Error publishing to SNS")
     # This function will query Tabroom.com for the tournament results and then
     # return a summary of the results using ChatGPT.
     # This Lambda will run asynchronously and will not return the results directly.

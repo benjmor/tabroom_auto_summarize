@@ -88,7 +88,15 @@ def get_debate_or_congress_results(
             result_school = result.get(
                 "school", entry_to_school_dict.get(entry_name, "UNKNOWN")
             )
-            percentile = result.get("percentile", "N/A")
+            # Try to get the percentile, but if it's not there, calculate it
+            try:
+                percentile = result["percentile"]
+            except KeyError:
+                try:
+                    percentile = 100 - ((100 * float(rank)) / float(total_entries))
+                except:
+                    percentile = 0  # If we can't calculate it, just set it to 0
+
             # Treat TOC bids as 100th percentile! It's a big achievement.
             if label == "TOC Qualifying Bids":
                 percentile = 100

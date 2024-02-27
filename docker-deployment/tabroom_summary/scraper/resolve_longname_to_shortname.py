@@ -44,6 +44,18 @@ def resolve_longname_to_shortname(long_name: str):
         "college prep school": "College Prep",
         "college prep hs": "College Prep",
         "st. paul academy and summit school": "St. Paul Academy and Summit",
+        "university high school, irvine": "University HS, Irvine",
+        "alannah debates": "Alannah",
+        "bellarmine college preparatory": "Bellarmine College Prep",
+        "basis independent fremont(hs)": "Basis Independent Fremont",
+        "brooks debate institute": "Brooks Debate",
+        "the delores taylor arthur school for young men": "Delores Taylor Arthur School for Young Men",
+        "dhs independent": "DHS",
+        "damien high school and st lucy's priory": "Damien HS and St. Lucy's Priory",
+        "davidson academy online": "Davidson Academy",
+        "st. ignatius college prep": "St Ignatius College Prep",
+        "vegas debates": "Vegas Debates",
+        "young genius, bay area speech and debate": "Young Genius",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]
@@ -72,21 +84,29 @@ def resolve_longname_to_shortname(long_name: str):
     for remove_phrase in always_remove:
         long_name = long_name.replace(remove_phrase, "")
 
+    # Replace "High School Independent" with "Independent"
+    long_name = long_name.replace("High School Independent", "Independent")
+
     # ELIMINATE THESE PHRASES ENTIRELY IF THEY APPEAR AT THE END
     bad_endings = [
         "Mock Trial",
         "Debate Association",
+        "Debate Academy",
         "Debate Panel",
         "Debate Society",
         "Debating Society",
         "Forensics/Debate",
         "of Math and Science",
         "Academy",
+        "Early College High School",
         "Regional High School",
         "Middle School",
         "Junior High School",
+        "Upper School",
+        "Sr High School",
         "University High School",
         "High School",
+        "College Prepatory",
         "College Prep",
         "Colleges",
         "School",
@@ -113,6 +133,7 @@ def resolve_longname_to_shortname(long_name: str):
         "(Middle)",
         "Regional",
         "Academy",
+        "School for Young Men",
         "School",
         "school",
         "Schools",
@@ -129,10 +150,13 @@ def resolve_longname_to_shortname(long_name: str):
         "Speech",
         "Debate",
         "Parliamentary",
-        "University" "CP" "College" "CC",
+        "University",
+        "CP",
+        "College",
+        "CC",
     ]
     for bad_ending in bad_endings:
-        if re.search(bad_ending, long_name, re.IGNORECASE):
+        if re.search(rf"{bad_ending}$", long_name, re.IGNORECASE):
             long_name = long_name.replace(bad_ending, "")
             break
 
