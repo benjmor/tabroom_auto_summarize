@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
     <style>
         body {
             background: linear-gradient(to right, white, lightblue);
@@ -18,6 +19,11 @@
             animation-iteration-count: infinite;
             animation-fill-mode: both;
         }
+
+        #responseContainer {
+            max-width: 800px;
+            overflow: hidden;
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +34,8 @@
     <h1>TABROOM SUMMARIZER</h1>
 
     Enter the following information for the results you want to summarize.<br><br>
+
+    (Need a suggestion for a tournament ID? Try 27074 (Cal Berkeley 2024). Submit a blank school name to display a list of schools with results.)<br><br>
 
     <form id="myForm">
         <label for="tournamentNumber">Tournament Number:</label>
@@ -46,6 +54,8 @@
 
     <script>
         function submitForm() {
+            // Update to Loading...
+            document.getElementById('responseContainer').innerText = "Loading..."
             // Get form data
             const tournamentNumber = document.getElementById('tournamentNumber').value;
             const schoolName = document.getElementById('schoolName').value;
@@ -79,10 +89,10 @@
             .then(response => response.json())
             .then(data => {
                 // Display the response
-                file_content = data['file_content'].replace(/\n/g, '<br>');
-                gpt_content = data['gpt_content'].replace(/\n/g, '<br>');
-                display_html = "<h2>Tournament Summary:</h2>" + file_content + "<h2>Prompt passed to ChatGPT:</h2>" + gpt_content + "<br>";
-                document.getElementById('responseContainer').innerHTML = display_html;
+                file_content = data['file_content'].replace("Event-by-Event Results", "### Event-by-Event Results") //.replace(/\n/g, '<br>');
+                gpt_content = data['gpt_content'] //.replace(/\n/g, '<br>');
+                display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "</md-block>";
+                document.getElementById('responseContainer').innerHTML = display_md;
             })
             .catch(error => {
                 console.error('Error:', error);
