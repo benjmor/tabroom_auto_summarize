@@ -51,7 +51,7 @@ def lambda_handler(event, context):
                 if len(obj["Key"].split("/")) > 2:
                     school_set.add(obj["Key"].split("/")[1])
             if len(school_set) > 0:
-                school_data = "\n".join(sorted(list(school_set)))
+                school_data = "\n\n".join(sorted(list(school_set)))
             else:
                 school_data = "No schools found; will attempt to regenerate."
                 lambda_client = boto3.client("lambda")
@@ -69,7 +69,7 @@ def lambda_handler(event, context):
                         "file_content": (
                             "Tournament exists, but school does not. "
                             + "Check that your school name matches the official name. "
-                            + f"Schools with results:\n{school_data}"
+                            + f"Schools with results:\n\n{school_data}"
                         ),
                         "gpt_content": "N/A",
                     }

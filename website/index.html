@@ -90,7 +90,7 @@
             .then(data => {
                 // Display the response
                 file_content = data['file_content'].replace("Event-by-Event Results", "### Event-by-Event Results") //.replace(/\n/g, '<br>');
-                gpt_content = data['gpt_content'] //.replace(/\n/g, '<br>');
+                gpt_content = data['gpt_content'].replace(/\n/g, "\n\n"); // more newlines!
                 display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "</md-block>";
                 document.getElementById('responseContainer').innerHTML = display_md;
             })
