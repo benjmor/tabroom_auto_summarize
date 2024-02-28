@@ -76,6 +76,9 @@ def handler(event, context):
 
 
 if __name__ == "__main__":
+    os.environ["SNS_TOPIC_ARN"] = (
+        "arn:aws:sns:us-east-1:238589881750:summary_generation_topic"
+    )
     # Create an argparse for tournament ID and readonly
     parser = argparse.ArgumentParser()
     parser.add_argument(

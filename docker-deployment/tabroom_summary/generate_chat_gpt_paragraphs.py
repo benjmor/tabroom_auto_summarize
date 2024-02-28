@@ -27,7 +27,6 @@ def generate_chat_gpt_paragraphs(
     school_short_name_dict: dict,
     open_ai_key_path: str = None,
     open_ai_key_secret_name: str = None,
-    debug: bool = False,
 ):
     all_schools_dict = {}
     # Read the OpenAI API key from a file or AWS Secrets Manager
@@ -40,8 +39,13 @@ def generate_chat_gpt_paragraphs(
             "SecretString"
         ]
     client = OpenAI(api_key=api_key)
+    tournament_id = tournament_data["id"]
     for school_long_name in schools_to_write_up:
         short_school_name = school_short_name_dict[school_long_name]
+        # If there is already a results.txt file for the school, continue early
+        if os.path.exists(f"{tournament_id}/{short_school_name}/results.txt"):
+            logging.debug(f"Skipping {short_school_name} due to existing results")
+            continue
         school_filtered_tournament_results = grouped_data.get(short_school_name, [])
         all_schools_dict[short_school_name] = {}
         logging.info(f"Starting results generation for {short_school_name}...")
@@ -73,7 +77,7 @@ def generate_chat_gpt_paragraphs(
             ]
         else:
             top_sorted_filtered_school_results = sorted_filtered_school_results
-        logging.info(
+        logging.debug(
             f"School specific results without any filtering:\r\n{json.dumps(sorted_school_results, indent=4)}"
         )
         data_labels_without_percentile = [
@@ -100,7 +104,7 @@ def generate_chat_gpt_paragraphs(
         all_schools_dict[short_school_name]["gpt_prompt"] = final_gpt_payload
 
         logging.info(f"Generating summary for {short_school_name}")
-        logging.info(f"GPT Prompt: {final_gpt_payload}")
+        logging.debug(f"GPT Prompt: {final_gpt_payload}")
         if read_only:
             logging.info(
                 f"Skipping summary generation for {short_school_name} due to read-only mode"
@@ -130,7 +134,6 @@ def generate_chat_gpt_paragraphs(
                 judge_string = ""
             body_response = (
                 body_response
-                + "\r\n"
                 + "More information about forensics (including how to compete, judge, or volunteer) can be found at www.speechanddebate.org, or by reaching out to the school's coach."
                 + judge_string
             )
@@ -177,7 +180,10 @@ def generate_chat_gpt_paragraphs(
         # Reduce to just the essentials
         for result_for_numbered_list in sorted_by_event:
             # Remove round-by-round results from the numbered list -- not required
-            result_for_numbered_list.pop("results_by_round")
+            try:
+                result_for_numbered_list.pop("results_by_round")
+            except KeyError:
+                pass  # already not present
             if float(result_for_numbered_list["percentile"]) < percentile_minimum:
                 continue
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
@@ -210,7 +216,7 @@ def generate_chat_gpt_paragraphs(
                 "numbered_list_prompt"
             ] = numbered_list_prompt
 
-            logging.info(f"GPT Prompt: {numbered_list_prompt}")
+            logging.debug(f"GPT Prompt: {numbered_list_prompt}")
             if read_only:
                 logging.info(
                     f"Skipping list generation for {short_school_name} due to read-only mode"
@@ -243,4 +249,20 @@ def generate_chat_gpt_paragraphs(
                 + numbered_response
             )
         all_schools_dict[short_school_name]["full_response"] = full_response
+        # If running outside of Lambda on a large tournament, save off results after each summary.
+        if (
+            os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None
+            and len(schools_to_write_up) > 20
+        ):
+            # Make the directories as needed
+            try:
+                os.makedirs(f"{tournament_id}/{short_school_name}", exist_ok=False)
+            except Exception:
+                # No need to
+                continue
+            if not read_only:
+                with open(f"{tournament_id}/{short_school_name}/results.txt", "w") as f:
+                    f.write(full_response)
+            with open(f"{tournament_id}/{short_school_name}/gpt_prompt.txt", "w") as f:
+                f.write(final_gpt_payload)
     return all_schools_dict

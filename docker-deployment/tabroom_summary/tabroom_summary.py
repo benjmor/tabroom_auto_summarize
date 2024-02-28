@@ -210,7 +210,6 @@ def main(
         judge_map=scrape_output["judge_map"],
         open_ai_key_path=open_ai_key_path,
         open_ai_key_secret_name=open_ai_key_secret_name,
-        debug=debug,
     )
     # return a dictionary of schools with the summary text and all GPT prompts
     return all_schools_dict
