@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
+    TimeoutException,
 )
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -78,9 +79,19 @@ def parse_results(input_data):
         sleep(sleep_time)
         browser.get(link)
     browser.find_elements(By.CSS_SELECTOR, "div.sidenote a")
-    result_pages = wait.until(
-        EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.sidenote a"))
-    )
+    try:
+        result_pages = wait.until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.sidenote a"))
+        )
+    except TimeoutException:
+        logging.error(f"Could not find event {event_name} in page elements")
+        return {
+            "event_name": event_name,
+            "code_to_name_dict": {},
+            "name_to_school_dict": {},
+            "name_to_full_name_dict": {},
+            "result_list": [],
+        }
     # Navigating through results. Make sure NOT to use the driver within the loop or you will break the loop's input!
     result_page_details = []
     for result in result_pages:

@@ -73,6 +73,13 @@ def handler(event, context):
                     Bucket=bucket_name,
                     Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
                 )
+        try:
+            # Delete the placeholder to signal to the Lambda that execution is complete
+            s3_client.delete_object(
+                Bucket=bucket_name, Key=f"{tournament_id}/placeholder.txt"
+            )
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":

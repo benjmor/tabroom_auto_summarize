@@ -44,6 +44,13 @@ def lambda_handler(event, context):
             Bucket=bucket_name,
             Prefix=tournament_id,
         )
+        try:
+            placeholder = s3_client.list_objects_v2(
+                Bucket=bucket_name,
+                Prefix=f"{tournament_id}/placeholder.txt",
+            )["Contents"]
+        except Exception:
+            placeholder = None
         if all_objects["KeyCount"] > 0:
             school_set = set()
             for obj in all_objects["Contents"]:
@@ -53,13 +60,21 @@ def lambda_handler(event, context):
             if len(school_set) > 0:
                 school_data = "\n\n".join(sorted(list(school_set)))
             else:
-                school_data = "No schools found; will attempt to regenerate."
-                lambda_client = boto3.client("lambda")
-                lambda_client.invoke(
-                    FunctionName=os.environ["TABROOM_SUMMARY_LAMBDA_NAME"],
-                    InvocationType="Event",
-                    Payload=json.dumps(parsed_body),
-                )
+                if placeholder is not None:
+                    school_data = "Still generating results! Check back soon! Consider opening a GitHub issue if this message persists."
+                else:
+                    school_data = "No schools found; will attempt to regenerate."
+                    s3_client.put_object(
+                        Body="Placeholder during generation.",
+                        Bucket=bucket_name,
+                        Key=f"{tournament_id}/placeholder.txt",
+                    )
+                    lambda_client = boto3.client("lambda")
+                    lambda_client.invoke(
+                        FunctionName=os.environ["TABROOM_SUMMARY_LAMBDA_NAME"],
+                        InvocationType="Event",
+                        Payload=json.dumps(parsed_body),
+                    )
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,

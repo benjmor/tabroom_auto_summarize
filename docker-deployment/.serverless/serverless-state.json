@@ -101,12 +101,12 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
-                "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:f52657f16a95e0e456e3891b598dc561415abccc2092e2b4cc3870c969e9bcc3"
+                "ImageUri": "238589881750.dkr.ecr.us-east-1.amazonaws.com/serverless-docker-selenium-lambda-prod@sha256:93916c7adbd56b11cb01817c2c625217a3828d732c6359068d56d5f943af9be2"
               },
               "PackageType": "Image",
               "FunctionName": "docker-selenium-lambda-prod-demo",
               "MemorySize": 2048,
-              "Timeout": 60,
+              "Timeout": 900,
               "Environment": {
                 "Variables": {
                   "DATA_BUCKET_NAME": "tabroom-summaries-data-bucket",
@@ -120,14 +120,14 @@
               "DemoLogGroup"
             ]
           },
-          "DemoLambdaVersionCj5dlZZKZyyGFkOS5IcmmPn8szb2S8mIgh3ffnVff8": {
+          "DemoLambdaVersion4ETrdD78XONeRiNwehfPO0cFpHgHBDP8K5ZHWATs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DemoLambdaFunction"
               },
-              "CodeSha256": "f52657f16a95e0e456e3891b598dc561415abccc2092e2b4cc3870c969e9bcc3"
+              "CodeSha256": "93916c7adbd56b11cb01817c2c625217a3828d732c6359068d56d5f943af9be2"
             }
           }
         },
@@ -143,7 +143,7 @@
           "DemoLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DemoLambdaVersionCj5dlZZKZyyGFkOS5IcmmPn8szb2S8mIgh3ffnVff8"
+              "Ref": "DemoLambdaVersion4ETrdD78XONeRiNwehfPO0cFpHgHBDP8K5ZHWATs"
             },
             "Export": {
               "Name": "sls-docker-selenium-lambda-prod-DemoLambdaFunctionQualifiedArn"
@@ -238,7 +238,7 @@
     "pluginsData": {},
     "functions": {
       "demo": {
-        "timeout": 60,
+        "timeout": 900,
         "memorySize": 2048,
         "image": {
           "name": "img"
@@ -254,7 +254,7 @@
         "package": {},
         "memory": 2048,
         "vpc": {},
-        "versionLogicalId": "DemoLambdaVersionCj5dlZZKZyyGFkOS5IcmmPn8szb2S8mIgh3ffnVff8"
+        "versionLogicalId": "DemoLambdaVersion4ETrdD78XONeRiNwehfPO0cFpHgHBDP8K5ZHWATs"
       }
     },
     "configValidationMode": "warn",
@@ -272,7 +272,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/docker-selenium-lambda/prod/1709015232097-2024-02-27T06:27:12.097Z",
+    "artifactDirectoryName": "serverless/docker-selenium-lambda/prod/1709097771310-2024-02-28T05:22:51.310Z",
     "artifact": ""
   }
 }
