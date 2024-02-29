@@ -109,7 +109,7 @@ def lambda_handler(event, context):
             else:
                 # Placeholder is present but no school results ready -- have the user wait for results
                 if placeholder is not None:
-                    school_data = "Still generating results! Check back soon! Consider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
+                    school_data = "Still generating results! Check back soon!\nConsider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
                 # Placeholder is not present AND no school results are present -- data should be regenerated.
                 else:
                     school_data = "No schools found; will attempt to regenerate."
@@ -157,7 +157,7 @@ def lambda_handler(event, context):
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes. Note that larger tournaments (eg. Harvard, Berkeley) are not supported through this web interface. Create an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
+                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes.\nNote: larger tournaments (eg. Harvard) are not supported through this web interface.\nCreate an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
                     "gpt_content": "N/A",
                 }
             ),
