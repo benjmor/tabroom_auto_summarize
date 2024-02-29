@@ -29,7 +29,6 @@ def main(
     scrape_entry_records_bool: bool = True,
     open_ai_key_path: str = None,
     open_ai_key_secret_name: str = None,
-    debug: bool = False,
 ):
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
@@ -48,16 +47,14 @@ def main(
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         chrome_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
         driver_location = None  # Use default
+        service = webdriver.ChromeService()
+        options.binary_location = chrome_location
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+
     # If we are in Lambda, assume we're in Linux
     else:
         chrome_location = "/opt/chrome/chrome"
         driver_location = "/opt/chromedriver"
-
-    if debug is True:
-        service = webdriver.ChromeService()
-        options.binary_location = chrome_location
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    else:
         service = webdriver.ChromeService(driver_location)
         options.binary_location = chrome_location
         options.add_argument("--single-process")

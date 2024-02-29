@@ -54,6 +54,21 @@ resource "aws_s3_bucket_cors_configuration" "example" {
   }
 }
 
+resource "aws_route53_zone" "exampleDomain" {
+  name = local.domain_name
+}
+
+resource "aws_route53_record" "exampleDomain-a" {
+  zone_id = aws_route53_zone.exampleDomain.zone_id
+  name    = local.domain_name
+  type    = "A"
+  alias {
+    name                   = aws_s3_bucket.website_bucket.website_endpoint
+    zone_id                = aws_s3_bucket.website_bucket.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
 #########################################################
 # DATA BUCKET - S3 Bucket for the underlying data
 #########################################################

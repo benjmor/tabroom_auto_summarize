@@ -9,10 +9,13 @@ def update_global_entry_dictionary(
         if "ballots" not in section:
             continue
         for ballot in section["ballots"]:
-            entry_id = ballot["entry"]
-            entry_name = ballot["entry_name"]
-            entry_code = ballot["entry_code"]
-            logging.debug(f"{entry_id}|{entry_name}")
-            entry_dictionary[entry_id] = entry_name
-            code_dictionary[entry_id] = entry_code
+            try:
+                entry_id = ballot["entry"]
+                entry_name = ballot["entry_name"]
+                entry_code = ballot["entry_code"]
+                logging.debug(f"{entry_id}|{entry_name}")
+                entry_dictionary[entry_id] = entry_name
+                code_dictionary[entry_id] = entry_code
+            except KeyError:
+                continue
     return entry_dictionary, code_dictionary

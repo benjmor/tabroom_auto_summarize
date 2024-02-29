@@ -109,7 +109,7 @@ def get_debate_or_congress_results(
                     "entry_name": entry_name,
                     "entry_code": entry_code,
                     "school_name": result_school,
-                    "rank": rank,
+                    "rank": f"{rank}/{total_entries}",
                     "total_entries": total_entries,
                     "round_reached": round_reached,
                     "percentile": percentile,

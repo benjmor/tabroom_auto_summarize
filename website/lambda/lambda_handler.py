@@ -18,50 +18,99 @@ def lambda_handler(event, context):
     school_name = str(parsed_body["school"]).strip()
     file_path_to_find_or_create = f"{tournament_id}/{school_name}/results.txt"
     raw_gpt_submission = f"{tournament_id}/{school_name}/gpt_prompt.txt"
+    api_response_key = f"{tournament_id}/api_response.json"
     bucket_name = os.environ["DATA_BUCKET_NAME"]
+
+    # Check if the requested results already exist -- return them if they do
     file_exists = s3_client.list_objects_v2(
-        Bucket=bucket_name, Prefix=file_path_to_find_or_create
+        Bucket=bucket_name,
+        Prefix=file_path_to_find_or_create,
     )
     if "Contents" in file_exists:
-        file_content = s3_client.get_object(
-            Bucket=bucket_name, Key=file_path_to_find_or_create
+        try:
+            file_content = (
+                s3_client.get_object(
+                    Bucket=bucket_name,
+                    Key=file_path_to_find_or_create,
+                )["Body"]
+                .read()
+                .decode("utf-8")
+            )
+        except Exception:
+            file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
+        gpt_content = (
+            s3_client.get_object(
+                Bucket=bucket_name,
+                Key=raw_gpt_submission,
+            )["Body"]
+            .read()
+            .decode("utf-8")
         )
-        gpt_content = s3_client.get_object(Bucket=bucket_name, Key=raw_gpt_submission)
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": file_content["Body"].read().decode("utf-8"),
-                    "gpt_content": gpt_content["Body"].read().decode("utf-8"),
+                    "file_content": file_content,
+                    "gpt_content": gpt_content,
                 }
             ),
         }
     else:
+        # If the API response file exists in S3 and is larger than 5MB, return an error message and exit
+        try:
+            api_response_content = s3_client.get_object_attributes(
+                Bucket=bucket_name,
+                Key=api_response_key,
+            )
+            api_response_size = api_response_content["ObjectSize"]
+            if api_response_size > 5 * 1024 * 1024:
+                return {
+                    "isBase64Encoded": False,
+                    "statusCode": 400,
+                    "headers": cors_headers,
+                    "body": json.dumps(
+                        {
+                            "error": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments."
+                        }
+                    ),
+                }
+        except Exception:
+            # If there is no api_response.json, chug along normally -- we'll download and quit if necessary.
+            pass
         # Check if there are any files in the path bucket_name/tournament_id
         all_objects = s3_client.list_objects_v2(
             Bucket=bucket_name,
             Prefix=tournament_id,
         )
-        try:
-            placeholder = s3_client.list_objects_v2(
-                Bucket=bucket_name,
-                Prefix=f"{tournament_id}/placeholder.txt",
-            )["Contents"]
-        except Exception:
-            placeholder = None
+        # If there are no files at all, then skip this section and kick off a results generation
         if all_objects["KeyCount"] > 0:
+            # See if a placeholder file exists -- used to prevent duplicate runs
+            # placeholder.txt is a good proxy of whether a Lambda is currently running or failed ungracefully
+            try:
+                placeholder = s3_client.list_objects_v2(
+                    Bucket=bucket_name,
+                    Prefix=f"{tournament_id}/placeholder.txt",
+                )["Contents"]
+            except Exception:
+                placeholder = None
+
+            # Get a list of all the schools in the tournament so that the user knows what they can choose from
             school_set = set()
             for obj in all_objects["Contents"]:
                 # Don't include files in the root of the tournament
                 if len(obj["Key"].split("/")) > 2:
                     school_set.add(obj["Key"].split("/")[1])
+            # Display the school list if there are schools present
             if len(school_set) > 0:
                 school_data = "\n\n".join(sorted(list(school_set)))
+            # Otherwise, display a message indicating the status
             else:
+                # Placeholder is present but no school results ready -- have the user wait for results
                 if placeholder is not None:
-                    school_data = "Still generating results! Check back soon! Consider opening a GitHub issue if this message persists."
+                    school_data = "Still generating results! Check back soon! Consider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
+                # Placeholder is not present AND no school results are present -- data should be regenerated.
                 else:
                     school_data = "No schools found; will attempt to regenerate."
                     s3_client.put_object(
@@ -90,7 +139,7 @@ def lambda_handler(event, context):
                     }
                 ),
             }
-        # Put a placeholder file in the S3 bucket and then trigger the Lambda to generate the file
+        # Put a placeholder file in the S3 bucket and then trigger the Lambda to generate the GPT prompts and results
         s3_client.put_object(
             Body="Placeholder during generation.",
             Bucket=bucket_name,
@@ -102,14 +151,13 @@ def lambda_handler(event, context):
             InvocationType="Event",
             Payload=json.dumps(parsed_body),
         )
-
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes.",
+                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes. Note that larger tournaments (eg. Harvard, Berkeley) are not supported through this web interface. Create an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
                     "gpt_content": "N/A",
                 }
             ),

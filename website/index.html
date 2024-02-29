@@ -35,6 +35,8 @@
 
     Enter the following information for the results you want to summarize.<br><br>
 
+    (To find the tournament ID for a tournament, click on the tournament on Tabroom.com and find the 5-digit tourn_id from the URL)
+
     (Need a suggestion for a tournament ID? Try 27074 (Cal Berkeley 2024). Submit a blank school name to display a list of schools with results.)<br><br>
 
     <form id="myForm">
@@ -47,8 +49,38 @@
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
 
-    <div id="loadingMessage" style="display: none;">Loading<span id="dots"></span></div>
-    <div id="responseContainer"></div>
+    <div id="responseContainer">
+        <md-block>
+            ## Recently-generated tournament results:
+            ```json
+            +---------------+------------------------------------------------------------+-------+------+
+            | Tournament ID | Tournament Name                                            | State | Year |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 19857         | Badger Ridge Hamilton Middle School Parliamentary Debate 1 | WI    | 2022 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 24637         | The Hilltopper Classic                                     | WI    | 2022 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 27074         | Cal Invitational UC Berkeley                               | CA    | 2024 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 27840         | MN Classic Debate Online Oct 7                             | MN    | 2023 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 28000         | Three Rivers TOC NIETOC at Upper St Clair                  | PA    | 2024 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 28332         | NSDA Taiwan Members Invitational                           | N/A   | 2023 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 28357         | CVFL 6 Speech St Francis Catholic High School              | CA    | 2024 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 28499         | The Falcon Fright                                          | ID    | 2023 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 29117         | The Edina Classic                                          | MN    | 2023 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 29796         | USA FORENSICS OLYMPIAD February Open                       | N/A   | 2024 |
+            +---------------+------------------------------------------------------------+-------+------+
+            | 30799         | Brooklyn Debate League 215                                 | NY    | 2024 |
+            +---------------+------------------------------------------------------------+-------+------+
+            ```
+        </md-block>
+    </div>
 
     <br>You can report issues with this service at <a href="https://github.com/benjmor/tabroom_auto_summarize/issues">the Issues page</a>.
 

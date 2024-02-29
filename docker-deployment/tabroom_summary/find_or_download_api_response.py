@@ -6,7 +6,7 @@ import ssl
 import urllib.request
 
 
-def find_or_download_api_response(tournament_id):
+def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
     # Check if the API response is already cached in S3. If it is, use that instead of re-scraping
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         file_location = f"{tournament_id}/api_response.json"
@@ -21,12 +21,20 @@ def find_or_download_api_response(tournament_id):
     else:
         s3_client = boto3.client("s3")
         try:
-            return json.loads(
-                s3_client.get_object(
-                    Bucket=os.environ["DATA_BUCKET_NAME"],
-                    Key=f"{tournament_id}/api_response.json",
-                )["Body"].read()
+            api_response_response = s3_client.get_object(
+                Bucket=os.environ["DATA_BUCKET_NAME"],
+                Key=f"{tournament_id}/api_response.json",
             )
+            response_contents = json.loads(["Body"].read())
+            # If the size is larger than the 5MB threshold, raise an exception
+            if (
+                api_response_response["ContentLength"]
+                > file_size_limit_mb * 1024 * 1024
+            ):
+                raise ValueError(
+                    f"API response size is too large ({file_size_limit_mb}MB limit)."
+                )
+            return response_contents
 
         except s3_client.exceptions.NoSuchKey:
             logging.info(
@@ -44,6 +52,7 @@ def find_or_download_api_response(tournament_id):
         raise ValueError(
             f"Error downloading data from Tabroom -- please check your tournament ID: {tournament_id}"
         )
+
     # Store the response for next time
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         os.makedirs(tournament_id, exist_ok=True)
@@ -55,4 +64,10 @@ def find_or_download_api_response(tournament_id):
             Bucket=os.environ["DATA_BUCKET_NAME"],
             Key=f"{tournament_id}/api_response.json",
         )
+    # If the response is longer than the 5MB threshold, raise an exception
+    if len(json.dumps(response)) > file_size_limit_mb * 1024 * 1024:
+        raise ValueError(
+            f"API response size is too large ({file_size_limit_mb}MB limit)."
+        )
+
     return response

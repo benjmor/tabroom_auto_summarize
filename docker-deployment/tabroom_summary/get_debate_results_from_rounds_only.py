@@ -145,7 +145,7 @@ def get_debate_results_from_rounds_only(
                 "entry_name": entry_name,
                 "entry_code": entry_code,
                 "school_name": entry_school,
-                "rank": current_entry_rank,
+                "rank": f"{current_entry_rank}/{len(overall_scoring_sorted)}",
                 "total_entries": len(overall_scoring_sorted),
                 "round_reached": "N/A",
                 "percentile": 100
