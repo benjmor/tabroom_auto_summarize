@@ -76,7 +76,8 @@ def lambda_handler(event, context):
                 "headers": cors_headers,
                 "body": json.dumps(
                     {
-                        "error": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments."
+                        "file_content": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments.",
+                        "gpt_content": "N/A",
                     }
                 ),
             }
