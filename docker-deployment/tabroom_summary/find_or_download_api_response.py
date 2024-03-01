@@ -25,7 +25,7 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
                 Bucket=os.environ["DATA_BUCKET_NAME"],
                 Key=f"{tournament_id}/api_response.json",
             )
-            response_contents = json.loads(["Body"].read())
+            response_contents = json.loads(api_response_response["Body"].read())
             # If the size is larger than the 5MB threshold, raise an exception
             if (
                 api_response_response["ContentLength"]

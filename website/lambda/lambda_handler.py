@@ -1,6 +1,7 @@
 import json
 import boto3
 import os
+from datetime import datetime, timedelta
 
 
 def lambda_handler(event, context):
@@ -14,6 +15,7 @@ def lambda_handler(event, context):
     # Do some data validation -- ensure that the number is 5 digits and the school name is 50 characters or less
     s3_client = boto3.client("s3")
     parsed_body = json.loads(event["body"])
+    parsed_body["read_only"] = os.environ["READ_ONLY"]
     tournament_id = parsed_body["tournament"]
     school_name = str(parsed_body["school"]).strip()
     file_path_to_find_or_create = f"{tournament_id}/{school_name}/results.txt"
@@ -22,11 +24,11 @@ def lambda_handler(event, context):
     bucket_name = os.environ["DATA_BUCKET_NAME"]
 
     # Check if the requested results already exist -- return them if they do
-    file_exists = s3_client.list_objects_v2(
+    gpt_file_exists = s3_client.list_objects_v2(
         Bucket=bucket_name,
-        Prefix=file_path_to_find_or_create,
+        Prefix=raw_gpt_submission,
     )
-    if "Contents" in file_exists:
+    if "Contents" in gpt_file_exists:
         try:
             file_content = (
                 s3_client.get_object(
@@ -63,6 +65,7 @@ def lambda_handler(event, context):
             api_response_content = s3_client.get_object_attributes(
                 Bucket=bucket_name,
                 Key=api_response_key,
+                ObjectAttributes=["ObjectSize"],
             )
             api_response_size = api_response_content["ObjectSize"]
             if api_response_size > 5 * 1024 * 1024:
@@ -89,12 +92,12 @@ def lambda_handler(event, context):
             # See if a placeholder file exists -- used to prevent duplicate runs
             # placeholder.txt is a good proxy of whether a Lambda is currently running or failed ungracefully
             try:
-                placeholder = s3_client.list_objects_v2(
+                placeholder_attributes = s3_client.get_object_attributes(
                     Bucket=bucket_name,
                     Prefix=f"{tournament_id}/placeholder.txt",
-                )["Contents"]
+                )
             except Exception:
-                placeholder = None
+                placeholder_attributes = None
 
             # Get a list of all the schools in the tournament so that the user knows what they can choose from
             school_set = set()
@@ -108,9 +111,14 @@ def lambda_handler(event, context):
             # Otherwise, display a message indicating the status
             else:
                 # Placeholder is present but no school results ready -- have the user wait for results
-                if placeholder is not None:
+                if (
+                    placeholder_attributes is not None
+                    and datetime(placeholder_attributes["LastModified"])
+                    + timedelta(hours=1)
+                    > datetime.now()
+                ):
                     school_data = "Still generating results! Check back soon!\nConsider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
-                # Placeholder is not present AND no school results are present -- data should be regenerated.
+                # no school results are present AND (the placeholder file is missing or outdated) -- data should be regenerated.
                 else:
                     school_data = "No schools found; will attempt to regenerate."
                     s3_client.put_object(
@@ -157,7 +165,7 @@ def lambda_handler(event, context):
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": "Results not yet generated, will attempt to generate it. Check back in about 15 minutes.\nNote: larger tournaments (eg. Harvard) are not supported through this web interface.\nCreate an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
+                    "file_content": "Results not yet generated, will attempt to generate them. Check back in about 15 minutes.\nNote: larger tournaments (eg. Harvard) are not supported through this web interface.\nCreate an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
                     "gpt_content": "N/A",
                 }
             ),

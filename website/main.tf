@@ -117,6 +117,7 @@ resource "aws_lambda_function" "api_lambda_function" {
     variables = {
       DATA_BUCKET_NAME = local.data_bucket_name
       TABROOM_SUMMARY_LAMBDA_NAME = local.summary_lambda_function_name
+      READ_ONLY = var.read_only
     }
   }
   source_code_hash = data.archive_file.lambda_source.output_base64sha256

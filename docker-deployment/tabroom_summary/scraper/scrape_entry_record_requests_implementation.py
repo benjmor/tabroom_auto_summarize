@@ -1,12 +1,12 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 import json
 import logging
+import requests
 import timeit
 
+# TODO - review whether this is worth pursuing. It might save like 5-10% per call, but it feels more fragile to do it that way.
 
-def scrape_entry_record(browser, entry_record_url):
+
+def scrape_entry_record(entry_record_url):
     """
     Returns a representation of an entry record.
 
@@ -25,13 +25,32 @@ def scrape_entry_record(browser, entry_record_url):
         ]
     }
     """
-    browser.get(entry_record_url)
+    response = requests.get(entry_record_url)
+
     results_list = []
-    full_entry_name = (
-        browser.find_element(By.CLASS_NAME, "main")
-        .find_element(By.CSS_SELECTOR, "h4")
-        .text
+    # Get the entry name
+    name_html_start_string = '<h4 class="nospace semibold">'
+    entry_name_start = response.content.find(
+        bytes(
+            name_html_start_string,
+            "utf-8",
+        ),
     )
+    entry_name_stop = response.content.find(
+        b"</h4>\n\n\t\t\t\t\t<h6",
+    )
+    full_entry_name_raw = str(
+        response.content[
+            entry_name_start + len(name_html_start_string) : entry_name_stop
+        ],
+        "utf-8",
+    )
+    full_entry_name = (
+        full_entry_name_raw.replace("\n", "").replace("\t", "").replace("&amp;", " & ")
+    )
+
+    return full_entry_name
+    # Get the data from the table.
     rows = browser.find_elements(By.CLASS_NAME, "row")
     logging.info(f"Grabbing entry record results for {full_entry_name}")
     for row in rows:
@@ -54,21 +73,11 @@ def scrape_entry_record(browser, entry_record_url):
 
 
 if __name__ == "__main__":
-    test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
-    # Start a new browser session
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_experimental_option(
-        "excludeSwitches", ["enable-logging"]
-    )  # attempting to suppress the USB read errors on Windows
-    # chrome_options.add_argument("--disable-logging")
-    # chrome_options.binary_location = CHROME_PATH
-    browser = webdriver.Chrome(options=chrome_options)
-    browser.get(test_url)
+    # test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
+    test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=20134&entry_id=3555490"
     time_per_10_scrape = timeit.timeit(
-        "json.dumps(scrape_entry_record(browser=browser, entry_record_url=test_url),indent=4,)",
+        "scrape_entry_record(entry_record_url=test_url)",
         number=10,
         globals=globals(),
     )
-    print(f"Each selenium scrape takes {time_per_10_scrape/10} seconds.")
-    browser.quit()
+    print(f"Each requests scrape takes {time_per_10_scrape/10} seconds.")
