@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "lambda_s3_writes" {
   statement {
 
     actions = [
-      "s3:GetObject",
+      "s3:GetObject*",
       "s3:PutObject",
       "s3:ListBucket",
     ]
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "summmarizer_role" {
   statement {
 
     actions = [
-      "s3:GetObject",
+      "s3:GetObject*",
       "s3:PutObject",
       "s3:ListBucket",
     ]
