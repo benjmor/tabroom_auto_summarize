@@ -1,5 +1,6 @@
 import json
 import boto3
+from botocore.response import StreamingBody
 import os
 from datetime import datetime, timedelta
 
@@ -36,9 +37,9 @@ def lambda_handler(event, context):
                     Key=file_path_to_find_or_create,
                 )["Body"]
                 .read()
-                .decode("utf-8")
-            )
-        except Exception:
+                .decode(encoding="utf-8", errors="replace")
+            ).replace("\uFFFD", "--")
+        except Exception as ex:
             file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
         gpt_content = (
             s3_client.get_object(
@@ -172,3 +173,20 @@ def lambda_handler(event, context):
             }
         ),
     }
+
+
+if __name__ == "__main__":
+    print(
+        lambda_handler(
+            {
+                "body": json.dumps(
+                    {
+                        "tournament": "27074",
+                        "school": "Folsom",
+                        "read_only": "True",
+                    }
+                )
+            },
+            {},
+        )
+    )
