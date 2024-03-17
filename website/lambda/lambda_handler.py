@@ -5,6 +5,10 @@ import os
 from datetime import datetime, timedelta
 
 
+def send_prompt_to_llm_and_save_to_s3(prompt):
+    raise Exception("Not implemented!")
+
+
 def lambda_handler(event, context):
     print(event)
     cors_headers = {
@@ -25,11 +29,18 @@ def lambda_handler(event, context):
     bucket_name = os.environ["DATA_BUCKET_NAME"]
 
     # Check if the requested results already exist -- return them if they do
-    gpt_file_exists = s3_client.list_objects_v2(
-        Bucket=bucket_name,
-        Prefix=raw_gpt_submission,
-    )
-    if "Contents" in gpt_file_exists:
+    try:
+        gpt_content = (
+            s3_client.get_object(
+                Bucket=bucket_name,
+                Key=raw_gpt_submission,
+            )["Body"]
+            .read()
+            .decode("utf-8")
+        )
+    except Exception:
+        gpt_content = None
+    if gpt_content is not None:
         try:
             file_content = (
                 s3_client.get_object(
@@ -40,15 +51,12 @@ def lambda_handler(event, context):
                 .decode(encoding="utf-8", errors="replace")
             ).replace("\uFFFD", "--")
         except Exception as ex:
-            file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
-        gpt_content = (
-            s3_client.get_object(
-                Bucket=bucket_name,
-                Key=raw_gpt_submission,
-            )["Body"]
-            .read()
-            .decode("utf-8")
-        )
+            try:
+                file_content = send_prompt_to_llm_and_save_to_s3(
+                    prompt=gpt_content,
+                )
+            except Exception:
+                file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
