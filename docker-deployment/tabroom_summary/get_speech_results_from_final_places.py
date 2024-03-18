@@ -51,7 +51,10 @@ def get_speech_results_from_final_places(
         ranks_by_round = ""
         for value in result["values"]:
             if value["priority"] == 999:
-                ranks_by_round = value["value"]
+                if "value" in value:
+                    ranks_by_round = value["value"]
+                else:
+                    ranks_by_round = "N/A"
                 break
         ret_val.append(
             {

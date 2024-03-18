@@ -137,8 +137,8 @@ def main(
     entry_id_to_entry_entry_name_dictionary = {}
     has_speech = False
     has_debate = False
-    for category in response_data["categories"]:
-        for event in category["events"]:
+    for category in response_data.get("categories", []):
+        for event in category.get("events", []):
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
             # This only looks at the first round of the event -- theoretically that could be a problem for late adds
             update_global_entry_dictionary(

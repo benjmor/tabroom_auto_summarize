@@ -99,7 +99,9 @@ def generate_chat_gpt_paragraphs(
             context=context,
             data_strings=data_strings,
         )
+        chat_gpt_payload += "<result_data>"
         chat_gpt_payload += data_strings
+        chat_gpt_payload += "</result_data>"
         final_gpt_payload = "\n".join(chat_gpt_payload)
         all_schools_dict[short_school_name]["gpt_prompt"] = final_gpt_payload
 
@@ -139,37 +141,6 @@ def generate_chat_gpt_paragraphs(
             )
 
             all_schools_dict[short_school_name]["unedited_response"] = body_response
-            # editor_payload = (
-            #     "You are the editor of a local newspaper. Keep the tone factual and concise. Edit the following article improve its flow and grammar:\r\n"
-            #     + body_response
-            # )
-            # editor_response = (
-            #     client.chat.completions.create(
-            #         model="gpt-4",
-            #         messages=[
-            #             {"role": "system", "content": "You are a helpful assistant."},
-            #             {"role": "user", "content": editor_payload},
-            #         ],
-            #     )
-            #     .choices[0]
-            #     .message.content
-            # )
-            # all_schools_dict[school]["edited_response"] = editor_response
-            # headline_response = (
-            #     client.chat.completions.create(
-            #         model="gpt-4",
-            #         messages=[
-            #             {
-            #                 "role": "system",
-            #                 "content": "Generate a headline for this article. The response should be just a single headline, not in quotes",
-            #             },
-            #             {"role": "user", "content": editor_response},
-            #         ],
-            #     )
-            #     .choices[0]
-            #     .message.content
-            # )
-            # all_schools_dict[school]["headline_response"] = headline_response
 
         sorted_by_event = sorted(
             school_filtered_tournament_results,
@@ -191,12 +162,8 @@ def generate_chat_gpt_paragraphs(
             logging.warning(
                 f"No results found for {short_school_name} above the percentile minimum, returning just the summary paragraph."
             )
-            full_response = (
-                # headline_response
-                # + "\r\n"
-                # + editor_response
-                body_response
-            )
+            full_response = body_response
+
         else:
             logging.info(f"Generating list of results for {short_school_name}")
             list_generation_prompt = generate_list_generation_prompt(
@@ -239,9 +206,6 @@ def generate_chat_gpt_paragraphs(
                 )
 
             full_response = (
-                # headline_response
-                # + "\r\n"
-                # + editor_response
                 body_response
                 + "\r\n"
                 + "Event-by-Event Results"
@@ -249,6 +213,9 @@ def generate_chat_gpt_paragraphs(
                 + numbered_response
             )
         all_schools_dict[short_school_name]["full_response"] = full_response
+        all_schools_dict[short_school_name][
+            "numbered_list_response"
+        ] = numbered_list_prompt
         # If running outside of Lambda on a large tournament, save off results after each summary.
         if (
             os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None

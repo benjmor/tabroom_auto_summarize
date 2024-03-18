@@ -73,6 +73,12 @@ def handler(event, context):
                     Bucket=bucket_name,
                     Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
                 )
+            if "numbered_list_response" in response[school_name]:
+                s3_client.put_object(
+                    Body=response[school_name]["numbered_list_response"],
+                    Bucket=bucket_name,
+                    Key=f"{tournament_id}/{school_name}/numbered_list_response.txt",
+                )
         try:
             # Delete the placeholder to signal to the Lambda that execution is complete
             s3_client.delete_object(
@@ -92,8 +98,8 @@ if __name__ == "__main__":
         "-t",
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
-        required=True,
-        default="29810",
+        required=False,
+        default="27974",
     )
     parser.add_argument(
         "-r",
@@ -113,6 +119,6 @@ if __name__ == "__main__":
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         "open_ai_key_path": open_ai_key_path,
-        "read_only": read_only,
+        "read_only": True,
     }
     handler(event, {})

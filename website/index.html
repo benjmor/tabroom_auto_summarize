@@ -159,7 +159,8 @@
                 // Display the response
                 file_content = data['file_content'].replace("Event-by-Event Results", "### Event-by-Event Results") //.replace(/\n/g, '<br>');
                 gpt_content = data['gpt_content'].replace(/\n/g, "\n\n"); // more newlines!
-                display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "</md-block>";
+                numbered_list_prompt_content = data['numbered_list_prompt_content']
+                display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "\n## Line-by-Line prompt passed to ChatGPT:\n" + numbered_list_prompt_content + "</md-block>";
                 document.getElementById('responseContainer').innerHTML = display_md;
             })
             .catch(error => {
