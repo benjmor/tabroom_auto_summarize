@@ -238,7 +238,7 @@ def lambda_handler(event, context):
     bucket_name = os.getenv("DATA_BUCKET_NAME", "tabroom-summaries-data-bucket")
 
     # Check if the requested results already exist -- return them if they do
-    if len(school_name > 0):  # explicitly skip empty names -- they are trouble.
+    if len(school_name) > 0:  # explicitly skip empty names -- they are trouble.
         try:
             gpt_content = (
                 s3_client.get_object(
