@@ -63,7 +63,7 @@ def get_judge_map(
             header_text = header.text.strip()
             if header_text in notable_header_indices.keys():
                 header_index = header.get_attribute("data-column")
-                notable_header_indices[header_text] = header_index
+                notable_header_indices[header_text] = int(header_index)
 
         try:
             judge_table = browser.find_element(By.TAG_NAME, "tbody")

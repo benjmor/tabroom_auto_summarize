@@ -1,6 +1,6 @@
 def generate_list_generation_prompt(headers: list[str]):
     return f"""
-Create a numbered list of the following speech and debate tournament, so that each event is a new number in the list, and each event contains results from all students in that event.
+Create a numbered list of the following speech and debate tournament event results, so that each event is a new number in the list, and each event contains results from all students in that event.
 Do not include the school name in the individual results entry.
 Team entries might be indicated with just last names, and will typically not contain first names. Those teams should be referred to as "the team of", followed by the last names.
 
@@ -18,8 +18,11 @@ For example:
 1. **Event Name**: StudentName (3rd place) made finals and StudentName6 placed 5th. StudentName6 was also 5th speaker.
 2. **Event Name2**: StudentName2 won 1st place and StudentName5 took 3rd place. StudentName3 (8th place) and StudentName4 (10th place) made semifinals.
 
-SOURCE DATA:
+ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO NOT APPEAR IN RESULT_DATA.
+
+<result_data>
 {"|".join(headers)}
+</result_data>
     """
 
 

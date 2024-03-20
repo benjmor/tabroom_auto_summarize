@@ -61,6 +61,7 @@ def resolve_longname_to_shortname(long_name: str):
         "university school": "University",
         "university": "University",
         "greenwich hs": "GHS",
+        "ghs": "GHS",
         "astor redhead academy": "FUHS",
         "stanford ohs": "Stanford OHS",
     }

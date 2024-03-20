@@ -38,6 +38,8 @@ def generate_llm_prompt_header(
 The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail}
 
 Write a 4 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely and professionally. Keep the tone factual and concise. Include individuals' rankings, wins, and placement out of the total number of entries. Do not prepend paragraphs with labels like 'Paragraph 1'.
+
+The presence of a "Final Places" result does not mean a student made the final round; it just indicates their overall placement in the tournament. 
     """
     ]
     if judge_map:
