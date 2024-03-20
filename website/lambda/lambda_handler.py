@@ -352,6 +352,7 @@ def lambda_handler(event, context):
                 school_set.add(obj["Key"].split("/")[1])
 
         # Get data to display the school list if there are schools present
+        logging.warning(f"school_set is {school_set}")
         if len(school_set) > 0:
             school_data = "\n\n".join(sorted(list(school_set)))
         # Otherwise, display a message indicating the status

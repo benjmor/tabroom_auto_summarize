@@ -58,6 +58,9 @@ def resolve_longname_to_shortname(long_name: str):
         "vegas debates": "Vegas Debates",
         "young genius, bay area speech and debate": "Young Genius",
         "university school": "University",
+        "greenwich hs": "GHS",
+        "astor redhead academy": "FUHS",
+        "stanford ohs": "Stanford OHS",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]
@@ -182,7 +185,7 @@ def resolve_longname_to_shortname(long_name: str):
             break
 
     bad_beginnings = [
-        "The",
+        "The ",
         "The University of",
         "The University Of",
         "University of",
