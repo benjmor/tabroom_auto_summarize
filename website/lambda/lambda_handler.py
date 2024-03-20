@@ -288,7 +288,8 @@ def lambda_handler(event, context):
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": file_content,
+                    "file_content": file_content
+                    + "\n\nMore information about forensics (including how to compete, judge, or volunteer) can be found at [www.speechanddebate.org](www.speechanddebate.org), or by reaching out to the school's coach.",
                     "gpt_content": gpt_content,
                     "numbered_list_prompt_content": numbered_list_prompt_content,
                 }
