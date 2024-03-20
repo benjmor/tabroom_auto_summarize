@@ -10,6 +10,7 @@ from .parse_results_wrapper import parse_results_wrapper
 from .get_judge_map import get_judge_map
 from .resolve_longname_to_shortname import resolve_longname_to_shortname
 from collections import Counter
+import boto3
 
 logging.basicConfig(
     format="%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
@@ -36,6 +37,7 @@ def main(
     scrape_entry_records,
     chrome_options,
     chrome_service,
+    data_bucket,
     final_results_identifiers=[
         "Final Places",
         "Prelim Seeds",  # Sometimes need to parse the prelim seeds to scrape name/entry data
@@ -61,6 +63,7 @@ def main(
     event_options = dropdown.find_elements(By.TAG_NAME, "option")
 
     results = []
+    # NOTE - Lambda runs in single-process mode
     if "--single-process" in chrome_options.arguments:
         # Grab the options data so that we don't have to loop over the dropdown again, which would require multiple browser windows
         event_options_tuples = []
@@ -72,10 +75,18 @@ def main(
                 )
             )
         for event_option in event_options_tuples:
-            # If we're running in single-process mode, we don't want to open multiple browser windows
-            # So we'll just run the parse_results function in the main thread
-            results.append(
-                parse_results_wrapper(
+            # If there is data in the temp_results folder in S3, load it into results
+            s3_client = boto3.client("s3")
+            try:
+                response = s3_client.get_object(
+                    Bucket=data_bucket,
+                    Key=f"{tournament_id}/temp_results/{event_option[1]}.json",
+                )
+                results.append(json.loads(response["Body"].read()))
+            except s3_client.exceptions.NoSuchKey:
+                # If we're running in single-process mode, we don't want to open multiple browser windows
+                # So we'll just run the parse_results function in the main thread
+                single_event_result_data = parse_results_wrapper(
                     event_option=event_option,
                     base_url=base_url,
                     browser=browser,
@@ -83,7 +94,14 @@ def main(
                     final_round_results_identifiers=final_round_results_identifiers,
                     scrape_entry_records=scrape_entry_records,
                 )
-            )
+                results.append(single_event_result_data)
+                # At the end, save the event option into the temp_results folder
+                s3_client.put_object(
+                    Body=json.dumps(single_event_result_data),
+                    Bucket=data_bucket,
+                    Key=f"{tournament_id}/temp_results/{event_option[1]}.json",
+                    ContentType="application/json",
+                )
     else:
         thread_arguments = []
         # Pass options so that parallel processes can create their own browser sessions

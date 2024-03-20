@@ -18,9 +18,8 @@ from .find_or_download_api_response import find_or_download_api_response
 
 
 def main(
-    school_name: str = "",
+    data_bucket: str,
     tournament_id: str = "",
-    all_schools: bool = False,
     # custom_url: str = "",
     percentile_minimum: int = 40,
     max_results_to_pass_to_gpt: int = 15,
@@ -92,7 +91,7 @@ def main(
         try:
             scrape_output = json.loads(
                 s3_client.get_object(
-                    Bucket=os.environ["DATA_BUCKET_NAME"],
+                    Bucket=data_bucket,
                     Key=f"{tournament_id}/scraped_results.json",
                 )["Body"].read()
             )
@@ -101,14 +100,12 @@ def main(
             logging.info("No scraped results found in S3. Scraping tabroom.com")
             must_scrape = True
     if must_scrape:
-        # TODO - for large tournaments (is_large = True), get each event, and scrape events individually via Step Functions.
-        # Store them in a scraped_events subfolder.
-        # At the end, compile the results into scraped_results.json, upload to S3, and re-run this Lambda
         scrape_output = tabroom_scrape.main(
             tournament_id=tournament_id,
             scrape_entry_records=scrape_entry_records_bool,
             chrome_options=options,
             chrome_service=service,
+            data_bucket=data_bucket,
         )
         save_scraped_results(scrape_output, tournament_id)
     scraped_results = scrape_output["results"]
@@ -171,21 +168,12 @@ def main(
             if result["entry_name"] in name_to_full_name_dict:
                 result["entry_name"] = name_to_full_name_dict[result["entry_name"]]
 
-    # Select the schools to write up reports on
-    if all_schools:
-        schools_to_write_up = school_set
-        grouped_data = group_data_by_school(
-            school_short_name_dict=school_short_name_dict,
-            results=tournament_results,
-            all_schools=all_schools,
-        )
-    else:
-        schools_to_write_up = set([school_name])
-        grouped_data = group_data_by_school(
-            school_short_name_dict=school_short_name_dict,
-            results=tournament_results,
-            school_name=school_name,
-        )
+    schools_to_write_up = school_set
+    grouped_data = group_data_by_school(
+        school_short_name_dict=school_short_name_dict,
+        results=tournament_results,
+    )
+
     # Generate a school-keyed dict of all the GPT prompts and responses for each school
     # Use the school SHORTNAME as the key
     all_schools_dict = generate_llm_prompts(
@@ -227,7 +215,6 @@ if __name__ == "__main__":
         open_ai_key_secret_name = args.open_ai_key_secret_name
         open_ai_key_path = None
     main(
-        school_name=school_name,
         tournament_id=tournament_id,
         all_schools=all_schools,
         custom_url=custom_url,
@@ -235,6 +222,4 @@ if __name__ == "__main__":
         max_results_to_pass_to_gpt=max_results_to_pass_to_gpt,
         context=context,
         scrape_entry_records_bool=scrape_entry_records_bool,
-        open_ai_key_path=open_ai_key_path,
-        open_ai_key_secret_name=open_ai_key_secret_name,
     )

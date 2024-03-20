@@ -14,6 +14,8 @@ Unlike previous versions, this version will NOT ever directly send LLM prompts t
 # Set log level
 logging.basicConfig(level=logging.INFO)
 
+DATA_BUCKET = "tabroom-summaries-data-bucket"  # TODO - remove after testing
+
 
 def handler(event, context):
     running_outside_of_lambda = os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None
@@ -30,8 +32,8 @@ def handler(event, context):
     # Generate a Tabroom summary
     tournament_id = event["tournament"]
     response = tabroom_summary.main(
-        all_schools=True,
         tournament_id=tournament_id,
+        data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
     )
 
     # Save the result outputs

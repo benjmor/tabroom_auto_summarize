@@ -4,8 +4,6 @@ import json
 def group_data_by_school(
     results,
     school_short_name_dict: dict,
-    all_schools: bool = False,
-    school_name: str = "",
 ):
     """
     Given a list of results and a dictionary that maps long school names to short school names
@@ -14,9 +12,6 @@ def group_data_by_school(
     """
     grouped_data = {}
     for result in results:
-        # Skip results that don't match the school name, unless we're looking for all schools
-        if not all_schools and result["school_name"] != school_name:
-            continue
         school_long_name = result["school_name"]
         try:
             school_short_name = school_short_name_dict[school_long_name]

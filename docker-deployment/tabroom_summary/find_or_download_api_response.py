@@ -31,10 +31,7 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
                 api_response_response["ContentLength"]
                 > file_size_limit_mb * 1024 * 1024
             ):
-                # TODO - Add handling for large tournaments -- break them out by event and run using step functions
-                raise ValueError(
-                    f"API response size is too large ({file_size_limit_mb}MB limit)."
-                )
+                logging.warning(f"BIG TOURNAMENT ALERT - Response size was {api_response_response["ContentLength"]}")
             return response_contents
 
         except s3_client.exceptions.NoSuchKey:
@@ -65,10 +62,8 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
             Bucket=os.environ["DATA_BUCKET_NAME"],
             Key=f"{tournament_id}/api_response.json",
         )
-    # If the response is longer than the 5MB threshold, raise an exception
+    # If the response is longer than the 5MB threshold, print a warning
     if len(json.dumps(response)) > file_size_limit_mb * 1024 * 1024:
-        raise ValueError(
-            f"API response size is too large ({file_size_limit_mb}MB limit)."
-        )
+        logging.warning(f"BIG TOURNAMENT ALERT - Response size was {api_response_response["ContentLength"]}")
 
     return response
