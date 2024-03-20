@@ -117,14 +117,10 @@ def generate_llm_prompts(
             list_generation_prompt = generate_list_generation_prompt(
                 headers=data_labels
             )
-            numbered_list_prompt = (
-                list_generation_prompt
-                + "\r\n"
-                + "\r\n".join(
-                    create_data_strings(
-                        data_objects=sorted_by_event_without_round_by_round,
-                        data_labels=data_labels_without_percentile,
-                    )
+            numbered_list_prompt = list_generation_prompt + "\n\n".join(
+                create_data_strings(
+                    data_objects=sorted_by_event_without_round_by_round,
+                    data_labels=data_labels_without_percentile,
                 )
             )
             all_schools_dict[short_school_name][
