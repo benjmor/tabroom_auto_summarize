@@ -26,6 +26,7 @@ def resolve_longname_to_shortname(long_name: str):
     """
     This function takes a long name and returns a short name.
     """
+    original_long_name = long_name
     # These are special cases that don't play nice with the logic
     special_case_dict = {
         "thomas jefferson high school of science and technology": "Thomas Jefferson",
@@ -201,5 +202,5 @@ def resolve_longname_to_shortname(long_name: str):
             break
 
     if len(long_name.strip()) == 0:
-        raise ValueError(f"Failed to resolve {long_name}")
+        raise ValueError(f"Failed to resolve {original_long_name}")
     return long_name.strip()
