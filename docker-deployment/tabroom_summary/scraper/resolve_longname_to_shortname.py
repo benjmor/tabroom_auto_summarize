@@ -59,6 +59,7 @@ def resolve_longname_to_shortname(long_name: str):
         "vegas debates": "Vegas Debates",
         "young genius, bay area speech and debate": "Young Genius",
         "university school": "University",
+        "university": "University",
         "greenwich hs": "GHS",
         "astor redhead academy": "FUHS",
         "stanford ohs": "Stanford OHS",
