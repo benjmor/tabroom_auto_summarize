@@ -75,8 +75,12 @@ def get_judge_map(
         judge_rows = judge_table.find_elements(By.TAG_NAME, "tr")
         for row in judge_rows:
             row_data = row.find_elements(By.TAG_NAME, "td")
-            judge_name = row_data[1].text + " " + row_data[2].text
-            school_long_name = row_data[3].text
+            judge_name = (
+                row_data[notable_header_indices["First"]].text
+                + " "
+                + row_data[notable_header_indices["Last"]].text
+            )
+            school_long_name = row_data[notable_header_indices["Institution"]].text
             school_short_name = school_short_name_dict.get(
                 school_long_name, school_long_name
             )
