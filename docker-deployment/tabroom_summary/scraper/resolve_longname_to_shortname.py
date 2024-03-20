@@ -200,6 +200,6 @@ def resolve_longname_to_shortname(long_name: str):
             long_name = long_name.replace(bad_beginning, "")
             break
 
-    if len(long_name.strip() == 0):
+    if len(long_name.strip()) == 0:
         raise ValueError(f"Failed to resolve {long_name}")
     return long_name.strip()
