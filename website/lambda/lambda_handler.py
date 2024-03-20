@@ -367,7 +367,7 @@ def lambda_handler(event, context):
             # no school results are present AND (the placeholder file is missing or outdated) -- data should be regenerated.
             # TODO - This path is being hit even when a recent placeholder exists! FIX IT!
             else:
-                school_data = "No schools found; will attempt to regenerate."
+                school_data = "No schools found; will attempt to regenerate. Check back in about an hour."
                 s3_client.put_object(
                     Body="Placeholder during generation.",
                     Bucket=bucket_name,
