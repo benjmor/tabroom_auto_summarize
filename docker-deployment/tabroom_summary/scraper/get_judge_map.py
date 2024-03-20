@@ -59,7 +59,7 @@ def get_judge_map(
             "Last": 2,
             "Institution": 3,
         }
-        for header in header_table:
+        for header in header_table.find_elements(By.TAG_NAME, "th"):
             header_text = header.text.strip()
             if header_text in notable_header_indices.keys():
                 header_index = header.get_attribute("data-column")

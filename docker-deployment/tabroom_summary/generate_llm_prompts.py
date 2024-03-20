@@ -76,7 +76,6 @@ def generate_llm_prompts(
         llm_payload = generate_llm_prompt_header(
             tournament_data=tournament_data,
             school_name=school_long_name,
-            short_school_name=short_school_name,
             school_count=school_count,
             state_count=state_count,
             has_speech=has_speech,
@@ -85,6 +84,7 @@ def generate_llm_prompts(
             header_string="|".join(data_labels_without_percentile),
             context=context,
             data_strings=data_strings,
+            judge_map=judge_map,
         )
         llm_payload += data_strings
         llm_payload.append("</result_data>")

@@ -43,6 +43,7 @@ def resolve_longname_to_shortname(long_name: str):
         "air academy hs": "Air Academy",
         "college prep school": "College Prep",
         "college prep hs": "College Prep",
+        "college prep": "College Prep",
         "st. paul academy and summit school": "St. Paul Academy and Summit",
         "university high school, irvine": "University HS, Irvine",
         "alannah debates": "Alannah",
@@ -56,6 +57,7 @@ def resolve_longname_to_shortname(long_name: str):
         "st. ignatius college prep": "St Ignatius College Prep",
         "vegas debates": "Vegas Debates",
         "young genius, bay area speech and debate": "Young Genius",
+        "university school": "University",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]
@@ -195,4 +197,6 @@ def resolve_longname_to_shortname(long_name: str):
             long_name = long_name.replace(bad_beginning, "")
             break
 
+    if len(long_name.strip() == 0):
+        raise ValueError(f"Failed to resolve {long_name}")
     return long_name.strip()

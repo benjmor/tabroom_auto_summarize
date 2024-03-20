@@ -238,63 +238,64 @@ def lambda_handler(event, context):
     bucket_name = os.getenv("DATA_BUCKET_NAME", "tabroom-summaries-data-bucket")
 
     # Check if the requested results already exist -- return them if they do
-    try:
-        gpt_content = (
-            s3_client.get_object(
-                Bucket=bucket_name,
-                Key=raw_gpt_submission,
-            )["Body"]
-            .read()
-            .decode("utf-8")
-        )
-    except Exception:
-        gpt_content = None
-    try:
-        numbered_list_prompt_content = (
-            s3_client.get_object(
-                Bucket=bucket_name,
-                Key=numbered_list_prompt_path,
-            )["Body"]
-            .read()
-            .decode("utf-8")
-        )
-    except Exception:
-        numbered_list_prompt_content = None
-    if gpt_content is not None:
+    if len(school_name > 0):  # explicitly skip empty names -- they are trouble.
         try:
-            file_content = (
+            gpt_content = (
                 s3_client.get_object(
                     Bucket=bucket_name,
-                    Key=file_path_to_find_or_create,
+                    Key=raw_gpt_submission,
                 )["Body"]
                 .read()
-                .decode(encoding="utf-8", errors="replace")
-            ).replace("\uFFFD", "--")
-        except Exception as ex:
+                .decode("utf-8")
+            )
+        except Exception:
+            gpt_content = None
+        try:
+            numbered_list_prompt_content = (
+                s3_client.get_object(
+                    Bucket=bucket_name,
+                    Key=numbered_list_prompt_path,
+                )["Body"]
+                .read()
+                .decode("utf-8")
+            )
+        except Exception:
+            numbered_list_prompt_content = None
+        if gpt_content is not None:
             try:
-                file_content = send_prompt_to_llm_and_save_to_s3(
-                    prompt=gpt_content,
-                    s3_client=s3_client,
-                    bucket_name=bucket_name,
-                    key=file_path_to_find_or_create,
-                    numbered_list_prompt_path=numbered_list_prompt_path,
-                )
+                file_content = (
+                    s3_client.get_object(
+                        Bucket=bucket_name,
+                        Key=file_path_to_find_or_create,
+                    )["Body"]
+                    .read()
+                    .decode(encoding="utf-8", errors="replace")
+                ).replace("\uFFFD", "--")
             except Exception as ex:
-                logging.error(repr(ex))
-                file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
-        return {
-            "isBase64Encoded": False,
-            "statusCode": 200,
-            "headers": cors_headers,
-            "body": json.dumps(
-                {
-                    "file_content": file_content
-                    + "\n\nMore information about forensics (including how to compete, judge, or volunteer) can be found at [www.speechanddebate.org](www.speechanddebate.org), or by reaching out to the school's coach.",
-                    "gpt_content": gpt_content,
-                    "numbered_list_prompt_content": numbered_list_prompt_content,
-                }
-            ),
-        }
+                try:
+                    file_content = send_prompt_to_llm_and_save_to_s3(
+                        prompt=gpt_content,
+                        s3_client=s3_client,
+                        bucket_name=bucket_name,
+                        key=file_path_to_find_or_create,
+                        numbered_list_prompt_path=numbered_list_prompt_path,
+                    )
+                except Exception as ex:
+                    logging.error(repr(ex))
+                    file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
+            return {
+                "isBase64Encoded": False,
+                "statusCode": 200,
+                "headers": cors_headers,
+                "body": json.dumps(
+                    {
+                        "file_content": file_content
+                        + "\n\nMore information about forensics (including how to compete, judge, or volunteer) can be found at [www.speechanddebate.org](www.speechanddebate.org), or by reaching out to the school's coach.",
+                        "gpt_content": gpt_content,
+                        "numbered_list_prompt_content": numbered_list_prompt_content,
+                    }
+                ),
+            }
 
     # If the API response file exists in S3 and is larger than 5MB, return an error message and exit
     # COMMENTED OUT - We're trying to support large tournaments now
@@ -363,6 +364,7 @@ def lambda_handler(event, context):
             ):
                 school_data = "Still generating results! Check back soon!\nConsider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
             # no school results are present AND (the placeholder file is missing or outdated) -- data should be regenerated.
+            # TODO - This path is being hit even when a recent placeholder exists! FIX IT!
             else:
                 school_data = "No schools found; will attempt to regenerate."
                 s3_client.put_object(
