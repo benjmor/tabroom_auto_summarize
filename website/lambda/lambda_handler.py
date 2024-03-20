@@ -336,7 +336,7 @@ def lambda_handler(event, context):
         try:
             placeholder_attributes = s3_client.get_object_attributes(
                 Bucket=bucket_name,
-                Prefix=f"{tournament_id}/placeholder.txt",
+                Key=f"{tournament_id}/placeholder.txt",
             )
         except Exception as ex:
             logging.error(f"Error while looking up placeholder: {repr(ex)}")
@@ -360,6 +360,7 @@ def lambda_handler(event, context):
         # Otherwise, display a message indicating the status
         else:
             # Placeholder is present but no school results ready -- have the user wait for results
+            print(f"This is the placeholder_attributes: {placeholder_attributes}")
             if placeholder_attributes is not None and (
                 (datetime(placeholder_attributes["LastModified"]) + timedelta(hours=1))
                 > datetime.now()
