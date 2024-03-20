@@ -236,6 +236,7 @@ def lambda_handler(event, context):
         f"{tournament_id}/{school_name}/numbered_list_prompt.txt"
     )
     bucket_name = os.getenv("DATA_BUCKET_NAME", "tabroom-summaries-data-bucket")
+    numbered_list_prompt_content = None
 
     # Check if the requested results already exist -- return them if they do
     if len(school_name) > 0:  # explicitly skip empty names -- they are trouble.
