@@ -72,7 +72,6 @@ def main(
                 (
                     event_option.get_attribute("innerHTML"),
                     event_option.get_attribute("value"),
-                    event_option.text,
                 )
             )
         for event_option in event_options_tuples:
@@ -81,7 +80,7 @@ def main(
             try:
                 response = s3_client.get_object(
                     Bucket=data_bucket,
-                    Key=f"{tournament_id}/temp_results/{event_option[2]}.json",
+                    Key=f"{tournament_id}/temp_results/{event_option[0]}.json",
                 )
                 results.append(json.loads(response["Body"].read()))
             except s3_client.exceptions.NoSuchKey:
@@ -100,7 +99,7 @@ def main(
                 s3_client.put_object(
                     Body=json.dumps(single_event_result_data),
                     Bucket=data_bucket,
-                    Key=f"{tournament_id}/temp_results/{event_option[2]}.json",
+                    Key=f"{tournament_id}/temp_results/{event_option[0]}.json",
                     ContentType="application/json",
                 )
     else:
