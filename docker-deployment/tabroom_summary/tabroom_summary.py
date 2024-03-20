@@ -11,7 +11,7 @@ from .scraper import tabroom_scrape as tabroom_scrape
 from .update_global_entry_dictionary import update_global_entry_dictionary
 from .parse_arguments import parse_arguments
 from .group_data_by_school import group_data_by_school
-from .generate_chat_gpt_paragraphs import generate_chat_gpt_paragraphs
+from .generate_llm_prompts import generate_llm_prompts
 from .parse_result_sets import parse_result_sets
 from .save_scraped_results import save_scraped_results
 from .find_or_download_api_response import find_or_download_api_response
@@ -21,14 +21,11 @@ def main(
     school_name: str = "",
     tournament_id: str = "",
     all_schools: bool = False,
-    custom_url: str = "",
-    read_only: bool = False,
+    # custom_url: str = "",
     percentile_minimum: int = 40,
     max_results_to_pass_to_gpt: int = 15,
     context: str = "",
     scrape_entry_records_bool: bool = True,
-    open_ai_key_path: str = None,
-    open_ai_key_secret_name: str = None,
 ):
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
@@ -104,6 +101,9 @@ def main(
             logging.info("No scraped results found in S3. Scraping tabroom.com")
             must_scrape = True
     if must_scrape:
+        # TODO - for large tournaments (is_large = True), get each event, and scrape events individually via Step Functions.
+        # Store them in a scraped_events subfolder.
+        # At the end, compile the results into scraped_results.json, upload to S3, and re-run this Lambda
         scrape_output = tabroom_scrape.main(
             tournament_id=tournament_id,
             scrape_entry_records=scrape_entry_records_bool,
@@ -188,9 +188,9 @@ def main(
         )
     # Generate a school-keyed dict of all the GPT prompts and responses for each school
     # Use the school SHORTNAME as the key
-    all_schools_dict = generate_chat_gpt_paragraphs(
+    all_schools_dict = generate_llm_prompts(
         tournament_data=response_data,
-        custom_url=custom_url,
+        # custom_url=custom_url,
         school_count=len(school_set),
         state_count=len(state_set_list),
         has_speech=has_speech,
@@ -201,12 +201,9 @@ def main(
         grouped_data=grouped_data,
         percentile_minimum=percentile_minimum,
         max_results_to_pass_to_gpt=max_results_to_pass_to_gpt,
-        read_only=read_only,
         data_labels=data_labels,
         school_short_name_dict=school_short_name_dict,
         judge_map=scrape_output["judge_map"],
-        open_ai_key_path=open_ai_key_path,
-        open_ai_key_secret_name=open_ai_key_secret_name,
     )
     # return a dictionary of schools with the summary text and all GPT prompts
     return all_schools_dict
@@ -219,7 +216,6 @@ if __name__ == "__main__":
     tournament_id = args.tournament_id
     all_schools = bool(args.all_schools)
     custom_url = args.custom_url
-    read_only = bool(args.read_only)
     percentile_minimum = int(args.percentile_minimum)
     max_results_to_pass_to_gpt = int(args.max_results)
     context = args.context
@@ -235,7 +231,6 @@ if __name__ == "__main__":
         tournament_id=tournament_id,
         all_schools=all_schools,
         custom_url=custom_url,
-        read_only=read_only,
         percentile_minimum=percentile_minimum,
         max_results_to_pass_to_gpt=max_results_to_pass_to_gpt,
         context=context,

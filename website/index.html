@@ -123,7 +123,7 @@
     <script>
         function submitForm() {
             // Update to Loading...
-            document.getElementById('responseContainer').innerText = "Loading...this may take a few seconds for new tournaments..."
+            document.getElementById('responseContainer').innerText = "Loading...this may take up to 15 seconds for new summary requests...to keep you engaged, here is a joke: How do you catch de fish? With de-bate!"
             // Get form data
             const tournamentNumber = document.getElementById('tournamentNumber').value;
             const schoolName = document.getElementById('schoolName').value;
@@ -160,7 +160,10 @@
                 file_content = data['file_content'].replace("Event-by-Event Results", "### Event-by-Event Results") //.replace(/\n/g, '<br>');
                 gpt_content = data['gpt_content'].replace(/\n/g, "\n\n"); // more newlines!
                 numbered_list_prompt_content = data['numbered_list_prompt_content']
-                display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "\n## Line-by-Line prompt passed to ChatGPT:\n" + numbered_list_prompt_content + "</md-block>";
+                display_md = "<md-block>" + "## Tournament Summary:\n" + file_content +
+                             "\nMore information about forensics (including how to compete, judge, or volunteer) can be found at [www.speechanddebate.org](www.speechanddebate.org), or by reaching out to the school's coach." + 
+                             "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + 
+                             "\n## Line-by-Line prompt passed to ChatGPT:\n" + numbered_list_prompt_content + "</md-block>";
                 document.getElementById('responseContainer').innerHTML = display_md;
             })
             .catch(error => {

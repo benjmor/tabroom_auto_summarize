@@ -4,6 +4,13 @@ import logging
 import os
 from tabroom_summary import tabroom_summary
 
+"""
+This is the main routine for the tabroom_summary Lambda. It will query Tabroom.com for the tournament results and then
+create a PROMPT that can be passed to an LLM to generate a summary of a school's results at the tournament.
+
+Unlike previous versions, this version will NOT ever directly send LLM prompts to an LLM. That behavior now occurs synchronously at user-request time.
+"""
+
 # Set log level
 logging.basicConfig(level=logging.INFO)
 
@@ -19,37 +26,20 @@ def handler(event, context):
         )
     except Exception:
         logging.error("Error publishing to SNS")
-    # This function will query Tabroom.com for the tournament results and then
-    # return a summary of the results using ChatGPT.
-    # This Lambda will run asynchronously and will not return the results directly.
+
+    # Generate a Tabroom summary
     tournament_id = event["tournament"]
-    if running_outside_of_lambda:
-        # For debugging, we will run the function locally and return the results to the user
-        response = tabroom_summary.main(
-            all_schools=True,
-            tournament_id=tournament_id,
-            open_ai_key_path=event["open_ai_key_path"],
-            read_only=event.get("read_only", False),
-        )
-    else:
-        open_ai_key_secret_name = os.environ.get(
-            "OPEN_AI_KEY_SECRET_NAME", "openai_auth_key"
-        )
-        response = tabroom_summary.main(
-            all_schools=True,
-            tournament_id=tournament_id,
-            open_ai_key_secret_name=open_ai_key_secret_name,
-            read_only=event.get("read_only", False),
-        )
+    response = tabroom_summary.main(
+        all_schools=True,
+        tournament_id=tournament_id,
+    )
+
+    # Save the result outputs
     # If we're not in Lambda, assume we're in Windows
     if running_outside_of_lambda:
         # Make the directories as needed
         for school_name in response.keys():
             os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
-            if event.get("read_only", False) is True:
-                if "full_response" in response[school_name]:
-                    with open(f"{tournament_id}/{school_name}/results.txt", "w") as f:
-                        f.write(response[school_name]["full_response"])
             if "gpt_prompt" in response[school_name]:
                 with open(f"{tournament_id}/{school_name}/gpt_prompt.txt", "w") as f:
                     f.write(response[school_name]["gpt_prompt"])
@@ -58,15 +48,6 @@ def handler(event, context):
         s3_client = boto3.client("s3")
         bucket_name = os.environ["DATA_BUCKET_NAME"]
         for school_name in response.keys():
-            if event.get("read_only", False) is True:
-                if "full_response" not in response[school_name]:
-                    logging.warning(f"No GPT response found for {school_name}")
-                    continue
-                s3_client.put_object(
-                    Body=response[school_name]["full_response"],
-                    Bucket=bucket_name,
-                    Key=f"{tournament_id}/{school_name}/results.txt",
-                )
             if "gpt_prompt" in response[school_name]:
                 s3_client.put_object(
                     Body=response[school_name]["gpt_prompt"],
@@ -98,27 +79,12 @@ if __name__ == "__main__":
         "-t",
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
-        required=False,
-        default="27974",
-    )
-    parser.add_argument(
-        "-r",
-        "--read-only",
-        help="If this flag is set, the Lambda will not write to the S3 bucket.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--open-ai-key-path",
-        help="Path to the OpenAI key file. This is only used for local testing.",
-        default="./openAiAuthKey.txt",  # Default to same folder as main.py
+        required=False,  # TODO - require again
+        default="20134",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
-    read_only = args.read_only
-    open_ai_key_path = args.open_ai_key_path
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
-        "open_ai_key_path": open_ai_key_path,
-        "read_only": True,
     }
     handler(event, {})

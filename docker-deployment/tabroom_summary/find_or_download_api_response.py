@@ -31,6 +31,7 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
                 api_response_response["ContentLength"]
                 > file_size_limit_mb * 1024 * 1024
             ):
+                # TODO - Add handling for large tournaments -- break them out by event and run using step functions
                 raise ValueError(
                     f"API response size is too large ({file_size_limit_mb}MB limit)."
                 )

@@ -280,6 +280,7 @@ def lambda_handler(event, context):
                     numbered_list_prompt_path=numbered_list_prompt_path,
                 )
             except Exception as ex:
+                logging.error(repr(ex))
                 file_content = "Prompt was not passed to ChatGPT; you can send the below prompt manually."
         return {
             "isBase64Encoded": False,

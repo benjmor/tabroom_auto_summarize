@@ -2,15 +2,14 @@ import boto3
 import json
 import logging
 import os
-from openai import OpenAI
-from .generate_chat_gpt_prompt import generate_chat_gpt_prompt
+from .generate_llm_prompt_header import generate_llm_prompt_header
 from .create_data_strings import create_data_strings
 from .generate_list_generation_prompt import generate_list_generation_prompt
 
 
-def generate_chat_gpt_paragraphs(
+def generate_llm_prompts(
     tournament_data: dict,
-    custom_url: str,
+    # custom_url: str,
     school_count: int,
     state_count: int,
     has_speech: bool,
@@ -21,24 +20,11 @@ def generate_chat_gpt_paragraphs(
     grouped_data: dict,
     percentile_minimum: int,
     max_results_to_pass_to_gpt: int,
-    read_only: bool,
     data_labels: list[str],
     judge_map: dict,
     school_short_name_dict: dict,
-    open_ai_key_path: str = None,
-    open_ai_key_secret_name: str = None,
 ):
     all_schools_dict = {}
-    # Read the OpenAI API key from a file or AWS Secrets Manager
-    if open_ai_key_path:
-        with open(open_ai_key_path, "r") as f:
-            api_key = f.read()
-    else:
-        secrets_client = boto3.client("secretsmanager", region_name="us-east-1")
-        api_key = secrets_client.get_secret_value(SecretId=open_ai_key_secret_name)[
-            "SecretString"
-        ]
-    client = OpenAI(api_key=api_key)
     tournament_id = tournament_data["id"]
     for school_long_name in schools_to_write_up:
         short_school_name = school_short_name_dict[school_long_name]
@@ -87,9 +73,10 @@ def generate_chat_gpt_paragraphs(
             data_objects=top_sorted_filtered_school_results,
             data_labels=data_labels_without_percentile,
         )
-        chat_gpt_payload = generate_chat_gpt_prompt(
+        llm_payload = generate_llm_prompt_header(
             tournament_data=tournament_data,
             school_name=school_long_name,
+            short_school_name=short_school_name,
             school_count=school_count,
             state_count=state_count,
             has_speech=has_speech,
@@ -98,49 +85,14 @@ def generate_chat_gpt_paragraphs(
             header_string="|".join(data_labels_without_percentile),
             context=context,
             data_strings=data_strings,
+            judge_map=judge_map,
         )
-        chat_gpt_payload += "<result_data>"
-        chat_gpt_payload += data_strings
-        chat_gpt_payload += "</result_data>"
-        final_gpt_payload = "\n".join(chat_gpt_payload)
-        all_schools_dict[short_school_name]["gpt_prompt"] = final_gpt_payload
+        llm_payload += data_strings
+        llm_payload.append("</result_data>")
+        final_llm_payload = "\n".join(llm_payload)
+        all_schools_dict[short_school_name]["gpt_prompt"] = final_llm_payload
 
-        logging.info(f"Generating summary for {short_school_name}")
-        logging.debug(f"GPT Prompt: {final_gpt_payload}")
-        if read_only:
-            logging.info(
-                f"Skipping summary generation for {short_school_name} due to read-only mode"
-            )
-            continue
-        else:
-            body_response = (
-                client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": "You are concise, professional newspaper editor.",
-                        },
-                        {"role": "user", "content": final_gpt_payload},
-                    ],
-                )
-                .choices[0]
-                .message.content
-            )
-            if judge_map.get(short_school_name, []):
-                judge_string = (
-                    f"\r\nThis tournament was made possible with the help of the following judges from {short_school_name}: "
-                    + ", ".join(judge_map.get(short_school_name, []))
-                )
-            else:
-                judge_string = ""
-            body_response = (
-                body_response
-                + "More information about forensics (including how to compete, judge, or volunteer) can be found at www.speechanddebate.org, or by reaching out to the school's coach."
-                + judge_string
-            )
-
-            all_schools_dict[short_school_name]["unedited_response"] = body_response
+        logging.debug(f"GPT Prompt: {final_llm_payload}")
 
         sorted_by_event = sorted(
             school_filtered_tournament_results,
@@ -148,6 +100,7 @@ def generate_chat_gpt_paragraphs(
             reverse=False,
         )
         sorted_by_event_without_round_by_round = []
+
         # Reduce to just the essentials
         for result_for_numbered_list in sorted_by_event:
             # Remove round-by-round results from the numbered list -- not required
@@ -159,11 +112,7 @@ def generate_chat_gpt_paragraphs(
                 continue
             sorted_by_event_without_round_by_round.append(result_for_numbered_list)
         if len(sorted_by_event_without_round_by_round) == 0:
-            logging.warning(
-                f"No results found for {short_school_name} above the percentile minimum, returning just the summary paragraph."
-            )
-            full_response = body_response
-
+            numbered_list_prompt = ""
         else:
             logging.info(f"Generating list of results for {short_school_name}")
             list_generation_prompt = generate_list_generation_prompt(
@@ -183,53 +132,16 @@ def generate_chat_gpt_paragraphs(
                 "numbered_list_prompt"
             ] = numbered_list_prompt
 
-            logging.debug(f"GPT Prompt: {numbered_list_prompt}")
-            if read_only:
-                logging.info(
-                    f"Skipping list generation for {short_school_name} due to read-only mode"
-                )
-                continue
-            else:
-                numbered_response = (
-                    client.chat.completions.create(
-                        model="gpt-4",
-                        messages=[
-                            {
-                                "role": "system",
-                                "content": "You are a helpful assistant.",
-                            },
-                            {"role": "user", "content": numbered_list_prompt},
-                        ],
-                    )
-                    .choices[0]
-                    .message.content
-                )
-
-            full_response = (
-                body_response
-                + "\r\n"
-                + "Event-by-Event Results"
-                + "\r\n"
-                + numbered_response
+        # If running outside of Lambda, save off results at the end
+        if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
+            os.makedirs(
+                f"{tournament_id}/{short_school_name}",
+                exist_ok=True,
             )
-        all_schools_dict[short_school_name]["full_response"] = full_response
-        all_schools_dict[short_school_name][
-            "numbered_list_response"
-        ] = numbered_list_prompt
-        # If running outside of Lambda on a large tournament, save off results after each summary.
-        if (
-            os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None
-            and len(schools_to_write_up) > 20
-        ):
-            # Make the directories as needed
-            try:
-                os.makedirs(f"{tournament_id}/{short_school_name}", exist_ok=False)
-            except Exception:
-                # No need to
-                continue
-            if not read_only:
-                with open(f"{tournament_id}/{short_school_name}/results.txt", "w") as f:
-                    f.write(full_response)
             with open(f"{tournament_id}/{short_school_name}/gpt_prompt.txt", "w") as f:
-                f.write(final_gpt_payload)
+                f.write(final_llm_payload)
+            with open(
+                f"{tournament_id}/{short_school_name}/numbered_list_response.txt", "w"
+            ) as f:
+                f.write(numbered_list_prompt)
     return all_schools_dict
