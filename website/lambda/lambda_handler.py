@@ -3,7 +3,7 @@ import boto3
 import os
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from botocore.exceptions import ClientError
 
 """
@@ -337,6 +337,7 @@ def lambda_handler(event, context):
             placeholder_attributes = s3_client.get_object_attributes(
                 Bucket=bucket_name,
                 Key=f"{tournament_id}/placeholder.txt",
+                ObjectAttributes=["ObjectSize"],
             )
         except Exception as ex:
             logging.error(f"Error while looking up placeholder: {repr(ex)}")
@@ -362,8 +363,8 @@ def lambda_handler(event, context):
             # Placeholder is present but no school results ready -- have the user wait for results
             print(f"This is the placeholder_attributes: {placeholder_attributes}")
             if placeholder_attributes is not None and (
-                (datetime(placeholder_attributes["LastModified"]) + timedelta(hours=1))
-                > datetime.now()
+                (placeholder_attributes["LastModified"] + timedelta(hours=1))
+                > datetime.now(tz=timezone.utc)
             ):
                 school_data = "Still generating results! Check back soon!\nConsider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
             # no school results are present AND (the placeholder file is missing or outdated) -- data should be regenerated.
