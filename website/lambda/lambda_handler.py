@@ -338,11 +338,13 @@ def lambda_handler(event, context):
                 Bucket=bucket_name,
                 Prefix=f"{tournament_id}/placeholder.txt",
             )
-        except Exception:
+        except Exception as ex:
+            logging.error(f"Error while looking up placeholder: {repr(ex)}")
             placeholder_attributes = None
 
         # Get a list of all the schools in the tournament so that the user knows what they can choose from
         # This logic just says "find all the subkeys within this tournament's key"
+        # But make sure to exclude the `temp_results` folder
         school_set = set()
         for obj in all_objects["Contents"]:
             # Don't include files in the root of the tournament
@@ -358,15 +360,12 @@ def lambda_handler(event, context):
         # Otherwise, display a message indicating the status
         else:
             # Placeholder is present but no school results ready -- have the user wait for results
-            if (
-                placeholder_attributes is not None
-                and datetime(placeholder_attributes["LastModified"])
-                + timedelta(hours=1)
+            if placeholder_attributes is not None and (
+                (datetime(placeholder_attributes["LastModified"]) + timedelta(hours=1))
                 > datetime.now()
             ):
                 school_data = "Still generating results! Check back soon!\nConsider opening a GitHub issue at https://github.com/benjmor/tabroom_auto_summarize/issues if this message persists."
             # no school results are present AND (the placeholder file is missing or outdated) -- data should be regenerated.
-            # TODO - This path is being hit even when a recent placeholder exists! FIX IT!
             else:
                 school_data = "No schools found; will attempt to regenerate. Check back in about an hour."
                 s3_client.put_object(
@@ -380,18 +379,18 @@ def lambda_handler(event, context):
                     InvocationType="Event",
                     Payload=json.dumps(parsed_body),
                 )
-                return {
-                    "isBase64Encoded": False,
-                    "statusCode": 200,
-                    "headers": cors_headers,
-                    "body": json.dumps(
-                        {
-                            "file_content": school_data,
-                            "gpt_content": "N/A",
-                            "numbered_list_prompt_content": "N/A",
-                        }
-                    ),
-                }
+            return {
+                "isBase64Encoded": False,
+                "statusCode": 200,
+                "headers": cors_headers,
+                "body": json.dumps(
+                    {
+                        "file_content": school_data,
+                        "gpt_content": "N/A",
+                        "numbered_list_prompt_content": "N/A",
+                    }
+                ),
+            }
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
