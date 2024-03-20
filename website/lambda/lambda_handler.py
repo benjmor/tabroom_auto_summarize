@@ -440,7 +440,8 @@ def lambda_handler(event, context):
         "headers": cors_headers,
         "body": json.dumps(
             {
-                "file_content": "Results not yet generated, will attempt to generate them. Check back in about 15 minutes.\nNote: larger tournaments (eg. Harvard) are not supported through this web interface.\nCreate an Issue at https://github.com/benjmor/tabroom_auto_summarize/issues if you want results from a specific large tournament.",
+                "file_content": "Results not yet generated, will attempt to generate them. Check back in about 15 minutes."
+                + "\n\nNote: Huge tournaments (eg. Harvard) are not supported through this web interface. Create an Issue [here](https://github.com/benjmor/tabroom_auto_summarize/issues) if you want results from a specific large tournament.",
                 "gpt_content": "N/A",
                 "numbered_list_prompt_content": numbered_list_prompt_content,
             }
