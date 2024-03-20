@@ -64,6 +64,6 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
         )
     # If the response is longer than the 5MB threshold, print a warning
     if len(json.dumps(response)) > file_size_limit_mb * 1024 * 1024:
-        logging.warning(f"BIG TOURNAMENT ALERT - Response size was {api_response_response["ContentLength"]}")
+        logging.warning(f"BIG TOURNAMENT ALERT - Response size was {len(json.dumps(response))}")
 
     return response

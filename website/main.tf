@@ -121,7 +121,7 @@ resource "aws_lambda_function" "api_lambda_function" {
     }
   }
   source_code_hash = data.archive_file.lambda_source.output_base64sha256
-  timeout          = 10
+  timeout          = 25 # Steer clear of API GW's 30 second timeout
 }
 
 resource "aws_api_gateway_rest_api" "website_api" {

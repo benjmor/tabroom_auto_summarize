@@ -2,7 +2,7 @@ import json
 import boto3
 import os
 import logging
-from botocore.vendored import requests
+import re
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 
@@ -233,7 +233,7 @@ def lambda_handler(event, context):
     raw_gpt_submission = f"{tournament_id}/{school_name}/gpt_prompt.txt"
     api_response_key = f"{tournament_id}/api_response.json"
     numbered_list_prompt_path = (
-        f"{tournament_id}/{school_name}/numbered_list_response.txt"
+        f"{tournament_id}/{school_name}/numbered_list_prompt.txt"
     )
     bucket_name = os.getenv("DATA_BUCKET_NAME", "tabroom-summaries-data-bucket")
 
@@ -296,30 +296,31 @@ def lambda_handler(event, context):
         }
 
     # If the API response file exists in S3 and is larger than 5MB, return an error message and exit
-    try:
-        api_response_content = s3_client.get_object_attributes(
-            Bucket=bucket_name,
-            Key=api_response_key,
-            ObjectAttributes=["ObjectSize"],
-        )
-        api_response_size = api_response_content["ObjectSize"]
-        print(f"api_response size is {api_response_size}")
-        if api_response_size > 5 * 1024 * 1024:
-            return {
-                "isBase64Encoded": False,
-                "statusCode": 400,
-                "headers": cors_headers,
-                "body": json.dumps(
-                    {
-                        "file_content": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments.",
-                        "gpt_content": "N/A",
-                        "numbered_list_prompt_content": numbered_list_prompt_content,
-                    }
-                ),
-            }
-    except Exception as ex:
-        print(f"Exception when reading api_response.json: {repr(ex)}")
-        pass
+    # COMMENTED OUT - We're trying to support large tournaments now
+    # try:
+    #     api_response_content = s3_client.get_object_attributes(
+    #         Bucket=bucket_name,
+    #         Key=api_response_key,
+    #         ObjectAttributes=["ObjectSize"],
+    #     )
+    #     api_response_size = api_response_content["ObjectSize"]
+    #     print(f"api_response size is {api_response_size}")
+    #     if api_response_size > 5 * 1024 * 1024:
+    #         return {
+    #             "isBase64Encoded": False,
+    #             "statusCode": 400,
+    #             "headers": cors_headers,
+    #             "body": json.dumps(
+    #                 {
+    #                     "file_content": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments.",
+    #                     "gpt_content": "N/A",
+    #                     "numbered_list_prompt_content": numbered_list_prompt_content,
+    #                 }
+    #             ),
+    #         }
+    # except Exception as ex:
+    #     print(f"Exception when reading api_response.json: {repr(ex)}")
+    #     pass
     # Check if there are any files in the path bucket_name/tournament_id
     all_objects = s3_client.list_objects_v2(
         Bucket=bucket_name,
@@ -342,7 +343,9 @@ def lambda_handler(event, context):
         school_set = set()
         for obj in all_objects["Contents"]:
             # Don't include files in the root of the tournament
-            if len(obj["Key"].split("/")) > 2:
+            if len(obj["Key"].split("/")) > 2 and not re.search(
+                r"temp_results", obj["Key"]
+            ):
                 school_set.add(obj["Key"].split("/")[1])
 
         # Get data to display the school list if there are schools present
@@ -372,6 +375,18 @@ def lambda_handler(event, context):
                     InvocationType="Event",
                     Payload=json.dumps(parsed_body),
                 )
+                return {
+                    "isBase64Encoded": False,
+                    "statusCode": 200,
+                    "headers": cors_headers,
+                    "body": json.dumps(
+                        {
+                            "file_content": school_data,
+                            "gpt_content": "N/A",
+                            "numbered_list_prompt_content": "N/A",
+                        }
+                    ),
+                }
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
@@ -388,25 +403,25 @@ def lambda_handler(event, context):
                 }
             ),
         }
-    # Check that the given tournament ID is valid and has results
-    tournament_url = (
-        f"https://www.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
-    )
-    response = requests.get(tournament_url)
-    decoded_response = response.content.decode("utf-8")
-    if tournament_is_invalid(decoded_response):
-        return {
-            "isBase64Encoded": False,
-            "statusCode": 200,
-            "headers": cors_headers,
-            "body": json.dumps(
-                {
-                    "file_content": "ERROR - The tournament ID appears to be invalid or finish in the future.",
-                    "gpt_content": "N/A",
-                    "numbered_list_prompt_content": numbered_list_prompt_content,
-                }
-            ),
-        }
+    # TODO - Check that the given tournament ID is valid and has results
+    # tournament_url = (
+    #     f"https://www.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
+    # )
+    # response = requests.get(tournament_url)
+    # decoded_response = response.content.decode("utf-8")
+    # if tournament_is_invalid(decoded_response):
+    #     return {
+    #         "isBase64Encoded": False,
+    #         "statusCode": 200,
+    #         "headers": cors_headers,
+    #         "body": json.dumps(
+    #             {
+    #                 "file_content": "ERROR - The tournament ID appears to be invalid or finish in the future.",
+    #                 "gpt_content": "N/A",
+    #                 "numbered_list_prompt_content": numbered_list_prompt_content,
+    #             }
+    #         ),
+    #     }
     # Put a placeholder file in the S3 bucket and then trigger the Lambda to generate the GPT prompts and results
     s3_client.put_object(
         Body="Placeholder during generation.",

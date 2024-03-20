@@ -85,7 +85,6 @@ def generate_llm_prompts(
             header_string="|".join(data_labels_without_percentile),
             context=context,
             data_strings=data_strings,
-            judge_map=judge_map,
         )
         llm_payload += data_strings
         llm_payload.append("</result_data>")

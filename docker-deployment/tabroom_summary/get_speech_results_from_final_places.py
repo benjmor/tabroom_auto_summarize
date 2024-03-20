@@ -32,7 +32,7 @@ def get_speech_results_from_final_places(
             entry_name = entry_dictionary[result["entry"]].strip()  # Remove whitespace
         except KeyError:
             logging.error(
-                f"Could not find entry name for {result['entry']} in ENTRY_DICTIONARY_GLOBAL in event {event_name}. Skipping. This may be due to a late add or potentially a round 1 bye."
+                f"Could not find entry name for {result['entry']} in the entry dictionary in event {event_name}. Skipping. This may be due to a late add or potentially a round 1 bye."
             )
             continue
         entry_code = ""  # CODE_DICTIONARY["entry"] # This is honestly pretty useless for speech, will omit.

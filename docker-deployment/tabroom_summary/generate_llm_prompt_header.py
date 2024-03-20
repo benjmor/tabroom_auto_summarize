@@ -5,7 +5,6 @@ import re
 def generate_llm_prompt_header(
     tournament_data,
     school_name,
-    short_school_name,
     school_count,
     entry_dictionary,
     header_string,
@@ -38,11 +37,11 @@ def generate_llm_prompt_header(
     
 The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail}
 
-Write a 3 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely and professionally. Keep the tone factual and concise. Include individuals' rankings, wins, and placement out of the total number of entries. Do not prepend paragraphs with labels like 'Paragraph 1'.
+Write a 4 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Write concisely and professionally. Keep the tone factual and concise. Include individuals' rankings, wins, and placement out of the total number of entries. Do not prepend paragraphs with labels like 'Paragraph 1'.
     """
     ]
     if judge_map:
-        judge_list = ", ".join(judge_map.get(short_school_name, []))
+        judge_list = ", ".join(judge_map.get(school_name, []))
         chat_gpt_payload_list.append(
             f"At the end of the article, thank these individuals for volunteering to judge for the tournament (there wouldn't be a tournament without them!): {judge_list}"
         )
@@ -99,6 +98,6 @@ If a student receives all 1s from a panel of judges, that can be called out as a
     """
         )
     # Add the data header string to tell ChatGPT what data is in each column
-    chat_gpt_payload_list.append(header_string)
     chat_gpt_payload_list.append("<result_data>")
+    chat_gpt_payload_list.append(header_string)
     return chat_gpt_payload_list
