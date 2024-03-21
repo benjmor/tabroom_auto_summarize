@@ -86,7 +86,7 @@ The presence of a "Final Places" result does not mean a student made the final r
         chat_gpt_payload_list.append(
             f"""Results may include round-by-round results, delimited by a "|" or "!" character or &nbsp string to demarcate each round.
 These results will include a W or L or B to indicate a win or a loss or bye.
-They may also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent). Avoid referencing speaker point scores from individual rounds unless necessary. If referencing speaker points, mention that the score is out of 30. Ignore any value above 30.
+They may also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent), or 60 for partnered events (58+ is excellent). Avoid referencing speaker point scores from individual rounds unless necessary. If referencing speaker points, mention that the score is out of 30. Ignore any value above 30.
     """
         )
     # Conditionally add speech context
