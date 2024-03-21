@@ -5,6 +5,7 @@ import re
 def generate_llm_prompt_header(
     tournament_data,
     school_name,
+    short_school_name,
     school_count,
     entry_dictionary,
     header_string,
@@ -43,7 +44,7 @@ The presence of a "Final Places" result does not mean a student made the final r
     """
     ]
     if judge_map:
-        judge_list = ", ".join(judge_map.get(school_name, []))
+        judge_list = ", ".join(judge_map.get(short_school_name, []))
         chat_gpt_payload_list.append(
             f"At the end of the article, thank these individuals for volunteering to judge for the tournament (there wouldn't be a tournament without them!): {judge_list}"
         )

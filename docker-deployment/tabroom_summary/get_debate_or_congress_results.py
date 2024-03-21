@@ -98,9 +98,10 @@ def get_debate_or_congress_results(
                     percentile = 0  # If we can't calculate it, just set it to 0
 
             # Treat TOC bids as 100th percentile! It's a big achievement.
+            rank_string = f"{rank}/{total_entries}"
             if label == "TOC Qualifying Bids":
                 percentile = 100
-
+                rank_string = "N/A"
             ret_val.append(
                 {
                     "event_name": event_name,
@@ -109,7 +110,7 @@ def get_debate_or_congress_results(
                     "entry_name": entry_name,
                     "entry_code": entry_code,
                     "school_name": result_school,
-                    "rank": f"{rank}/{total_entries}",
+                    "rank": rank_string,
                     "total_entries": total_entries,
                     "round_reached": round_reached,
                     "percentile": percentile,

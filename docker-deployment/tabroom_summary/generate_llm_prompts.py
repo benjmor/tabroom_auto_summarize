@@ -76,6 +76,7 @@ def generate_llm_prompts(
         llm_payload = generate_llm_prompt_header(
             tournament_data=tournament_data,
             school_name=school_long_name,
+            short_school_name=short_school_name,
             school_count=school_count,
             state_count=state_count,
             has_speech=has_speech,
@@ -117,10 +118,14 @@ def generate_llm_prompts(
             list_generation_prompt = generate_list_generation_prompt(
                 headers=data_labels
             )
-            numbered_list_prompt = list_generation_prompt + "\n\n".join(
-                create_data_strings(
-                    data_objects=sorted_by_event_without_round_by_round,
-                    data_labels=data_labels_without_percentile,
+            numbered_list_prompt = (
+                list_generation_prompt
+                + "\n\n"
+                + "\n\n".join(
+                    create_data_strings(
+                        data_objects=sorted_by_event_without_round_by_round,
+                        data_labels=data_labels_without_percentile,
+                    )
                 )
             )
             all_schools_dict[short_school_name][
