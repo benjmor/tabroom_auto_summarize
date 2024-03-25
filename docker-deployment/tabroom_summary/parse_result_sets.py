@@ -2,6 +2,7 @@ from .get_speech_results_from_final_places import get_speech_results_from_final_
 from .get_debate_results_from_rounds_only import get_debate_results_from_rounds_only
 from .get_debate_or_congress_results import get_debate_or_congress_results
 from .get_speech_results_from_rounds_only import get_speech_results_from_rounds_only
+from .get_district_qualifier_results import get_district_qualifier_results
 
 
 def parse_result_sets(
@@ -15,17 +16,43 @@ def parse_result_sets(
     has_speech = False
     tournament_results = []
     # Parse results sets
+    # Start with District Qualifiers since that's special and processed the same regardless of event type
+    for result_set in event.get("result_sets", []):
+        # It's way easier to just grab the data from scraped results.
+        if result_set["label"] == "District Qualifiers":
+            event_name = event["name"]
+            scraped_single_event_results_list = [
+                result_list
+                for result_list in scraped_results
+                if result_list.get("event_name", "") == event_name
+            ]
+            if len(scraped_single_event_results_list) != 1:
+                raise ValueError(
+                    f"Expected 1 scraped result for event {event_name}, got {len(scraped_single_event_results_list)}"
+                )
+            scraped_single_event_results = scraped_single_event_results_list[0]
+            district_results = get_district_qualifier_results(
+                scraped_data=scraped_single_event_results,
+                event_name=event.get("name"),
+                event_type=event.get("type"),
+            )
+            for district_result in district_results:
+                tournament_results.append(district_result)
+
     if event["type"] in ["debate", "congress", "wsdc"]:
         has_debate = True
         if "result_sets" not in event:
-            tournament_results = get_debate_results_from_rounds_only(
+            debate_round_results = get_debate_results_from_rounds_only(
                 code_dictionary=entry_id_to_entry_code_dictionary,
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
                 entry_to_school_dict=name_to_school_dict,
                 event=event,
             )
+            for debate_round_result in debate_round_results:
+                tournament_results.append(debate_round_result)
+
         else:
-            tournament_results = get_debate_or_congress_results(
+            debate_final_results = get_debate_or_congress_results(
                 event=event,
                 code_dictionary=entry_id_to_entry_code_dictionary,
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
@@ -33,6 +60,9 @@ def parse_result_sets(
                 scraped_data=scraped_results,
                 event_type=event["type"],
             )
+            for debate_final_result in debate_final_results:
+                tournament_results.append(debate_final_result)
+
         # TODO - add an option to enrich the results via scraped data - perhaps replacing rounds-only?
     elif event["type"] == "speech":
         has_speech = True
@@ -46,19 +76,25 @@ def parse_result_sets(
                 for result_set in event.get("result_sets", [{}])
                 if result_set.get("label", "") == "Final Places"
             ][0]["results"]
-            tournament_results = get_speech_results_from_final_places(
+            speech_final_place_results = get_speech_results_from_final_places(
                 final_results_result_set=final_results_result_set,
                 event_name=event["name"],
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
                 entry_to_school_dict=name_to_school_dict,
             )
+            for speech_final_place_result in speech_final_place_results:
+                tournament_results.append(speech_final_place_result)
+
         else:
-            tournament_results = get_speech_results_from_rounds_only(
+            speech_rounds_based_results = get_speech_results_from_rounds_only(
                 event=event,
                 code_dictionary=entry_id_to_entry_code_dictionary,
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
                 entry_to_school_dict=name_to_school_dict,
             )
+            for speech_rounds_based_result in speech_rounds_based_results:
+                tournament_results.append(speech_rounds_based_result)
+
             # TODO - add an option to enrich the results via scraped data - perhaps replacing rounds-only?
 
     return has_speech, has_debate, tournament_results

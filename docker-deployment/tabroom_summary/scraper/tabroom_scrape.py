@@ -43,6 +43,7 @@ def main(
         "Prelim Seeds",  # Sometimes need to parse the prelim seeds to scrape name/entry data
         "Prelim Records",  # Often Used in tournaments that don't have elim rounds
         "Speaker Awards",  # API data doesn't differentiate individual speaker awards well
+        "District Qualifiers",  # Sometimes this is the only thing published.
     ],
     final_round_results_identifiers=["Finals Round results"],
 ):

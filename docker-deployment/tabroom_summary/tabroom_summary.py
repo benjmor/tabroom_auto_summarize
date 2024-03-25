@@ -3,6 +3,7 @@ import json
 import logging
 import urllib.request
 import os
+import re
 import ssl
 import datetime
 from selenium import webdriver
@@ -117,6 +118,14 @@ def main(
     state_set_list = scrape_output["state_set"]
     school_short_name_dict = scrape_output["school_short_name_dict"]
 
+    # Check if this is an NSDA Qualifier tournament - TODO - currently just checking the tournament name in the LLM prompt generation.
+    # if re.search(
+    #     r"District Tournament", response_data["name"]
+    # ):  # and "NSDA" in circuits:
+    #     is_nsda_qualifier = True
+    # else:
+    #     is_nsda_qualifier = False
+
     # WALK THROUGH EACH EVENT AND PARSE RESULTS
     data_labels = [
         "event_name",
@@ -165,6 +174,8 @@ def main(
     # Full name can only be ascertained from web scraping
     if scrape_entry_records_bool:
         for result in tournament_results:
+            if not result:
+                continue
             if result["entry_name"] in name_to_full_name_dict:
                 result["entry_name"] = name_to_full_name_dict[result["entry_name"]]
 
@@ -192,6 +203,7 @@ def main(
         data_labels=data_labels,
         school_short_name_dict=school_short_name_dict,
         judge_map=scrape_output["judge_map"],
+        # is_nsda_qualifier=is_nsda_qualifier,
     )
     # return a dictionary of schools with the summary text and all GPT prompts
     return all_schools_dict

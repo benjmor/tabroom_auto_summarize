@@ -32,9 +32,13 @@ def generate_llm_prompt_header(
         state_detail = f" from {state_count} states."
     else:
         state_detail = "."
+    if re.search("District Tournament", tournament_data["name"]):
+        nsda_context = "This tournament is an NSDA national qualifier; the top 2 placing entries in each event qualify to this year's National Speech and Debate Tournament. The remaining competitors are alternate qualifiers in case qualifiers cannot attend Nationals."
+    else:
+        nsda_context = ""
     # Start with the basic prompt
     chat_gpt_payload_list = [
-        f"""The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}. {context}
+        f"""The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}. {nsda_context} {context}
     
 The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail}
 

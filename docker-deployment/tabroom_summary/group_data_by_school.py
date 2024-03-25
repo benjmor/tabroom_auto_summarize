@@ -12,6 +12,8 @@ def group_data_by_school(
     """
     grouped_data = {}
     for result in results:
+        if not result:
+            continue
         school_long_name = result["school_name"]
         try:
             school_short_name = school_short_name_dict[school_long_name]

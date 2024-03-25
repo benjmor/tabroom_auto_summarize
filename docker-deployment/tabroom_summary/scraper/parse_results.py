@@ -13,6 +13,7 @@ from time import sleep
 from .parse_final_places_results import parse_final_places_results
 from .parse_prelim_records_results import parse_prelim_records_results
 from .parse_speaker_awards_results import parse_speaker_awards_results
+from .parse_district_qualifiers import parse_district_qualifiers
 
 
 def parse_results(input_data):
@@ -142,6 +143,12 @@ def parse_results(input_data):
             )
         elif result_page_detail["result_name"] == "Speaker Awards":
             result_table_content = parse_speaker_awards_results(browser)
+
+        elif result_page_detail["result_name"] == "District Qualifiers":
+            (
+                result_table_content,
+                name_to_school_dict,
+            ) = parse_district_qualifiers(browser)
         # TODO - Add support for more page types
         else:
             continue
