@@ -1,4 +1,5 @@
 import re
+import logging
 
 """
 This little guy takes a combination of API and scraped data to return a list of district qualifier results
@@ -11,7 +12,11 @@ def get_district_qualifier_results(
     event_type,
 ) -> list:
     results_list = []
-    total_entries = len(scraped_data["result_list"][0]["results"])
+    try:
+        total_entries = len(scraped_data["result_list"][0]["results"])
+    except IndexError:
+        logging.warning(f"No results for {event_name}")
+        total_entries = 0
     for result in scraped_data["result_list"][0]["results"]:
         numeric_place = int(re.sub("[^0-9]", "", result["place"]))
         result_object = {
