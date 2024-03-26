@@ -21,9 +21,9 @@ def get_district_qualifier_results(
         numeric_place = int(re.sub("[^0-9]", "", result["place"]))
         # TODO - technically, this isn't always accurate, but most qualifiers have <30 entries
         if numeric_place < 3:
-            result_set = "District Qualifiers"
+            result_set = "National Qualifier"
         else:
-            result_set = "District Alternate"
+            result_set = "National Tournament Alternate"
         result_object = {
             "event_name": event_name,
             "event_type": event_type,
