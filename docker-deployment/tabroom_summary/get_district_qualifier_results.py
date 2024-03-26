@@ -16,13 +16,18 @@ def get_district_qualifier_results(
         total_entries = len(scraped_data["result_list"][0]["results"])
     except IndexError:
         logging.warning(f"No results for {event_name}")
-        total_entries = 0
+        return results_list
     for result in scraped_data["result_list"][0]["results"]:
         numeric_place = int(re.sub("[^0-9]", "", result["place"]))
+        # TODO - technically, this isn't always accurate, but most qualifiers have <30 entries
+        if numeric_place < 3:
+            result_set = "District Qualifiers"
+        else:
+            result_set = "District Alternate"
         result_object = {
             "event_name": event_name,
             "event_type": event_type,
-            "result_set": "District Qualifiers",
+            "result_set": result_set,
             "entry_name": result["name"],
             "entry_code": result["name"],
             "school_name": result["school"],
