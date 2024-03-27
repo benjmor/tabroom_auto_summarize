@@ -109,7 +109,7 @@ resource "aws_iam_role_policy" "lambda_s3_writes" {
 
 resource "aws_lambda_function" "api_lambda_function" {
   function_name = "api_lambda_function"
-  runtime       = "python3.11"
+  runtime       = "python3.12"
   handler       = "lambda_handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
   filename      = data.archive_file.lambda_source.output_path
@@ -121,7 +121,7 @@ resource "aws_lambda_function" "api_lambda_function" {
     }
   }
   source_code_hash = data.archive_file.lambda_source.output_base64sha256
-  timeout          = 10
+  timeout          = 25 # Steer clear of API GW's 30 second timeout
 }
 
 resource "aws_api_gateway_rest_api" "website_api" {
@@ -226,37 +226,6 @@ resource "aws_iam_role_policy" "summary_lambda_role" {
   role   = aws_iam_role.summary_lambda_role.id
   policy = data.aws_iam_policy_document.summmarizer_role.json
 }
-
-# resource "aws_lambda_function" "summary_lambda_function" {
-#   function_name = local.summary_lambda_function_name
-#   runtime       = "python3.11"
-#   handler       = "summary_generator.lambda_handler"
-#   role          = aws_iam_role.lambda_role.arn # TODO - new role for this?
-#   filename      = data.archive_file.summary_lambda_source.output_path
-#   environment {
-#     variables = {
-#       DATA_BUCKET_NAME        = local.data_bucket_name
-#       OPEN_AI_KEY_SECRET_NAME = local.openai_auth_key_secret_name
-#     }
-#   }
-#   source_code_hash = data.archive_file.summary_lambda_source.output_base64sha256
-#   timeout          = 900
-#   layers = [
-#     "arn:aws:lambda:us-east-1:238589881750:layer:tabroom_layer:7",
-#     "arn:aws:lambda:us-east-1:238589881750:layer:chromium:1"
-#   ]
-# }
-
-# resource "aws_lambda_layer_version" "tabroom_summary_layer" {
-#   # depends_on = [ data.archive_file.tabroom_summary_layer, null_resource.install_requirements ]
-#   filename   = "${path.module}/tabroom_summary_layer.zip"
-#   # source_code_hash = filebase64sha256("${path.module}/tabroom_summary_layer.zip")
-#   description = "A layer for the tabroom summary generator"
-#   layer_name = "python"
-#   compatible_runtimes = [
-#     "python3.12",
-#   ]
-# }
 
 resource "aws_secretsmanager_secret" "openai_auth_key" {
   name = local.openai_auth_key_secret_name

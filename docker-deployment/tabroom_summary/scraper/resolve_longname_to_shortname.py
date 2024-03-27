@@ -26,6 +26,7 @@ def resolve_longname_to_shortname(long_name: str):
     """
     This function takes a long name and returns a short name.
     """
+    original_long_name = long_name
     # These are special cases that don't play nice with the logic
     special_case_dict = {
         "thomas jefferson high school of science and technology": "Thomas Jefferson",
@@ -43,6 +44,7 @@ def resolve_longname_to_shortname(long_name: str):
         "air academy hs": "Air Academy",
         "college prep school": "College Prep",
         "college prep hs": "College Prep",
+        "college prep": "College Prep",
         "st. paul academy and summit school": "St. Paul Academy and Summit",
         "university high school, irvine": "University HS, Irvine",
         "alannah debates": "Alannah",
@@ -56,6 +58,12 @@ def resolve_longname_to_shortname(long_name: str):
         "st. ignatius college prep": "St Ignatius College Prep",
         "vegas debates": "Vegas Debates",
         "young genius, bay area speech and debate": "Young Genius",
+        "university school": "University",
+        "university": "University",
+        "greenwich hs": "GHS",
+        "ghs": "GHS",
+        "astor redhead academy": "FUHS",
+        "stanford ohs": "Stanford OHS",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]
@@ -180,7 +188,7 @@ def resolve_longname_to_shortname(long_name: str):
             break
 
     bad_beginnings = [
-        "The",
+        "The ",
         "The University of",
         "The University Of",
         "University of",
@@ -195,4 +203,6 @@ def resolve_longname_to_shortname(long_name: str):
             long_name = long_name.replace(bad_beginning, "")
             break
 
+    if len(long_name.strip()) == 0:
+        raise ValueError(f"Failed to resolve {original_long_name}")
     return long_name.strip()

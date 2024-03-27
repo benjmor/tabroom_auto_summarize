@@ -51,6 +51,20 @@ def get_judge_map(
 
     for href in href_list:
         browser.get(href)
+        # Get the indices for First/Last/School
+        header_table = browser.find_element(By.TAG_NAME, "thead")
+        # Set defaults
+        notable_header_indices = {
+            "First": 1,
+            "Last": 2,
+            "Institution": 3,
+        }
+        for header in header_table.find_elements(By.TAG_NAME, "th"):
+            header_text = header.text.strip()
+            if header_text in notable_header_indices.keys():
+                header_index = header.get_attribute("data-column")
+                notable_header_indices[header_text] = int(header_index)
+
         try:
             judge_table = browser.find_element(By.TAG_NAME, "tbody")
         except NoSuchElementException:
@@ -61,8 +75,12 @@ def get_judge_map(
         judge_rows = judge_table.find_elements(By.TAG_NAME, "tr")
         for row in judge_rows:
             row_data = row.find_elements(By.TAG_NAME, "td")
-            judge_name = row_data[1].text + " " + row_data[2].text
-            school_long_name = row_data[3].text
+            judge_name = (
+                row_data[notable_header_indices["First"]].text
+                + " "
+                + row_data[notable_header_indices["Last"]].text
+            )
+            school_long_name = row_data[notable_header_indices["Institution"]].text
             school_short_name = school_short_name_dict.get(
                 school_long_name, school_long_name
             )
