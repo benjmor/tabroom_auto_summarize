@@ -35,3 +35,4 @@ scraped_results.json
 
 cloudformation-template-update-stack.json
 serverless-state.json
+.DS_Store
