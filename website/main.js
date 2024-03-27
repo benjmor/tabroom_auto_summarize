@@ -1,6 +1,6 @@
 function submitForm() {
     // Update to Loading...
-    document.getElementById('responseContainer').innerText = "Loading..."
+    document.getElementById('responseContainer').innerText = "\nLoading...this may take up to 25 seconds for new summary requests...to keep you engaged, here is a joke:\nHow do you catch de fish? With de-bate!"
     // Get form data
     const tournamentNumber = document.getElementById('tournamentNumber').value;
     const schoolName = document.getElementById('schoolName').value;
@@ -34,14 +34,17 @@ function submitForm() {
     .then(response => response.json())
     .then(data => {
         // Display the response
-        file_content = data['file_content'].replace("Event-by-Event Results", "### Event-by-Event Results") //.replace(/\n/g, '<br>');
+        file_content = data['file_content']
         gpt_content = data['gpt_content'].replace(/\n/g, "\n\n"); // more newlines!
-        display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + "</md-block>";
+        numbered_list_prompt_content = data['numbered_list_prompt_content']
+        display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + 
+                     "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + 
+                     "\n## Line-by-Line prompt passed to ChatGPT:\n" + numbered_list_prompt_content + "</md-block>";
         document.getElementById('responseContainer').innerHTML = display_md;
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('responseContainer').innerText = 'Error occurred. Please try again.';
+        document.getElementById('responseContainer').innerText = 'Error occurred. Please try again later, as this may have been due to high server demand.';
     });
 }
 
