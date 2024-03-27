@@ -31,6 +31,26 @@ resource "aws_s3_object" "website_homepage" {
   content_type = "text/html"
 }
 
+resource "aws_s3_object" "website_functions" {
+  depends_on = [aws_s3_bucket.website_bucket]
+  bucket     = local.website_bucket_name
+  key        = "main.js"
+  source     = "${path.module}/main.js"
+  etag       = filemd5("${path.module}/main.js")
+
+  # content_type = "text/html"
+}
+
+resource "aws_s3_object" "website_css" {
+  depends_on = [aws_s3_bucket.website_bucket]
+  bucket     = local.website_bucket_name
+  key        = "styles.css"
+  source     = "${path.module}/styles.css"
+  etag       = filemd5("${path.module}/styles.css")
+
+  # content_type = "text/html"
+}
+
 resource "aws_s3_bucket_policy" "public_access_to_website" {
   depends_on = [aws_s3_bucket_public_access_block.website_bucket]
   bucket     = aws_s3_bucket.website_bucket.id
