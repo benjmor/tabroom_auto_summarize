@@ -9,3 +9,30 @@ openAiAuthKey.txt
 __pycache__
 __pycache__/**
 *.txt
+
+*.zip
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+**/.terraform
+**/.terraform/*
+
+tabroom_summary/lambda_layer/python/**
+
+# Downloaded files for testing
+**/test_pages
+**/test_pages/**
+
+# Cached local files
+api_response.json
+scraped_results.json
+
+# Serverless caches
+.serverless
+.serverless/**
+**/.serverless
+**/.serverless/**
+
+cloudformation-template-update-stack.json
+serverless-state.json
+.DS_Store

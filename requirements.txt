@@ -1,4 +1,0 @@
-openai
-pandas
-selenium
-urllib3
