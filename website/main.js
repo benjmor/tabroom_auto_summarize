@@ -47,19 +47,3 @@ function submitForm() {
         document.getElementById('responseContainer').innerText = 'Error occurred. Please try again later, as this may have been due to high server demand.';
     });
 }
-
-document.querySelector('#myForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    // Show the loading message
-    document.getElementById('loadingMessage').style.display = 'block';
-
-    // Add the dots
-    let dots = window.setInterval( function() {
-        let wait = document.getElementById("dots");
-        if ( wait.innerHTML.length > 3 ) 
-            wait.innerHTML = "";
-        else 
-            wait.innerHTML += ".";
-    }, 300);
-});

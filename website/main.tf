@@ -44,9 +44,9 @@ resource "aws_s3_object" "website_functions" {
 resource "aws_s3_object" "website_css" {
   depends_on = [aws_s3_bucket.website_bucket]
   bucket     = local.website_bucket_name
-  key        = "styles.css"
-  source     = "${path.module}/styles.css"
-  etag       = filemd5("${path.module}/styles.css")
+  key        = "stylesheet.css"
+  source     = "${path.module}/stylesheet.css"
+  etag       = filemd5("${path.module}/stylesheet.css")
 
   # content_type = "text/html"
 }
