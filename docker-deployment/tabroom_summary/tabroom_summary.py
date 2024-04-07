@@ -26,6 +26,7 @@ def main(
     max_results_to_pass_to_gpt: int = 15,
     context: str = "",
     scrape_entry_records_bool: bool = True,
+    default_qualifier_count: int = 1,
 ):
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
@@ -203,6 +204,7 @@ def main(
         data_labels=data_labels,
         school_short_name_dict=school_short_name_dict,
         judge_map=scrape_output["judge_map"],
+        default_qualifier_count=default_qualifier_count,
         # is_nsda_qualifier=is_nsda_qualifier,
     )
     # return a dictionary of schools with the summary text and all GPT prompts

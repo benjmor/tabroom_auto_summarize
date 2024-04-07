@@ -10,6 +10,7 @@ def generate_llm_prompt_header(
     entry_dictionary,
     header_string,
     data_strings,
+    default_qualifier_count: int,
     state_count=1,
     has_speech=False,
     has_debate=False,
@@ -33,7 +34,12 @@ def generate_llm_prompt_header(
     else:
         state_detail = "."
     if re.search("District Tournament", tournament_data["name"]):
-        nsda_context = "This tournament is an NSDA national qualifier; the top 2 placing entries in each event qualify to this year's National Speech and Debate Tournament. The remaining competitors are alternate qualifiers in case qualifiers cannot attend Nationals."
+        if default_qualifier_count == 1:
+            qualifier_count_string = "the top entry in each event qualifies"
+        else:
+            qualifier_count_string = f"the top {default_qualifier_count} placing entries in each event qualify"
+        # TODO - Be more precise here about how many qualify.
+        nsda_context = f"This tournament is an NSDA national qualifier; {qualifier_count_string} to this year's National Speech and Debate Tournament. The remaining competitors are alternate qualifiers in case qualifiers cannot attend Nationals."
     else:
         nsda_context = ""
     # Start with the basic prompt

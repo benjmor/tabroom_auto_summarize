@@ -23,6 +23,7 @@ def generate_llm_prompts(
     data_labels: list[str],
     judge_map: dict,
     school_short_name_dict: dict,
+    default_qualifier_count: int,
 ):
     all_schools_dict = {}
     tournament_id = tournament_data["id"]
@@ -86,6 +87,7 @@ def generate_llm_prompts(
             context=context,
             data_strings=data_strings,
             judge_map=judge_map,
+            default_qualifier_count=default_qualifier_count,
         )
         llm_payload += data_strings
         llm_payload.append("</result_data>")
