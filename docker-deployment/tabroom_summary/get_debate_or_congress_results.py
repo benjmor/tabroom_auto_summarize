@@ -63,6 +63,11 @@ def get_debate_or_congress_results(
             # These points are some real inside baseball that no one cares about
             continue
         for result in r_set["results"]:
+            if result["values"] == [{}]:
+                total_entries -= (
+                    1  # Adjust blank entry values here as they mess up the numbers
+                )
+        for result in r_set["results"]:
             if "entry" not in result:
                 continue  # Handling a strange case for blank results
             if result["values"] == [{}]:

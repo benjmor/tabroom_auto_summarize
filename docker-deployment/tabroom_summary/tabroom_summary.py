@@ -186,7 +186,7 @@ def main(
         results=tournament_results,
     )
 
-    # Generate a school-keyed dict of all the GPT prompts and responses for each school
+    # Generate a school-keyed dict of all the LLM prompts and responses for each school
     # Use the school SHORTNAME as the key
     all_schools_dict = generate_llm_prompts(
         tournament_data=response_data,
@@ -207,7 +207,7 @@ def main(
         default_qualifier_count=default_qualifier_count,
         # is_nsda_qualifier=is_nsda_qualifier,
     )
-    # return a dictionary of schools with the summary text and all GPT prompts
+    # return a dictionary of schools with the summary text and all LLM prompts
     return all_schools_dict
 
 

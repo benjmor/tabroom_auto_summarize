@@ -4,7 +4,7 @@ def get_debate_speaker_awards_from_scraped_data(
     event_entries=0,
 ) -> list[dict]:
     """
-    Returns a list of result objects to be consumed by ChatGPT
+    Returns a list of result objects to be consumed by LLM
     """
     ret_val = []
     total_entries = max(event_entries, len(speaker_results))

@@ -12,7 +12,7 @@ def get_speech_results_from_final_places(
 ):
     """
     Assumes there is a Final Places result published for a speech event.
-    Returns a list of pipe-delimited strings with results to append to the ChatGPT prompt.
+    Returns a list of pipe-delimited strings with results to append to the LLM prompt.
     """
     ret_val = []
     unique_entries = set()
@@ -70,5 +70,5 @@ def get_speech_results_from_final_places(
                 "results_by_round": ranks_by_round,
             }
         )
-    # Return the results sorted with best-percentile results at the top, so ChatGPT focuses on those
+    # Return the results sorted with best-percentile results at the top, so the LLM focuses on those
     return ret_val

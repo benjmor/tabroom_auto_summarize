@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome
 from .scrape_entry_record import scrape_entry_record
 import json
+import re
 import time
 
 
@@ -73,6 +74,7 @@ def parse_prelim_records_results(
         "code": {"identifiers": ["Code"], "index": -1},
         "school": {"identifiers": ["Institution", "School"], "index": -1},
         "wins": {"identifiers": ["Wins"], "index": -1},
+        "ballots": {"identifiers": ["Ballots"], "index": -1},
     }
     for index, header_name in enumerate(header_names, start=0):
         for header_expected_name_key in index_dict.keys():
@@ -102,11 +104,27 @@ def parse_prelim_records_results(
                         .get_attribute("href")
                     )
         results_list.append(entry_result)
-        code_to_name_dict[entry_result["code"]] = entry_result["name"]
-        name_to_school_dict[entry_result["name"]] = entry_result["school"]
+        # Get a name or closest approximation.
+        if "name" in entry_result:
+            name_value = entry_result["name"]
+        elif "code" in entry_result:
+            try:
+                # If the code begins with a two-letter all-caps word, treat it as a school code
+                # Everything after the school code is the name
+                if re.match(r"[A-Z]{2}\s", entry_result["code"]):
+                    name_value = entry_result["code"][3:]
+            except Exception:
+                name_value = entry_result["code"]
+        code_to_name_dict[entry_result["code"]] = name_value
+
+        # Get school or create a blank if not currently populated
+        if "school" in entry_result:
+            name_to_school_dict[name_value] = entry_result["school"]
 
     if scrape_entry_record_data:
         for entry_result_dict in results_list:
+            if "entry_record_url" not in entry_result_dict:
+                continue
             time.sleep(1)  # Sleep for a bit to avoid rate limiting
             entry_result_dict["scrape_entry_record_data"] = scrape_entry_record(
                 entry_record_url=entry_result_dict["entry_record_url"],

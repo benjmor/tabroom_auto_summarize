@@ -24,11 +24,11 @@ This section is mostly for the nerds who don't want to use the website.
 
 ![image](https://github.com/benjmor/tabroom_auto_summarize/assets/44407400/b2d15de2-0b60-4687-935e-5700959d3588)
 
-The website is powered by AWS serverless resources and ChatGPT.
+The website is powered by AWS serverless resources and Anthropic's Claude.
 
 The main API/Lambda for handling requests uses the following logic:
 1. If there is a `results.txt` file present for the given tournament and school, return `results.txt` and the underlying `gpt_prompt.txt` used to generate the results.
-2. If there is a `gpt_prompt.txt` for the given tournament and school but no `results.txt`, send the `gpt_prompt.txt` file to ChatGPT synchronously, wait for the response, then save the result to `results.txt` and display it to the user.
+2. If there is a `gpt_prompt.txt` for the given tournament and school but no `results.txt`, send the `gpt_prompt.txt` file to Claude synchronously, wait for the response, then save the result to `results.txt` and display it to the user.
 3. If there is no `gpt_prompt.txt` file present, kick off a process to generate `gpt_prompt.txt` files for all schools at the tournament. This is a long process, so let the user know that they should check back later.
 
 Ideally, we never get to step 3. A batch process should look for recently-completed tournaments with results and generate prompts for them so that users don't need to spend a lot of time waiting for results.
