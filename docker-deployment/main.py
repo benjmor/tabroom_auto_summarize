@@ -31,9 +31,13 @@ def handler(event, context):
 
     # Generate a Tabroom summary
     tournament_id = event["tournament"]
+    event_context = event.get("context", "")
+    percentile_minimum = event.get("percentile_minimum", None)
     response = tabroom_summary.main(
         tournament_id=tournament_id,
         data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
+        context=event_context,
+        percentile_minimum=percentile_minimum,
     )
 
     # Save the result outputs
@@ -82,11 +86,13 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="20134",
+        default="29595",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
+        "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
+        "percentile_minimum": 0,  # CHSSA championship -- should include all results
     }
     handler(event, {})

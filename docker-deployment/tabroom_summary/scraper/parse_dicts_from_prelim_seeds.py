@@ -1,40 +1,22 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import (
-    StaleElementReferenceException,
-)
 import json
 import logging
-import re
 import selenium
-from .parse_hidden_string import parse_hidden_string
 
 
-def parse_final_places_results(driver, result_id):
+def parse_dicts_from_prelim_seeds(driver, result_url):
     """
-    Walk through the results table.
-    Returns 3 items in a tuple:
-    1. Return a dict with a list of results by code, formatted like this:
-    {
-        "result_set_type": "Final Places",
-        "results": [
-        {
-            "entry_name": <entry name>,
-            "school_name": <entry school>,
-            <various other key-value pairs, such as Place, Tiebreakers, and round-by-round performance>
-        },
-        ...
-        {...}
-    ]
-    2. A dict that maps codes to entry names
-    3. A dict that maps entry names to school names
+    Walk through the prelim seeds table and gather school/code information into the dicts.
+    1. A dict that maps codes to entry names
+    2. A dict that maps entry names to school names
     """
-    results_list = []
     code_to_name_dict = {}
     name_to_school_dict = {}
     table_num = 0
     # Walk through the results tables until we run out of tables
+    result_id = result_url.split("=")[-1]
     done = False
     while not done:
         table_num = table_num + 1
@@ -50,7 +32,7 @@ def parse_final_places_results(driver, result_id):
                 element_id = result_id
                 table = driver.find_element(By.ID, f"{element_id}")
             except selenium.common.exceptions.NoSuchElementException:
-                logging.debug(f"No table found for element ID {element_id}, either")
+                logging.warning(f"No table found for element ID {element_id}, either")
                 break
         # Find the table headers
         headers = table.find_elements(By.CSS_SELECTOR, "thead th")
@@ -78,25 +60,10 @@ def parse_final_places_results(driver, result_id):
             visible_results = [
                 cell.text for cell in row.find_elements(By.CSS_SELECTOR, "td")
             ]
-            # Add that hidden CSV if it's there because we love it -- it contains round-by-round debate results
-            try:
-                hidden_csv_string = (
-                    (row.find_element(By.XPATH, './/td[@class="hiddencsv"]'))
-                    .get_attribute("innerHTML")
-                    .strip()
-                )
-
-                result["round_by_round"] = parse_hidden_string(hidden_csv_string)
-
-            except selenium.common.exceptions.NoSuchElementException:
-                logging.debug(
-                    f"Could not add hidden results table for element ID {element_id}. This is normal for speech events, but weird for debate."
-                )
             for i in range(len(header_names)):
                 # Skip empty headers
                 if header_names[i] != "":
                     result[header_names[i]] = visible_results[i]
-            results_list.append(result)
             # Skip if Code is not defined
             if index_dict["code"]["index"] != -1:
                 code_to_name_dict[visible_results[index_dict["code"]["index"]]] = (
@@ -105,12 +72,7 @@ def parse_final_places_results(driver, result_id):
             name_to_school_dict[visible_results[index_dict["name"]["index"]]] = (
                 visible_results[index_dict["school"]["index"]]
             )
-    results_dict = {
-        "result_set_type": "Final Places",
-        "results": results_list,
-    }
     return (
-        results_dict,
         code_to_name_dict,
         name_to_school_dict,
     )
@@ -120,8 +82,7 @@ if __name__ == "__main__":
     """
     This is for testing purposes
     """
-    test_url = "https://www.tabroom.com/index/tourn/results/event_results.mhtml?tourn_id=29595&result_id=326926"
-    test_result_id = test_url.split("result_id=")[1]
+    test_url = "https://www.tabroom.com/index/tourn/results/event_results.mhtml?tourn_id=29595&result_id=326502"
     # Start a new browser session
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
@@ -130,14 +91,14 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService()  # executable_path="/opt/chromedriver")
+    service = webdriver.ChromeService()
     browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
         json.dumps(
-            parse_final_places_results(
+            parse_dicts_from_prelim_seeds(
                 driver=browser,
-                result_id=test_result_id,
+                result_url=test_url,
             ),
             indent=4,
         )

@@ -5,7 +5,7 @@ def parse_arguments():
     # PARSE INPUT FROM USER
     parser = argparse.ArgumentParser(
         prog="tabroom_summary",
-        description="Uses ChatGPT to create summaries of Tabroom results",
+        description="Uses an LLM to create summaries of Tabroom results",
     )
     school_args = parser.add_mutually_exclusive_group(required=True)
     school_args.add_argument(
@@ -34,7 +34,7 @@ def parse_arguments():
     parser.add_argument(
         "-r",
         "--read-only",
-        help="Read-only mode. Will pull data from Tabroom and format it but will not send the payload to ChatGPT.",
+        help="Read-only mode. Will pull data from Tabroom and format it but will not send the payload to the LLM.",
         action="store_true",
         required=False,
     )
@@ -48,7 +48,7 @@ def parse_arguments():
     parser.add_argument(
         "-m",
         "--max-results",
-        help="Maximum number of results to pass to ChatGPT. If this number is exceeded, the results will be truncated.",
+        help="Maximum number of results to pass to the LLM. If this number is exceeded, the results will be truncated.",
         type=int,
         default=15,
     )

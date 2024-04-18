@@ -26,6 +26,7 @@ def main(
     max_results_to_pass_to_gpt: int = 15,
     context: str = "",
     scrape_entry_records_bool: bool = True,
+    default_qualifier_count: int = 1,
 ):
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
@@ -146,9 +147,14 @@ def main(
     for category in response_data.get("categories", []):
         for event in category.get("events", []):
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
-            # This only looks at the first round of the event -- theoretically that could be a problem for late adds
+            # This only looks at the first non-elim round of the event -- theoretically that could be a problem for late adds
+            for round in event.get("rounds", []):
+                if round["type"] == "elim" or round["type"] == "final":
+                    continue
+                round_to_pull_entry_data_from = round
+                break
             update_global_entry_dictionary(
-                sections=event.get("rounds", [{}])[0].get("sections", []),
+                sections=round_to_pull_entry_data_from.get("sections", []),
                 code_dictionary=entry_id_to_entry_code_dictionary,
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
             )
@@ -185,7 +191,7 @@ def main(
         results=tournament_results,
     )
 
-    # Generate a school-keyed dict of all the GPT prompts and responses for each school
+    # Generate a school-keyed dict of all the LLM prompts and responses for each school
     # Use the school SHORTNAME as the key
     all_schools_dict = generate_llm_prompts(
         tournament_data=response_data,
@@ -203,9 +209,10 @@ def main(
         data_labels=data_labels,
         school_short_name_dict=school_short_name_dict,
         judge_map=scrape_output["judge_map"],
+        default_qualifier_count=default_qualifier_count,
         # is_nsda_qualifier=is_nsda_qualifier,
     )
-    # return a dictionary of schools with the summary text and all GPT prompts
+    # return a dictionary of schools with the summary text and all LLM prompts
     return all_schools_dict
 
 

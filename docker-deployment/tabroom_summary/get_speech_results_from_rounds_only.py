@@ -14,7 +14,7 @@ def get_speech_results_from_rounds_only(
 ):
     """
     Assumes that the data is for a tournament that only publishes round results, not a 'Final Places' result.
-    Returns a list of pipe-delimited results strings to append to the ChatGPT prompt
+    Returns a list of pipe-delimited results strings to append to the LLM prompt
 
     The string will be a list of individual performances, summarized by their final rank.
 

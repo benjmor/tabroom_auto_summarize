@@ -14,6 +14,7 @@ from .parse_final_places_results import parse_final_places_results
 from .parse_prelim_records_results import parse_prelim_records_results
 from .parse_speaker_awards_results import parse_speaker_awards_results
 from .parse_district_qualifiers import parse_district_qualifiers
+from .parse_dicts_from_prelim_seeds import parse_dicts_from_prelim_seeds
 
 
 def parse_results(input_data):
@@ -141,6 +142,15 @@ def parse_results(input_data):
                 browser=browser,
                 result_url=result_page_detail["result_url"],
             )
+        elif result_page_detail["result_name"] == "Prelim Seeds":
+            (
+                code_to_name_dict,
+                name_to_school_dict,
+            ) = parse_dicts_from_prelim_seeds(
+                driver=browser,
+                result_url=result_page_detail["result_url"],
+            )
+            result_table_content = {}
         elif result_page_detail["result_name"] == "Speaker Awards":
             result_table_content = parse_speaker_awards_results(browser)
 

@@ -14,7 +14,7 @@ def get_debate_results_from_rounds_only(
 ):
     """
     Assumes that the data is for a tournament that only publishes round results, not a 'Final Places' result.
-    Returns a list result objects to append to the ChatGPT prompt
+    Returns a list result objects to append to the LLM prompt
 
     This data is much harder to process than result_sets and may be inaccurate.
     """

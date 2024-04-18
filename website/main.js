@@ -23,7 +23,7 @@ function submitForm() {
         school: schoolName
     };
 
-    // Perform a POST request to the API Gateway endpoint
+    // Perform a POST request to the API Gateway endpoint to send the request
     fetch('https://4wvm0o3xmb.execute-api.us-east-1.amazonaws.com/prod/submit_tournament', {
         method: 'POST',
         headers: {
@@ -38,8 +38,8 @@ function submitForm() {
         gpt_content = data['gpt_content'].replace(/\n/g, "\n\n"); // more newlines!
         numbered_list_prompt_content = data['numbered_list_prompt_content']
         display_md = "<md-block>" + "## Tournament Summary:\n" + file_content + 
-                     "\n## Prompt passed to ChatGPT:\n" + gpt_content + "\n" + 
-                     "\n## Line-by-Line prompt passed to ChatGPT:\n" + numbered_list_prompt_content + "</md-block>";
+                     "\n## Prompt passed to Claude:\n" + gpt_content + "\n" + 
+                     "\n## Line-by-Line prompt passed to Claude:\n" + numbered_list_prompt_content + "</md-block>";
         document.getElementById('responseContainer').innerHTML = display_md;
     })
     .catch(error => {
@@ -47,19 +47,3 @@ function submitForm() {
         document.getElementById('responseContainer').innerText = 'Error occurred. Please try again later, as this may have been due to high server demand.';
     });
 }
-
-document.querySelector('#myForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    // Show the loading message
-    document.getElementById('loadingMessage').style.display = 'block';
-
-    // Add the dots
-    let dots = window.setInterval( function() {
-        let wait = document.getElementById("dots");
-        if ( wait.innerHTML.length > 3 ) 
-            wait.innerHTML = "";
-        else 
-            wait.innerHTML += ".";
-    }, 300);
-});

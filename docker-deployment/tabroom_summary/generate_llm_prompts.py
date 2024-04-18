@@ -23,6 +23,8 @@ def generate_llm_prompts(
     data_labels: list[str],
     judge_map: dict,
     school_short_name_dict: dict,
+    default_qualifier_count: int,
+    remove_duplicate_prelim_final_places_rows: bool = True,
 ):
     all_schools_dict = {}
     tournament_id = tournament_data["id"]
@@ -43,6 +45,23 @@ def generate_llm_prompts(
             key=lambda x: float(x["percentile"]),
             reverse=True,
         )
+        # Remove Prelim Seeds if there is a Final Places entry with the same data
+        # This is O(N^2) but shouldn't be a huge issue except for MASSIVE school entries (100+)
+        if remove_duplicate_prelim_final_places_rows:
+            for outer_result in sorted_school_results:
+                if outer_result["result_set"] == "Final Places":
+                    target_result_set = "Prelim Seeds"
+                    current_entry = outer_result["entry_name"]
+                    current_rank = outer_result["rank"]
+                    for inner_result in sorted_school_results:
+                        if (
+                            inner_result["result_set"] == target_result_set
+                            and inner_result["entry_name"] == current_entry
+                            and inner_result["rank"] == current_rank
+                        ):
+                            sorted_school_results.remove(inner_result)
+                            break
+
         # If there is at least one result above the percentile minimum, filter out any results below the percentile minimum
         if int(float(sorted_school_results[0]["percentile"])) > percentile_minimum:
             logging.info(
@@ -86,16 +105,18 @@ def generate_llm_prompts(
             context=context,
             data_strings=data_strings,
             judge_map=judge_map,
+            default_qualifier_count=default_qualifier_count,
         )
         llm_payload += data_strings
         llm_payload.append("</result_data>")
         final_llm_payload = "\n".join(llm_payload)
         all_schools_dict[short_school_name]["gpt_prompt"] = final_llm_payload
 
-        logging.debug(f"GPT Prompt: {final_llm_payload}")
+        logging.debug(f"LLM Prompt: {final_llm_payload}")
 
+        ###  Generate numbered list prompt
         sorted_by_event = sorted(
-            school_filtered_tournament_results,
+            sorted_school_results,
             key=lambda x: x["event_name"],
             reverse=False,
         )
@@ -120,13 +141,15 @@ def generate_llm_prompts(
             )
             numbered_list_prompt = (
                 list_generation_prompt
-                + "\n\n"
+                + "\n"
                 + "\n\n".join(
                     create_data_strings(
                         data_objects=sorted_by_event_without_round_by_round,
                         data_labels=data_labels_without_percentile,
                     )
                 )
+                + "\n"
+                + "</result_data>"
             )
             all_schools_dict[short_school_name][
                 "numbered_list_prompt"
@@ -141,7 +164,7 @@ def generate_llm_prompts(
             with open(f"{tournament_id}/{short_school_name}/gpt_prompt.txt", "w") as f:
                 f.write(final_llm_payload)
             with open(
-                f"{tournament_id}/{short_school_name}/numbered_list_response.txt", "w"
+                f"{tournament_id}/{short_school_name}/numbered_list_prompt.txt", "w"
             ) as f:
                 f.write(numbered_list_prompt)
     return all_schools_dict

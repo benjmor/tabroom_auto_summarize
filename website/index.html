@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- TODO - Factor out this stylesheet -- currently borked because the CSS doesn't load from an external file -->
+    <!-- <link rel="stylesheet" href="stylesheet.css" crossorigin="anonymous"> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="https://md-block.verou.me/md-block.js"></script>
-    <link rel="stylesheet" href="styles.css">
     <script src="main.js"></script>
     <title>Tabroom Summary</title>
 </head>
@@ -38,6 +39,10 @@
             +---------------+------------------------------------------------------------+-------+---------------------+
             | Tournament ID |                      Tournament Name                       | State |        Date         |
             +===============+============================================================+=======+=====================+
+            | 29595         | California State Tournament                                |  CA   | 2024-04-13 23:00:00 |
+            +---------------+------------------------------------------------------------+-------+---------------------+
+            | 29907         | CAPITOL VALLEY DISTRICT TOURNAMENT                         |  CA   | 2024-04-06 23:00:00 |
+            +---------------+------------------------------------------------------------+-------+---------------------+
             | 30799         | Brooklyn Debate League 215                                 |  NY   | 2024-02-15 22:10:00 |
             +---------------+------------------------------------------------------------+-------+---------------------+
             | 30392         | BAUDL Aaron Thomas Memorial Tournament                     |  CA   | 2024-02-03 16:00:00 |
@@ -101,4 +106,75 @@
     <br>You can report issues with this service at <a href="https://github.com/benjmor/tabroom_auto_summarize/issues">the Issues page</a>.
 
 </body>
+<!-- TODO - Factor out this stylesheet -- currently borked because the CSS doesn't load from an external file -->
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f6f6f6;
+}
+
+h1 {
+    color: #1d5188;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #f9f9fc;
+    border-bottom: 2px solid #e1e1f1;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+h2 {
+    color: #1d5188;
+    margin-bottom: 20px;
+}
+
+form {
+    margin: 0 auto;
+    text-align: center;
+    width: 50%;
+}
+
+form label {
+    display: block;
+    margin: 10px 0;
+    text-align: left;
+    color: #1d5188;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button[type="button"] {
+    background-color: #006080;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+    transition: background-color 0.3s;
+}
+
+button[type="button"]:hover {
+    background-color: #00475b;
+}
+
+#responseContainer {
+    margin: 20px 0 40px;
+    background-color: #fff;
+    padding: 20px;
+}
+</style>
+
 </html>
+
