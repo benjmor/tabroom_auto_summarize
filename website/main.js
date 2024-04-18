@@ -23,7 +23,7 @@ function submitForm() {
         school: schoolName
     };
 
-    // Perform a POST request to the API Gateway endpoint
+    // Perform a POST request to the API Gateway endpoint to send the request
     fetch('https://4wvm0o3xmb.execute-api.us-east-1.amazonaws.com/prod/submit_tournament', {
         method: 'POST',
         headers: {

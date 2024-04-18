@@ -50,6 +50,8 @@ The tournament was attended by {len(entry_dictionary)} student entries and {scho
 
 Write a 4 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Keep the tone factual, professional, concise, and positive. Avoid commenting on negative results. Selectively include individuals' rankings, wins, and placement out of the total number of entries, but prioritize names and final places. Do not prepend paragraphs with labels like 'Paragraph 1'.
 
+ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO NOT APPEAR IN RESULT_DATA.
+
 The presence of a "Final Places" result does not mean a student made the final round; it just indicates their overall placement in the tournament. 
     """
     ]
