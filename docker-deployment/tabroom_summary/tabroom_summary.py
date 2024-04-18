@@ -147,9 +147,14 @@ def main(
     for category in response_data.get("categories", []):
         for event in category.get("events", []):
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
-            # This only looks at the first round of the event -- theoretically that could be a problem for late adds
+            # This only looks at the first non-elim round of the event -- theoretically that could be a problem for late adds
+            for round in event.get("rounds", []):
+                if round["type"] == "elim" or round["type"] == "final":
+                    continue
+                round_to_pull_entry_data_from = round
+                break
             update_global_entry_dictionary(
-                sections=event.get("rounds", [{}])[0].get("sections", []),
+                sections=round_to_pull_entry_data_from.get("sections", []),
                 code_dictionary=entry_id_to_entry_code_dictionary,
                 entry_dictionary=entry_id_to_entry_entry_name_dictionary,
             )

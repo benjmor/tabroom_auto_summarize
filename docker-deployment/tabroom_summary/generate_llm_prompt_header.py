@@ -46,7 +46,7 @@ def generate_llm_prompt_header(
     chat_gpt_payload_list = [
         f"""The following data represents results of a team's performance at a speech and debate tournament called {tournament_data["name"]} held in {tournament_data["city"]} ({tournament_data["state"]}) on {start_date}. {nsda_context} {context}
     
-The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail}. Include this context in the article.
+The tournament was attended by {len(entry_dictionary)} student entries and {school_count} schools{state_detail} Include this context in the article.
 
 Write a 4 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Keep the tone factual, professional, concise, and positive. Avoid commenting on negative results. Selectively include individuals' rankings, wins, and placement out of the total number of entries, but prioritize names and final places. Do not prepend paragraphs with labels like 'Paragraph 1'.
 
@@ -94,7 +94,7 @@ The presence of a "Final Places" result does not mean a student made the final r
     # Conditionally add debate context
     if has_debate:
         chat_gpt_payload_list.append(
-            f"""Results may include round-by-round results, delimited by a "|" or "!" character or &nbsp string to demarcate each round.
+            f"""Results may include round-by-round results, delimited by a "|" character to demarcate each ballot.
 These results will include a W or L or B to indicate a win or a loss or bye.
 They may also include a speaker point score, out of a maximum of 30 speaker points (anything above 29 is excellent), or 60 for partnered events (58+ is excellent). Avoid referencing speaker point scores from individual rounds unless necessary. If referencing speaker points, mention that the score is out of 30. Ignore any value above 30.
 

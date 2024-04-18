@@ -120,8 +120,8 @@ if __name__ == "__main__":
     """
     This is for testing purposes
     """
-    test_url = "https://www.tabroom.com/index/tourn/results/event_results.mhtml?tourn_id=24104&result_id=245220"
-    test_result_id = "245220"
+    test_url = "https://www.tabroom.com/index/tourn/results/event_results.mhtml?tourn_id=29595&result_id=326926"
+    test_result_id = test_url.split("result_id=")[1]
     # Start a new browser session
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     )  # attempting to suppress the USB read errors on Windows
     # chrome_options.add_argument("--disable-logging")
     # chrome_options.binary_location = CHROME_PATH
-    service = webdriver.ChromeService(executable_path="/opt/chromedriver")
+    service = webdriver.ChromeService()  # executable_path="/opt/chromedriver")
     browser = webdriver.Chrome(options=chrome_options, service=service)
     browser.get(test_url)
     print(
