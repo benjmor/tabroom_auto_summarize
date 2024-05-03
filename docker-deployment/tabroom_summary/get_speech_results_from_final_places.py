@@ -24,10 +24,12 @@ def get_speech_results_from_final_places(
             continue
         unique_entries.add(result["entry"])
     unique_entry_count = len(unique_entries)
+    current_implicit_place_value = 0
     for result in final_results_result_set:
         # Check if the values is a dummy value, continue if it is.
         if not result["values"][0]:
             continue
+        current_implicit_place_value += 1
         try:
             entry_name = entry_dictionary[result["entry"]].strip()  # Remove whitespace
         except KeyError:
@@ -44,7 +46,10 @@ def get_speech_results_from_final_places(
             )
             entry_school = "UNKNOWN"
         rank = result["rank"]
-        place = result["place"]
+        try:
+            place = int(result["place"])
+        except (ValueError, TypeError, KeyError):
+            place = current_implicit_place_value
         percentile = result["percentile"]
         # Palmer likes to hide round-by-round results in this very low-priority column.
         # Might as well include it to give a summary of how each round went.
