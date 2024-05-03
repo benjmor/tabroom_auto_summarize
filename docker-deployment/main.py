@@ -32,7 +32,7 @@ def handler(event, context):
     # Generate a Tabroom summary
     tournament_id = event["tournament"]
     event_context = event.get("context", "")
-    percentile_minimum = event.get("percentile_minimum", None)
+    percentile_minimum = event.get("percentile_minimum", 25)
     response = tabroom_summary.main(
         tournament_id=tournament_id,
         data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
