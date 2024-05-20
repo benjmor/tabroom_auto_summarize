@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import json
+import selenium
+import logging
 
 
 def parse_speaker_awards_results(driver):
@@ -28,7 +30,11 @@ def parse_speaker_awards_results(driver):
     }
     """
     results_list = []
-    table = driver.find_element(By.CLASS_NAME, f"tablesorter")
+    try:
+        table = driver.find_element(By.CLASS_NAME, f"tablesorter")
+    except selenium.common.exceptions.NoSuchElementException:
+        logging.debug("No table found, this may indicate results not published.")
+        return results_list
     # Find the table headers
     headers = table.find_elements(By.CSS_SELECTOR, "thead th")
     if not headers:
