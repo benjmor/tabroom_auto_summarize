@@ -1,0 +1,52 @@
+name: Deploy main branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: "pip" # caching pip dependencies
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: cd docker-deployment
+    - run: npm ci
+
+    # Set up AWS Credentials
+    - name: Source Environment Variables
+      id: dotenv
+      uses: falti/dotenv-action@v1.0.4
+      with:
+        path: ".github/workflows/.env"
+
+    - name: Set Environment Variables
+      uses: c-py/action-dotenv-to-setenv@v5
+      with:
+        env-file: ".github/workflows/.env"
+
+    - name: Configure AWS Credentials for creating resources
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ steps.dotenv.outputs.aws_account_id }}:role/${{ steps.dotenv.outputs.aws_workflow_role }}
+        role-session-name: ${{ github.actor }}_${{ github.job }}
+        aws-region: ${{ steps.dotenv.outputs.aws_region }}
+
+    # Run Serverless Deploy
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy
