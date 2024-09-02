@@ -118,6 +118,7 @@ def main(
     school_set = scrape_output["school_set"]
     state_set_list = scrape_output["state_set"]
     school_short_name_dict = scrape_output["school_short_name_dict"]
+    response_data["sweepstakes"] = scrape_output["sweepstakes"]
 
     # Check if this is an NSDA Qualifier tournament - TODO - currently just checking the tournament name in the LLM prompt generation.
     # if re.search(
@@ -190,6 +191,8 @@ def main(
         school_short_name_dict=school_short_name_dict,
         results=tournament_results,
     )
+
+    # TODO - INCLUDE SWEEPSTAKES DATA? Is it in the response? Test with 28061
 
     # Generate a school-keyed dict of all the LLM prompts and responses for each school
     # Use the school SHORTNAME as the key

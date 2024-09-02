@@ -9,6 +9,7 @@ from .get_schools_and_states import get_schools_and_states
 from .parse_results_wrapper import parse_results_wrapper
 from .get_judge_map import get_judge_map
 from .resolve_longname_to_shortname import resolve_longname_to_shortname
+from .get_sweeps_results import get_sweeps_results
 from collections import Counter
 import boto3
 
@@ -21,14 +22,15 @@ logging.basicConfig(
 """
 Returns a dictionary with the following keys:
 {
-        "results" - A JSON with results data, including 
-        "name_to_school_dict": name_to_school_dict_overall,
-        "code_to_name_dict": code_to_name_dict_overall,
-        "name_to_full_name_dict": name_to_full_name_dict_overall,
-        "entry_counter_by_school": entry_counter_by_school,
-        "school_set": school_set,
-        "state_set": state_set,
-    }
+    "results" - A JSON with results data, including 
+    "name_to_school_dict": name_to_school_dict_overall,
+    "code_to_name_dict": code_to_name_dict_overall,
+    "name_to_full_name_dict": name_to_full_name_dict_overall,
+    "entry_counter_by_school": entry_counter_by_school,
+    "school_set": school_set,
+    "state_set": state_set,
+    "sweeps": sweep_list,
+}
 """
 
 
@@ -157,6 +159,13 @@ def main(
         browser=browser,
         school_short_name_dict=school_short_name_dict,
     )
+
+    # Get any sweeps results
+    browser.get(base_url)
+    sweep_list = get_sweeps_results(
+        browser=browser,
+    )
+
     # Close the browser session
     browser.quit()
     return {
@@ -169,6 +178,7 @@ def main(
         "state_set": list(state_set),
         "judge_map": judge_map,
         "school_short_name_dict": school_short_name_dict,
+        "sweepstakes": sweep_list,
     }
 
 

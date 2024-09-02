@@ -1,5 +1,10 @@
 from datetime import datetime
 import re
+import logging
+import logging
+import logging
+import logging
+from .get_sweepstakes_string import get_sweepstakes_string
 
 
 def generate_llm_prompt_header(
@@ -50,16 +55,29 @@ The tournament was attended by {len(entry_dictionary)} student entries and {scho
 
 Write a 4 paragraph summary for the {school_name} speech and debate team social media feed. Use as many student names of {school_name} students as reasonable. Keep the tone factual, professional, concise, and positive. Avoid commenting on negative results. Selectively include individuals' rankings, wins, and placement out of the total number of entries, but prioritize names and final places. Do not prepend paragraphs with labels like 'Paragraph 1'.
 
-ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO NOT APPEAR IN RESULT_DATA.
-
 The presence of a "Final Places" result does not mean a student made the final round; it just indicates their overall placement in the tournament. 
+
+ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO NOT APPEAR IN RESULT_DATA.
     """
     ]
+
+    # Add sweepstakes results
+    if "sweepstakes" in tournament_data:
+        logging.info("Found sweepstakes data!")
+        sweepstakes_string = get_sweepstakes_string(
+            sweepstakes_data=tournament_data["sweepstakes"],
+            school_name=short_school_name,
+            school_count=school_count,
+        )
+        chat_gpt_payload_list.append(sweepstakes_string)
+
+    # Thank judges, if published judge list exists
     if judge_map:
         judge_list = ", ".join(judge_map.get(short_school_name, []))
         chat_gpt_payload_list.append(
             f"At the end of the article, thank these individuals for volunteering to judge for the tournament (there wouldn't be a tournament without them!): {judge_list}"
         )
+
     # Loop through data strings looking to add context if Claude needs to know about debate or speech terms
     found_elims = False
     abbreviation_map = {
