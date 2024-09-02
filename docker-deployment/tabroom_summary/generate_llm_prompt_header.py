@@ -62,7 +62,7 @@ ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO N
     ]
 
     # Add sweepstakes results
-    if "sweepstakes" in tournament_data:
+    if "sweepstakes" in tournament_data and bool(tournament_data["sweepstakes"]):
         logging.info("Found sweepstakes data!")
         sweepstakes_string = get_sweepstakes_string(
             sweepstakes_data=tournament_data["sweepstakes"],

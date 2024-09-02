@@ -39,7 +39,7 @@ def get_debate_results_from_rounds_only(
             logging.debug(
                 f"Parsing results from section {section['letter']} in event {event_name} round {label}..."
             )
-            for ballot in section["ballots"]:
+            for ballot in section.get("ballots", []):
                 # Get winloss
                 did_student_win_round = None
                 try:

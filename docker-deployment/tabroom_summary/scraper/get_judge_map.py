@@ -52,7 +52,13 @@ def get_judge_map(
     for href in href_list:
         browser.get(href)
         # Get the indices for First/Last/School
-        header_table = browser.find_element(By.TAG_NAME, "thead")
+        try:
+            header_table = browser.find_element(By.TAG_NAME, "thead")
+        except NoSuchElementException:
+            logging.error(
+                "Error when attempting to load a specific judge page, probably because the tournament does not have any judges in this category."
+            )
+            continue
         # Set defaults
         notable_header_indices = {
             "First": 1,
