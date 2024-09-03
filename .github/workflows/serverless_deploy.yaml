@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: deploy
+  deploy_serverless:
+    name: deploy_serverless_function
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,12 +18,14 @@ jobs:
       with:
         python-version: "3.11"
         cache: "pip" # caching pip dependencies
+
+    # TODO - is this actually needed?
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: cd docker-deployment
-    - run: npm ci
+    # - run: npm ci
 
     # Set up AWS Credentials
     - name: Source Environment Variables
@@ -50,3 +52,54 @@ jobs:
       uses: serverless/github-action@v3.2
       with:
         args: deploy
+  deploy_website:
+    name: deploy_website
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: cd website
+
+    # Set up AWS Credentials
+    - name: Source Environment Variables
+      id: dotenv
+      uses: falti/dotenv-action@v1.0.4
+      with:
+        path: ".github/workflows/.env"
+
+    - name: Set Environment Variables
+      uses: c-py/action-dotenv-to-setenv@v5
+      with:
+        env-file: ".github/workflows/.env"
+
+    - name: Configure AWS Credentials for creating resources
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ steps.dotenv.outputs.aws_account_id }}:role/${{ steps.dotenv.outputs.aws_workflow_role }}
+        role-session-name: ${{ github.actor }}_${{ github.job }}
+        aws-region: ${{ steps.dotenv.outputs.aws_region }}
+
+    # Run Terraform Deploy
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ steps.dotenv.outputs.TERRAFORM_VERSION }}
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color -input=false -out=terraform.tfplan
+      continue-on-error: true
+
+    - name: Terraform Apply
+      id: apply
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -input=false -no-color terraform.tfplan
+      continue-on-error: true
