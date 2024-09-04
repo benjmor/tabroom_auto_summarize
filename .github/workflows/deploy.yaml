@@ -55,11 +55,10 @@ jobs:
         aws-region: ${{ steps.dotenv.outputs.aws_region }}
 
     # Run Serverless Deploy
+    - name: install serverless
+      run: npm i -g serverless
     - name: serverless deploy
-      uses: serverless/github-action@v3.2
-      with:
-        args: -c "cd ./docker-deployment && serverless deploy"
-        entrypoint: /bin/sh
+      run: sls deploy --verbose --force
 
   deploy_website:
     name: deploy_website

@@ -25,11 +25,11 @@ resource "aws_iam_role_policy" "workflow_role_readonly_state_access" {
   role   = module.workflow_role_readonly.iam_role_name
   policy = local.terraform_state_policy
 }
-resource "aws_iam_role_policy" "workflow_role_management_readonly" {
-  name   = "github-workflow-role-management-readonly"
-  role   = module.workflow_role_readonly.iam_role_name
-  policy = local.rvm_readonly_assumption_policy
-}
+# resource "aws_iam_role_policy" "workflow_role_management_readonly" {
+#   name   = "github-workflow-role-management-readonly"
+#   role   = module.workflow_role_readonly.iam_role_name
+#   policy = local.rvm_readonly_assumption_policy
+# }
 
 ### IAM Role with OIDC trust for creating resources ###
 module "workflow_role" {
@@ -55,8 +55,8 @@ resource "aws_iam_role_policy" "workflow_role_state_access" {
   role   = module.workflow_role.iam_role_name
   policy = local.terraform_state_policy
 }
-resource "aws_iam_role_policy" "workflow_role_management" {
-  name   = "github-workflow-role-management"
+resource "aws_iam_role_policy" "tabroom_modify_policy" {
+  name   = "github-workflow-role-tabroom-apply"
   role   = module.workflow_role.iam_role_name
-  policy = local.rvm_assumption_policy
+  policy = local.tabroom_modify_policy
 }
