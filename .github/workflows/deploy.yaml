@@ -56,7 +56,7 @@ jobs:
 
     # Run Serverless Deploy
     - name: install serverless
-      run: npm i -g serverless
+      run: npm install -g serverless@3.38.0
     - name: serverless deploy
       run: sls deploy --verbose --force
 
