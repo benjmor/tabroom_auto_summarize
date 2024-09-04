@@ -64,6 +64,16 @@ locals {
         "Resource" : [
           "arn:aws:ecr:us-east-1:238589881750:repository/serverless-docker-selenium-lambda-tabroom-prod"
         ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "cloudformation:*",
+        ],
+        "Resource" : [
+          "arn:aws:cloudformation:us-east-1:238589881750:stack/docker-selenium-lambda-tabroom-prod",
+          "arn:aws:cloudformation:us-east-1:238589881750:stack/docker-selenium-lambda-tabroom-prod/*"
+        ]
       }
     ]
   })
