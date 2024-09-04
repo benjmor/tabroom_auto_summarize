@@ -1,3 +1,8 @@
+module "state_management" {
+  count  = var.create_tf_state_management_infrastructure == true ? 1 : 0
+  source = "./state_management"
+}
+
 ### IAM Role with OIDC trust for Read-only operations during planning ###
 # The read-only and non-read-only roles have identical permissions policies, but...
 # ...the read-only role is only able to assume read-only roles in member accounts
