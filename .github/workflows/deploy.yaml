@@ -14,6 +14,9 @@ jobs:
   deploy_serverless:
     name: deploy_serverless_function
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docker-deployment
     strategy:
       matrix:
         node-version: [18.x]
@@ -29,7 +32,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd docker-deployment
     # - run: npm ci
 
     # Set up AWS Credentials
@@ -60,9 +62,11 @@ jobs:
   deploy_website:
     name: deploy_website
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
     steps:
     - uses: actions/checkout@v4
-    - run: cd website
 
     # Set up AWS Credentials
     - name: Source Environment Variables
@@ -93,8 +97,6 @@ jobs:
     - name: Terraform Init
       id: init
       run: terraform init
-
-    - run: ls
 
     - name: Terraform Validate
       id: validate
