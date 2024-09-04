@@ -25,7 +25,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.11"
-        cache: "pip" # caching pip dependencies
+        # cache: "pip" # caching pip dependencies
 
     # TODO - is this actually needed?
     - name: Use Node.js ${{ matrix.node-version }}
