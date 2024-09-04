@@ -54,6 +54,15 @@ locals {
         "Resource" : [
           "arn:aws:lambda:us-east-1:238589881750:function:api_lambda_function"
         ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:*",
+        ],
+        "Resource" : [
+          "arn:aws:ecr:us-east-1:238589881750:repository/serverless-docker-selenium-lambda-tabroom-prod"
+        ]
       }
     ]
   })
