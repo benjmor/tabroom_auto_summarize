@@ -43,7 +43,8 @@ locals {
         ],
         "Resource" : [
           "arn:aws:s3:::tabroomsummary.com",
-          "arn:aws:s3:::tabroomsummary.com/*"
+          "arn:aws:s3:::tabroomsummary.com/*",
+          "arn:aws:s3:::docker-selenium-lambda-ta-serverlessdeploymentbuck-dsqpcfvopg4c/serverless/docker-selenium-lambda-tabroom/*"
         ]
       },
       {
