@@ -1,4 +1,4 @@
-resource "aws_dynamodb_table" "example" {
+resource "aws_dynamodb_table" "tabroom_tournaments" {
   name         = "tabroom_tournaments"
   billing_mode = "PAY_PER_REQUEST"  # or "PROVISIONED" for provisioned throughput
 
