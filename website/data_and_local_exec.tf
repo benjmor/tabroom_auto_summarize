@@ -92,6 +92,19 @@ data "aws_iam_policy_document" "summmarizer_role" {
       "*",
     ]
   }
+
+  statement {
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+    ]
+    resources = [
+      "arn:aws:dynamodb:us-east-1:238589881750:table/tabroom_tournaments",
+      "arn:aws:dynamodb:us-east-1:238589881750:table/tabroom_tournaments/*",
+    ]
+  }
 }
 
 # data "archive_file" "summary_lambda_source" {
