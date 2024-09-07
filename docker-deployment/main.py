@@ -84,13 +84,16 @@ def handler(event, context):
         "tourn_name": tourn_metadata.get("name", ""),
         "end_date": end_date,
         "locality": tourn_metadata.get("state", "N/A"),
-        "prompts_generated": True,
+        "prompts_generated": {
+            "B": True,
+        },
     }
     ddb_client = boto3.client(
         "dynamodb",
         region_name="us-east-1",
     )
     table_name = "tabroom_tournaments"
+    logging.info(f"Updating DDB table {table_name} with item {data}")
     response = ddb_client.put_item(
         TableName=table_name,
         Item=data,
