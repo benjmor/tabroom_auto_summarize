@@ -192,8 +192,6 @@ def main(
         results=tournament_results,
     )
 
-    # TODO - INCLUDE SWEEPSTAKES DATA? Is it in the response? Test with 28061
-
     # Generate a school-keyed dict of all the LLM prompts and responses for each school
     # Use the school SHORTNAME as the key
     all_schools_dict = generate_llm_prompts(
@@ -215,8 +213,8 @@ def main(
         default_qualifier_count=default_qualifier_count,
         # is_nsda_qualifier=is_nsda_qualifier,
     )
-    # return a dictionary of schools with the summary text and all LLM prompts
-    return all_schools_dict
+    # return a dictionary of schools with the summary text and all LLM prompts, as well as some basic tournament metadata
+    return all_schools_dict, response_data
 
 
 if __name__ == "__main__":

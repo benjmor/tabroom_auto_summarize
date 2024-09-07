@@ -1,5 +1,6 @@
 import argparse
 import boto3
+import datetime
 import logging
 import os
 from tabroom_summary import tabroom_summary
@@ -33,7 +34,7 @@ def handler(event, context):
     tournament_id = event["tournament"]
     event_context = event.get("context", "")
     percentile_minimum = event.get("percentile_minimum", 25)
-    response = tabroom_summary.main(
+    response, tourn_metadata = tabroom_summary.main(
         tournament_id=tournament_id,
         data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
         context=event_context,
@@ -73,6 +74,27 @@ def handler(event, context):
             )
         except Exception:
             pass
+    # Find or update the DDB table with the values
+    end_date = datetime.datetime.strptime(
+        tourn_metadata.get("end"), "%Y-%m-%d %H:%M:%S"
+    )
+    end_date = end_date.strftime("%Y-%m-%d")
+    data = {
+        "tourn_id": tournament_id,
+        "tourn_name": tourn_metadata.get("name", ""),
+        "end_date": end_date,
+        "locality": tourn_metadata.get("state", "N/A"),
+        "prompts_generated": True,
+    }
+    ddb_client = boto3.client(
+        "dynamodb",
+        region_name="us-east-1",
+    )
+    table_name = "tabroom_tournaments"
+    response = ddb_client.put_item(
+        TableName=table_name,
+        Item=data,
+    )
 
 
 if __name__ == "__main__":

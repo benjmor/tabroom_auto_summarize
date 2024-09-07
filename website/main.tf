@@ -259,3 +259,8 @@ resource "aws_secretsmanager_secret" "openai_auth_key" {
 resource "aws_sns_topic" "summary_generation_topic" {
   name = "summary_generation_topic"
 }
+
+#### Batching Module ####
+module "ddb_and_batch_lambdas" {
+  source = "./ddb_and_batch_lambdas"
+}
