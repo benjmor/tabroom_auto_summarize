@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Replace with your bucket name and file path
     const bucketName = 'tabroomsummary.com';
     const filePath = 'recent_tournaments.txt';
-    const fileUrl = `https://${bucketName}.s3.amazonaws.com/${filePath}`;
+    const fileUrl = `http://${bucketName}.s3.amazonaws.com/${filePath}`;
     
     // Fetch the .txt file
     fetch(fileUrl)
