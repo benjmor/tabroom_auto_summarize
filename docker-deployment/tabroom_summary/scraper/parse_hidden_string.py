@@ -50,8 +50,12 @@ def parse_hidden_string(hidden_csv_string: str):
         if len(ranks_list) == 1:
             total_rank = ranks_list[0]
         else:
-            # Remove parens from total rank
-            total_rank = content.split("(")[1].replace(")", "")
+            try:
+                # Remove parens from total rank
+                total_rank = content.split("(")[1].replace(")", "")
+            except IndexError:
+                logging.warning("Unable to process total rank from hidden string")
+                total_rank = "-1"
         round_by_round_results.append(
             {
                 "round_name": this_identifier,

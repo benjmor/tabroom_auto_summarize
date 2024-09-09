@@ -228,12 +228,6 @@ if __name__ == "__main__":
     max_results_to_pass_to_gpt = int(args.max_results)
     context = args.context
     scrape_entry_records_bool = bool(args.scrape_entry_records_bool)
-    if args.open_ai_key_path:
-        open_ai_key_path = args.open_ai_key_path
-        open_ai_key_secret_name = None
-    else:
-        open_ai_key_secret_name = args.open_ai_key_secret_name
-        open_ai_key_path = None
     main(
         tournament_id=tournament_id,
         all_schools=all_schools,

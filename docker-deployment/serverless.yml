@@ -20,7 +20,6 @@ functions:
       name: img
     environment:
       DATA_BUCKET_NAME: "tabroom-summaries-data-bucket"
-      OPEN_AI_KEY_SECRET_NAME: "openai_auth_key"
       SNS_TOPIC_ARN: "arn:aws:sns:us-east-1:238589881750:summary_generation_topic"
     role: arn:aws:iam::238589881750:role/summary_lambda_role
     

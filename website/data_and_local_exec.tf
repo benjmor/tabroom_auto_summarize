@@ -75,14 +75,6 @@ data "aws_iam_policy_document" "summmarizer_role" {
       "${aws_s3_bucket.data_bucket.arn}/*",
     ]
   }
-  statement {
-    actions = [
-      "secretsmanager:GetSecretValue",
-    ]
-    resources = [
-      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:${local.openai_auth_key_secret_name}*",
-    ]
-  }
 
   statement {
     actions = [

@@ -105,6 +105,7 @@ def parse_prelim_records_results(
                     )
         results_list.append(entry_result)
         # Get a name or closest approximation.
+        name_value = None
         if "name" in entry_result:
             name_value = entry_result["name"]
         elif "code" in entry_result:
@@ -115,6 +116,9 @@ def parse_prelim_records_results(
                     name_value = entry_result["code"][3:]
             except Exception:
                 name_value = entry_result["code"]
+        if name_value is None:
+            logging.warning(f"Skipping entry result{entry_result} because it has no valid name value.")
+            continue
         code_to_name_dict[entry_result["code"]] = name_value
 
         # Get school or create a blank if not currently populated
