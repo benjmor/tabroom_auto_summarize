@@ -79,6 +79,7 @@ data "aws_iam_policy_document" "summmarizer_role" {
   statement {
     actions = [
       "sns:Publish",
+      "secretsmanager:DeleteSecret",
     ]
     resources = [
       "*",
@@ -96,6 +97,23 @@ data "aws_iam_policy_document" "summmarizer_role" {
       "arn:aws:dynamodb:us-east-1:238589881750:table/tabroom_tournaments",
       "arn:aws:dynamodb:us-east-1:238589881750:table/tabroom_tournaments/*",
     ]
+  }
+
+  statement {
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = [
+      "arn:aws:iam::238589881750:role/summary_lambda_role"
+    ]
+    conditions {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+
+      values = [
+        "lambda.amazonaws.com"
+      ]
+    }
   }
 }
 
