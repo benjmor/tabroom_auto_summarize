@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "summmarizer_role" {
     resources = [
       "arn:aws:iam::238589881750:role/summary_lambda_role"
     ]
-    conditions {
+    condition {
       test     = "StringEquals"
       variable = "iam:PassedToService"
 
