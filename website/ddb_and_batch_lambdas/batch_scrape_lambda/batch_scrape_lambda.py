@@ -18,10 +18,6 @@ from selenium import webdriver
 from tempfile import mkdtemp
 from selenium.webdriver.common.by import By
 
-DDB_TABLE_NAME = "tabroom_tournaments"
-REGION = "us-east-1"
-
-
 def store_data_in_ddb(
     data: dict,
     ddb_name: str,
@@ -29,7 +25,7 @@ def store_data_in_ddb(
     if ddb_resource is None:
         ddb_resource = boto3.resource(
             "dynamodb",
-            region_name=REGION,
+            # region_name=REGION,
         )
     table = ddb_resource.Table(ddb_name)
     # Check if the item's tourn_id already exists in the table
@@ -116,13 +112,18 @@ def find_upcoming_tournaments(
             data=data_to_store,
             ddb_name=ddb_table_name,
         )
+    boto3.client("sns").publish(
+        Message=f"Completed tournament scrape. {new_tournament_count} tournaments were added.",
+        TopicArn=os.environ.get("SNS_TOPIC_ARN")
+    )
 
-
-if __name__ == "__main__":
+def lambda_handler(event, context):
+    env_var_ddb_table = os.environ.get("DDB_TABLE_NAME")
     options = webdriver.ChromeOptions()
 
     # If we're not in Lambda, assume we're in Windows
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
+        env_var_ddb_table = "tabroom_tournaments"
         chrome_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
         driver_location = None  # Use default
         service = webdriver.ChromeService()
@@ -151,5 +152,8 @@ if __name__ == "__main__":
 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     browser = webdriver.Chrome(options=options)
-    find_upcoming_tournaments(browser=browser, ddb_table_name=DDB_TABLE_NAME)
+    find_upcoming_tournaments(browser=browser, ddb_table_name=env_var_ddb_table)
     browser.quit()
+
+if __name__ == "__main__":
+    lambda_handler({},{})
