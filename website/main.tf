@@ -247,14 +247,6 @@ resource "aws_iam_role_policy" "summary_lambda_role" {
   policy = data.aws_iam_policy_document.summmarizer_role.json
 }
 
-resource "aws_secretsmanager_secret" "openai_auth_key" {
-  name = local.openai_auth_key_secret_name
-  # Must update manually
-  lifecycle {
-    ignore_changes = all
-  }
-}
-
 # Topic that notifies subscribers when a summary is requested
 resource "aws_sns_topic" "summary_generation_topic" {
   name = "summary_generation_topic"
