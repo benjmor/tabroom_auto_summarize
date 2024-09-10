@@ -6,7 +6,7 @@ Generates AI-powered school-specific summaries of speech and debate competitions
 
 I now host a web version of this tool at [tabroomsummary.com](http://tabroomsummary.com). You can specify a tournament ID and a school name and it will return your summary (it may ask for a little bit of time to generate it first).
 
-The website does have a significant cost to me, so please USE the results you generate! Edit them and put them on social media, school newsletters, and local papers. Email them to principals, parents, and school board members! I'm fine with the costs as long as it's going to a good purpose.
+The website does have a small cost to me, so please USE the results you generate! Edit them and put them on social media, school newsletters, and local papers. Email them to principals, parents, and school board members! I'm fine with the costs as long as it's going to a good purpose.
 
 # Disclaimer
 
