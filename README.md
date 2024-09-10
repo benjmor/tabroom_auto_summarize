@@ -8,6 +8,10 @@ I now host a web version of this tool at [tabroomsummary.com](http://tabroomsumm
 
 The website does have a small cost to me, so please USE the results you generate! Edit them and put them on social media, school newsletters, and local papers. Email them to principals, parents, and school board members! I'm fine with the costs as long as it's going to a good purpose.
 
+## GitHub Actions
+
+The whole provisioning process now runs via GitHub Actions. Pretty nifty!
+
 # Disclaimer
 
 This is still very much a work in progress -- Tabroom supports lots of different result types and I am gradually adding support for more of them.
