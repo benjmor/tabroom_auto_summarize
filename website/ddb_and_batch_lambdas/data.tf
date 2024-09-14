@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "batch_process_lambda_permissions" {
     ]
     resources = [
       "arn:aws:lambda:us-east-1:238589881750:function:docker-selenium-lambda-tabroom-prod-main",
+      "arn:aws:lambda:us-east-1:238589881750:function:docker-selenium-lambda-tabroom-prod-main:*"
     ]
   }
 
