@@ -111,6 +111,10 @@ def handler(event, context):
         )
     except Exception as e:
         logging.error(f"Tabroom Summary failed with the following error! {repr(e)}!")
+        if tournament_id:
+            message = f"Tabroom Summary for tournament {tournament_id} failed with the following error! {repr(e)}!"
+        else:
+            message = f"Tabroom Summary failed with the following error! {repr(e)}!"
         try:
             boto3.client("sns").publish(
                 TopicArn=os.environ["SNS_TOPIC_ARN"],

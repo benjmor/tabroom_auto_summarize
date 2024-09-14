@@ -149,7 +149,10 @@ def main(
         for event in category.get("events", []):
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
             # This only looks at the first non-elim round of the event -- theoretically that could be a problem for late adds
-            for round in event.get("rounds", []):
+            all_rounds = event.get("rounds", [])
+            if not all_rounds:
+                continue
+            for round in all_rounds:
                 if round["type"] == "elim" or round["type"] == "final":
                     continue
                 round_to_pull_entry_data_from = round
