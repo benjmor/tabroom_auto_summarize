@@ -36,7 +36,7 @@ resource "aws_lambda_function" "recent_summaries_lambda_function" {
   environment {
     variables = {
       BUCKET_TARGET = "tabroomsummary.com"
-      DDB_NAME = var.ddb_table_name
+      TABROOM_SUMMARY_DDB_NAME = var.ddb_table_name
     }
   }
   source_code_hash = data.archive_file.recent_summaries_lambda_source.output_base64sha256

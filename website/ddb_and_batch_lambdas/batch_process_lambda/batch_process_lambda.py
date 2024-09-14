@@ -30,7 +30,6 @@ def lambda_handler(event, context):
     logging.info(f"Found {len(all_items)} tournaments to process.")
     for item in all_items:
         data = item
-        logging.info(f"Processing tournament {data['tourn_name']} with data {data}")
         tournament_id = data["tourn_id"]
         tournament_name = data["tourn_name"]
         end_date = data["end_date"]
@@ -45,24 +44,25 @@ def lambda_handler(event, context):
                 f"Skipping tournament {tournament_name} ({tournament_id}) because results are not available, even a week after its end-date."
             )
             continue
-        # Asynchronously invoke the Lambda function to process the tournament data
-        logging.info(f"Invoking {target_lambda} for tournament {tournament_name}")
-        lambda_client = boto3.client("lambda")
-        lambda_client.invoke(
-            FunctionName=target_lambda,
-            InvocationType="Event",
-            Payload=json.dumps(
-                {
-                    "tournament": tournament_id,
-                    "school": "None/Batch-Requested",
-                }
-            ),
-        )
-        # A little logic so that we're not slamming everything into this process at once
-        invocation_count += 1
-        if invocation_count >= max_invocations:
-            break
-        # Waiting here would time out, so make sure that the processing lambdas mark the records as True in DDB
+        else:
+            # Asynchronously invoke the Lambda function to process the tournament data
+            logging.info(f"Invoking {target_lambda} for tournament {tournament_name}")
+            lambda_client = boto3.client("lambda")
+            lambda_client.invoke(
+                FunctionName=target_lambda,
+                InvocationType="Event",
+                Payload=json.dumps(
+                    {
+                        "tournament": tournament_id,
+                        "school": "None/Batch-Requested",
+                    }
+                ),
+            )
+            # A little logic so that we're not slamming everything into this process at once
+            invocation_count += 1
+            if invocation_count >= max_invocations:
+                break
+            # Waiting here would time out, so make sure that the processing lambdas mark the records as True in DDB
 
 
 if __name__ == "__main__":
