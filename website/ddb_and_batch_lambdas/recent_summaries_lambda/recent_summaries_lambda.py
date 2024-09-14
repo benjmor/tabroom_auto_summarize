@@ -2,6 +2,7 @@ import boto3
 import datetime
 import json
 import logging
+import os
 from boto3.dynamodb.conditions import Key, Attr
 
 # Lazily copy-pasting the TextTable class code in here.
@@ -563,15 +564,13 @@ class Texttable:
         return line_wrapped
 
 
-if __name__ == "__main__":
-    REGION = "us-east-1"
+def lambda_handler(event, context):
     DISPLAY_LIMIT = 20
-    ddb_name = "tabroom_tournaments"
+    ddb_name = os.getenv("TABROOM_SUMMARY_DDB_NAME")
 
     # Pull a list of the newest DynamoDB entries and save them to a text file to display new tournaments in the website
     ddb_resource = boto3.resource(
         "dynamodb",
-        region_name=REGION,
     )
     table = ddb_resource.Table(ddb_name)
     all_items = table.scan()["Items"]

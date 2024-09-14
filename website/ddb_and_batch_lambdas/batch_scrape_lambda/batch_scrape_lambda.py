@@ -18,6 +18,7 @@ from selenium import webdriver
 from tempfile import mkdtemp
 from selenium.webdriver.common.by import By
 
+
 def store_data_in_ddb(
     data: dict,
     ddb_name: str,
@@ -59,6 +60,8 @@ def find_upcoming_tournaments(
     browser,
     ddb_table_name,
 ):
+    new_tournament_count = 0
+
     browser.get("https://www.tabroom.com/index/index.mhtml")
     # Get all rows in the table
 
@@ -112,10 +115,12 @@ def find_upcoming_tournaments(
             data=data_to_store,
             ddb_name=ddb_table_name,
         )
+        new_tournament_count += 1
     boto3.client("sns").publish(
         Message=f"Completed tournament scrape. {new_tournament_count} tournaments were added.",
-        TopicArn=os.environ.get("SNS_TOPIC_ARN")
+        TopicArn=os.environ.get("SNS_TOPIC_ARN"),
     )
+
 
 def lambda_handler(event, context):
     env_var_ddb_table = os.environ.get("DDB_TABLE_NAME")
@@ -155,5 +160,6 @@ def lambda_handler(event, context):
     find_upcoming_tournaments(browser=browser, ddb_table_name=env_var_ddb_table)
     browser.quit()
 
+
 if __name__ == "__main__":
-    lambda_handler({},{})
+    lambda_handler({}, {})

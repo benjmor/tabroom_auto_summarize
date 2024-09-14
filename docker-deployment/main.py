@@ -19,85 +19,98 @@ DATA_BUCKET = "tabroom-summaries-data-bucket"  # TODO - remove after testing
 
 
 def handler(event, context):
-    running_outside_of_lambda = os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None
-    print(event)
-    # Send ol' Benjamin an email to let him know that people are using the service
     try:
-        boto3.client("sns").publish(
-            TopicArn=os.environ["SNS_TOPIC_ARN"],
-            Message=f"Running tabroom_summary for {event['tournament']}; requested school is {event['school']}",
-        )
-    except Exception:
-        logging.error("Error publishing to SNS")
-
-    # Generate a Tabroom summary
-    tournament_id = event["tournament"]
-    event_context = event.get("context", "")
-    percentile_minimum = event.get("percentile_minimum", 25)
-    response, tourn_metadata = tabroom_summary.main(
-        tournament_id=tournament_id,
-        data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
-        context=event_context,
-        percentile_minimum=percentile_minimum,
-    )
-
-    # Save the result outputs
-    # If we're not in Lambda, assume we're in Windows
-    if running_outside_of_lambda:
-        # Make the directories as needed
-        for school_name in response.keys():
-            os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
-            if "gpt_prompt" in response[school_name]:
-                with open(f"{tournament_id}/{school_name}/gpt_prompt.txt", "w") as f:
-                    f.write(response[school_name]["gpt_prompt"])
-    else:
-        # Save the tournament results to S3
-        s3_client = boto3.client("s3")
-        bucket_name = os.environ["DATA_BUCKET_NAME"]
-        for school_name in response.keys():
-            if "gpt_prompt" in response[school_name]:
-                s3_client.put_object(
-                    Body=response[school_name]["gpt_prompt"],
-                    Bucket=bucket_name,
-                    Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
-                )
-            if "numbered_list_prompt" in response[school_name]:
-                s3_client.put_object(
-                    Body=response[school_name]["numbered_list_prompt"],
-                    Bucket=bucket_name,
-                    Key=f"{tournament_id}/{school_name}/numbered_list_prompt.txt",
-                )
+        running_outside_of_lambda = os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None
+        print(event)
+        # Send ol' Benjamin an email to let him know that people are using the service
         try:
-            # Delete the placeholder to signal to the Lambda that execution is complete
-            s3_client.delete_object(
-                Bucket=bucket_name, Key=f"{tournament_id}/placeholder.txt"
+            boto3.client("sns").publish(
+                TopicArn=os.environ["SNS_TOPIC_ARN"],
+                Message=f"Running tabroom_summary for {event['tournament']}; requested school is {event['school']}",
             )
         except Exception:
-            pass
-    # Find or update the DDB table with the values
-    end_date = datetime.datetime.strptime(
-        tourn_metadata.get("end"), "%Y-%m-%d %H:%M:%S"
-    )
-    end_date = end_date.strftime("%Y-%m-%d")
-    data = {
-        "tourn_id": tournament_id,
-        "tourn_name": tourn_metadata.get("name", ""),
-        "end_date": end_date,
-        "locality": tourn_metadata.get("state", "N/A"),
-        "prompts_generated": {
-            "B": True,
-        },
-    }
-    ddb_client = boto3.client(
-        "dynamodb",
-        region_name="us-east-1",
-    )
-    table_name = "tabroom_tournaments"
-    logging.info(f"Updating DDB table {table_name} with item {data}")
-    response = ddb_client.put_item(
-        TableName=table_name,
-        Item=data,
-    )
+            logging.error("Error publishing to SNS")
+
+        # Generate a Tabroom summary
+        tournament_id = event["tournament"]
+        event_context = event.get("context", "")
+        percentile_minimum = event.get("percentile_minimum", 25)
+        response, tourn_metadata = tabroom_summary.main(
+            tournament_id=tournament_id,
+            data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
+            context=event_context,
+            percentile_minimum=percentile_minimum,
+        )
+
+        # Save the result outputs
+        # If we're not in Lambda, assume we're in Windows
+        if running_outside_of_lambda:
+            # Make the directories as needed
+            for school_name in response.keys():
+                os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
+                if "gpt_prompt" in response[school_name]:
+                    with open(
+                        f"{tournament_id}/{school_name}/gpt_prompt.txt", "w"
+                    ) as f:
+                        f.write(response[school_name]["gpt_prompt"])
+        else:
+            # Save the tournament results to S3
+            s3_client = boto3.client("s3")
+            bucket_name = os.environ["DATA_BUCKET_NAME"]
+            for school_name in response.keys():
+                if "gpt_prompt" in response[school_name]:
+                    s3_client.put_object(
+                        Body=response[school_name]["gpt_prompt"],
+                        Bucket=bucket_name,
+                        Key=f"{tournament_id}/{school_name}/gpt_prompt.txt",
+                    )
+                if "numbered_list_prompt" in response[school_name]:
+                    s3_client.put_object(
+                        Body=response[school_name]["numbered_list_prompt"],
+                        Bucket=bucket_name,
+                        Key=f"{tournament_id}/{school_name}/numbered_list_prompt.txt",
+                    )
+            try:
+                # Delete the placeholder to signal to the Lambda that execution is complete
+                s3_client.delete_object(
+                    Bucket=bucket_name, Key=f"{tournament_id}/placeholder.txt"
+                )
+            except Exception:
+                pass
+        # Find or update the DDB table with the values
+        end_date = datetime.datetime.strptime(
+            tourn_metadata.get("end"), "%Y-%m-%d %H:%M:%S"
+        )
+        end_date = end_date.strftime("%Y-%m-%d")
+        data = {
+            "tourn_id": {
+                "S": tournament_id,
+            },
+            "tourn_name": {
+                "S": tourn_metadata.get("name", ""),
+            },
+            "end_date": {
+                "S": end_date,
+            },
+            "locality": {
+                "S": tourn_metadata.get("state", "N/A"),
+            },
+            "prompts_generated": {
+                "B": True,
+            },
+        }
+        ddb_client = boto3.client(
+            "dynamodb",
+            region_name="us-east-1",
+        )
+        table_name = "tabroom_tournaments"
+        logging.info(f"Updating DDB table {table_name} with item {data}")
+        response = ddb_client.put_item(
+            TableName=table_name,
+            Item=data,
+        )
+    except Exception as e:
+        logging.error(f"Tabroom Summary failed with the following error! {repr(e)}!")
 
 
 if __name__ == "__main__":

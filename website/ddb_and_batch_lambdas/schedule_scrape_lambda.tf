@@ -43,6 +43,4 @@ resource "aws_lambda_function" "schedule_scrape_lambda_function" {
   timeout          = 25
 }
 
-# Lambda that reviews recently-completed tournaments to see if there's results, then sends them to the parser
 
-# Lambda that creates a text table with the newest tournaments, then sends it to S3
