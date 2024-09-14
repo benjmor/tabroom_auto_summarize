@@ -35,12 +35,12 @@ def lambda_handler(event, context):
         tournament_name = data["tourn_name"]
         end_date = data["end_date"]
         end_datetime = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-        if today > end_datetime + datetime.timedelta(days=1):
+        if today < end_datetime + datetime.timedelta(days=1):
             logging.info(
                 f"Skipping tournament {tournament_name} ({tournament_id}) because results are likely not ready yet."
             )
             continue
-        elif today + datetime.timedelta(days=7) < end_datetime:
+        elif today - datetime.timedelta(days=7) > end_datetime:
             logging.info(
                 f"Skipping tournament {tournament_name} ({tournament_id}) because results are not available, even a week after its end-date."
             )
