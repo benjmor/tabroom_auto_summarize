@@ -23,8 +23,10 @@ def lambda_handler(event, context):
     max_invocations = 5
     invocation_count = 0
     all_items = table.scan(**scan_filter)["Items"]
+    logging.info(f"Found {len(all_items)} tournaments to process.")
     for item in all_items:
         data = item
+        logging.info(f"Processing tournament {data['tourn_name']} with data {data}")
         tournament_id = data["tourn_id"]
         tournament_name = data["tourn_name"]
         end_date = data["end_date"]
