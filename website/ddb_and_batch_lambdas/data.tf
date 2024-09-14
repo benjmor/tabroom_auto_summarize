@@ -51,6 +51,15 @@ data "aws_iam_policy_document" "batch_process_lambda_permissions" {
 
   statement {
     actions = [
+      "lambda:InvokeFunction",
+    ]
+    resources = [
+      "arn:aws:lambda:us-east-1:238589881750:function:docker-selenium-lambda-tabroom-prod-main",
+    ]
+  }
+
+  statement {
+    actions = [
       # "dynamodb:PutItem",
       "dynamodb:GetItem",
       "dynamodb:Query",
