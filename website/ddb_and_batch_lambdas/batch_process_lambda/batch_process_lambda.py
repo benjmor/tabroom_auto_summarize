@@ -4,7 +4,8 @@ import json
 import logging
 import os
 
-ddb_name = "tabroom_tournaments"
+logging.basicConfig(level=logging.INFO)
+
 
 def lambda_handler(event, context):
     ddb_name = os.getenv("DDB_NAME")
@@ -39,6 +40,7 @@ def lambda_handler(event, context):
             )
             continue
         # Asynchronously invoke the Lambda function to process the tournament data
+        logging.info(f"Invoking {target_lambda} for tournament {tournament_name}")
         lambda_client = boto3.client("lambda")
         lambda_client.invoke(
             FunctionName=target_lambda,

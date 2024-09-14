@@ -18,6 +18,8 @@ from selenium import webdriver
 from tempfile import mkdtemp
 from selenium.webdriver.common.by import By
 
+logging.basicConfig(level=logging.INFO)
+
 
 def store_data_in_ddb(
     data: dict,
@@ -157,7 +159,10 @@ def lambda_handler(event, context):
 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     browser = webdriver.Chrome(options=options)
-    find_upcoming_tournaments(browser=browser, ddb_table_name=env_var_ddb_table)
+    find_upcoming_tournaments(
+        browser=browser,
+        ddb_table_name=env_var_ddb_table,
+    )
     browser.quit()
 
 

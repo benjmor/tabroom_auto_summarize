@@ -5,6 +5,9 @@ import logging
 import os
 from boto3.dynamodb.conditions import Key, Attr
 
+logging.basicConfig(level=logging.INFO)
+
+
 # Lazily copy-pasting the TextTable class code in here.
 import re
 import math
@@ -598,6 +601,8 @@ def lambda_handler(event, context):
         [["Tournament ID", "Tournament Name", "Locality", "Date"]]
         + tournaments_with_results,
     )
+    logging.info("Table generated, uploading this to S3:")
+    logging.info(table.draw())
     s3_client = boto3.client("s3")
     s3_client.put_object(
         Body=table.draw(),
