@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import os
+from boto3.dynamodb.conditions import Key, Attr
 
 if len(logging.getLogger().handlers) > 0:
     # The Lambda environment pre-configures a handler logging to stderr. If a handler is already configured,
@@ -21,13 +22,11 @@ def lambda_handler(event, context):
         "dynamodb",
     )
     table = ddb_resource.Table(ddb_name)
-    scan_filter = {
-        "FilterExpression": "prompts_generated = :value",
-        "ExpressionAttributeValues": {":value": {"BOOL": False}},
-    }
     max_invocations = 5
     invocation_count = 0
-    all_items = table.scan(**scan_filter)["Items"]
+    all_items = table.scan(FilterExpression=Attr("prompts_generated").eq(False))[
+        "Items"
+    ]
     logging.info(f"Found {len(all_items)} tournaments to process.")
     for item in all_items:
         data = item
@@ -64,3 +63,11 @@ def lambda_handler(event, context):
         if invocation_count >= max_invocations:
             break
         # Waiting here would time out, so make sure that the processing lambdas mark the records as True in DDB
+
+
+if __name__ == "__main__":
+    os.environ["DDB_NAME"] = "tabroom_tournaments"
+    os.environ["TARGET_TABROOM_SUMMARY_LAMBDA"] = (
+        "docker-selenium-lambda-tabroom-prod-main"
+    )
+    lambda_handler(None, None)
