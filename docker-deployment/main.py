@@ -96,7 +96,7 @@ def handler(event, context):
                 "S": tourn_metadata.get("state", "N/A"),
             },
             "prompts_generated": {
-                "B": True,
+                "BOOL": True,
             },
         }
         ddb_client = boto3.client(
