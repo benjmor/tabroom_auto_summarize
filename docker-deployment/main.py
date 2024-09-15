@@ -3,6 +3,7 @@ import boto3
 import datetime
 import logging
 import os
+import traceback
 from tabroom_summary import tabroom_summary
 
 """
@@ -112,9 +113,9 @@ def handler(event, context):
     except Exception as e:
         logging.error(f"Tabroom Summary failed with the following error! {repr(e)}!")
         if tournament_id:
-            message = f"Tabroom Summary for tournament {tournament_id} failed with the following error! {repr(e)}!"
+            message = f"Tabroom Summary for tournament {tournament_id} failed with the following error! {repr(e)}! Traceback: {traceback.format_exc()}"
         else:
-            message = f"Tabroom Summary failed with the following error! {repr(e)}!"
+            message = f"Tabroom Summary failed with the following error! {repr(e)}! Traceback: {traceback.format_exc()}"
         try:
             boto3.client("sns").publish(
                 TopicArn=os.environ["SNS_TOPIC_ARN"],

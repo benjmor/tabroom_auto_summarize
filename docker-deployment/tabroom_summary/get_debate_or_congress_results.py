@@ -44,7 +44,7 @@ def get_debate_or_congress_results(
                 if scraped_event["event_name"] == event_name:
                     for scraped_result_set in scraped_event["result_list"]:
                         if not scraped_result_set:
-                            continue 
+                            continue
                         if scraped_result_set["result_set_type"] == "Speaker Awards":
                             speaker_award_results = (
                                 get_debate_speaker_awards_from_scraped_data(
@@ -76,6 +76,8 @@ def get_debate_or_congress_results(
                 continue  # Sometimes Palmer populates a duplicate entry with blank 'values'. Skip it.
             results_by_round = ""  # Palmer likes to hide round-by-round results in this very low-priority column.
             for value in result["values"]:
+                if "priority" not in value:
+                    continue
                 if value["priority"] == 999:
                     results_by_round = value.get("value", "")
                 # Stash the bid type in the results_by_round field
