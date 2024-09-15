@@ -123,6 +123,10 @@ def handler(event, context):
             )
         except Exception:
             logging.error("Error publishing error to SNS")
+    boto3.client("sns").publish(
+        TopicArn=os.environ["SNS_TOPIC_ARN"],
+        Message=f"Tabroom results successfully generated for tournament tournament_id ({tourn_metadata.get("name", "")})!",
+    )
 
 
 if __name__ == "__main__":
