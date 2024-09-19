@@ -46,7 +46,9 @@ def lambda_handler(event, context):
             continue
         else:
             # Asynchronously invoke the Lambda function to process the tournament data
-            logging.info(f"Invoking {target_lambda} for tournament {tournament_name}")
+            logging.info(
+                f"Invoking {target_lambda} for tournament {tournament_name} ({tournament_id})"
+            )
             lambda_client = boto3.client("lambda")
             lambda_client.invoke(
                 FunctionName=target_lambda,
