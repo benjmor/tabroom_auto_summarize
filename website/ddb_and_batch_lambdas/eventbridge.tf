@@ -30,14 +30,14 @@ resource "aws_cloudwatch_event_rule" "monday_tuesday_trigger" {
 }
 
 # Add the target for the rule (your existing Lambda function)
-resource "aws_cloudwatch_event_target" "lambda_target" {
+resource "aws_cloudwatch_event_target" "lambda_target_batchproc" {
   rule      = aws_cloudwatch_event_rule.monday_tuesday_trigger.name
   target_id = "LambdaMondayTuesdayTarget"
   arn       = aws_lambda_function.batch_process_lambda_function.arn  # Reference to your Lambda function
 }
 
 # Allow EventBridge to invoke your Lambda function
-resource "aws_lambda_permission" "allow_eventbridge" {
+resource "aws_lambda_permission" "allow_eventbridge_batchproc" {
   statement_id  = "AllowExecutionFromEventBridgeMondayTuesday"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.batch_process_lambda_function.function_name
@@ -49,24 +49,24 @@ resource "aws_lambda_permission" "allow_eventbridge" {
 
 # Update the S3 bucket Mondays and Tuesdays each week at 2AM
 
-resource "aws_cloudwatch_event_rule" "monday_tuesday_trigger_later" {
+resource "aws_cloudwatch_event_rule" "monday_tuesday_trigger_recents" {
   name                = "lambda-monday-tuesday-trigger-later"
   description         = "Triggers Lambda at 1 AM every Monday and Tuesday"
   schedule_expression = "cron(0 10 ? * 2,3 *)"  # 1 AM UTC on Mondays (2) and Tuesdays (3)
 }
 
 # Add the target for the rule (your existing Lambda function)
-resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule      = aws_cloudwatch_event_rule.monday_tuesday_trigger_later.name
+resource "aws_cloudwatch_event_target" "lambda_target_recents" {
+  rule      = aws_cloudwatch_event_rule.monday_tuesday_trigger_recents.name
   target_id = "LambdaMondayTuesdayTarget"
   arn       = aws_lambda_function.recent_summaries_lambda_function.arn  # Reference to your Lambda function
 }
 
 # Allow EventBridge to invoke your Lambda function
-resource "aws_lambda_permission" "allow_eventbridge" {
+resource "aws_lambda_permission" "allow_eventbridge_recents" {
   statement_id  = "AllowExecutionFromEventBridgeMondayTuesday"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.recent_summaries_lambda_function.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.monday_tuesday_trigger_later.arn
+  source_arn    = aws_cloudwatch_event_rule.monday_tuesday_trigger_recents.arn
 }
