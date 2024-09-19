@@ -150,18 +150,15 @@ def main(
             # Create dictionaries to map the entry ID to an Entry Code and Entry Name
             # This only looks at the first non-elim round of the event -- theoretically that could be a problem for late adds
             all_rounds = event.get("rounds", [])
-            if not all_rounds:
-                continue
             for round in all_rounds:
                 if round["type"] == "elim" or round["type"] == "final":
                     continue
                 round_to_pull_entry_data_from = round
-                break
-            update_global_entry_dictionary(
-                sections=round_to_pull_entry_data_from.get("sections", []),
-                code_dictionary=entry_id_to_entry_code_dictionary,
-                entry_dictionary=entry_id_to_entry_entry_name_dictionary,
-            )
+                update_global_entry_dictionary(
+                    sections=round_to_pull_entry_data_from.get("sections", []),
+                    code_dictionary=entry_id_to_entry_code_dictionary,
+                    entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                )
             # Parse the result set and get its important info
             (
                 event_is_speech,

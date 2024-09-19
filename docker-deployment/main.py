@@ -123,10 +123,13 @@ def handler(event, context):
             )
         except Exception:
             logging.error("Error publishing error to SNS")
-    boto3.client("sns").publish(
-        TopicArn=os.environ["SNS_TOPIC_ARN"],
-        Message=f"Tabroom results successfully generated for tournament tournament_id ({tourn_metadata.get("name", "")})!",
-    )
+    try:
+        boto3.client("sns").publish(
+            TopicArn=os.environ["SNS_TOPIC_ARN"],
+            Message=f"Tabroom results successfully generated for tournament tournament_id ({tourn_metadata.get("name", "")})!",
+        )
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
@@ -140,13 +143,13 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="31429",
+        default="28354",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         # "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
-        "percentile_minimum": 0,  # CHSSA championship -- should include all results
+        "percentile_minimum": 25,  # CHSSA championship -- should include all results
     }
     handler(event, {})
