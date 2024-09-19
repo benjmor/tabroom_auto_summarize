@@ -75,6 +75,18 @@ locals {
           "arn:aws:cloudformation:us-east-1:238589881750:stack/docker-selenium-lambda-tabroom-prod",
           "arn:aws:cloudformation:us-east-1:238589881750:stack/docker-selenium-lambda-tabroom-prod/*"
         ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "events:PutRule",
+          "events:PutTargets",
+          "events:DeleteRule",
+          "events:RemoveTargets"
+        ],
+        "Resource" : [
+          "*",
+        ]
       }
     ]
   })
