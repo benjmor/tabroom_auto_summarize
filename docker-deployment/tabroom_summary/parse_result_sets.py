@@ -50,6 +50,29 @@ def parse_result_sets(
             )
             for debate_round_result in debate_round_results:
                 tournament_results.append(debate_round_result)
+            # Look up the entry in the scraped_data whose name key matches the event name key
+            # This is probably horrible, but I don't know where else to make it work.
+            scraped_result_for_event = [
+                result
+                for result in scraped_results
+                if result["event_name"] == event["name"]
+            ][0]
+            if scraped_result_for_event:
+                for overall_event_result in scraped_result_for_event["result_list"]:
+                    for index, result in enumerate(overall_event_result["results"]):
+                        tournament_results.append({
+                    "event_name": event["name"],
+                    "event_type": event["type"],
+                    "result_set": overall_event_result.get("result_set_type", ""),
+                    "entry_name": result.get("name", ""),
+                    "entry_code": result.get("code", ""),
+                    "school_name": result.get("school", ""),
+                    "rank": f"{index+1}/{len(overall_event_result["results"])}",
+                    "total_entries": len(overall_event_result["results"]),
+                    "round_reached": "N/A",
+                    "percentile": 100-(100*(index+1)/(len(overall_event_result["results"]))),
+                    "results_by_round": f"{result.get("wins", "N/A")} prelim wins",
+                })
 
         else:
             debate_final_results = get_debate_or_congress_results(
