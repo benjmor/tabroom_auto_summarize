@@ -111,7 +111,7 @@ def handler(event, context):
             Item=data,
         )
     except Exception as e:
-        logging.error(f"Tabroom Summary failed with the following error! {repr(e)}!")
+        logging.error(f"Tabroom Summary failed with the following error! {repr(e)} Traceback: {traceback.format_exc()}!")
         if tournament_id:
             message = f"Tabroom Summary for tournament {tournament_id} failed with the following error! {repr(e)}! Traceback: {traceback.format_exc()}"
         else:
@@ -129,7 +129,7 @@ def handler(event, context):
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
     except Exception:
-        logging.info(f"Error publishing error to SNS. Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!")
+        logging.info(f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!")
 
 
 if __name__ == "__main__":
@@ -143,7 +143,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="32297",
+        default="24581",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id

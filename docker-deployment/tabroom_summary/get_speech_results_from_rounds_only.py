@@ -35,11 +35,24 @@ def get_speech_results_from_rounds_only(
                     f"Parsing results from section {section['letter']} in event {event_name} round {label}..."
                 )
                 for ballot in section["ballots"]:
-                    rank = [
-                        score["value"]
-                        for score in ballot["scores"]
-                        if score["tag"] == "rank"
-                    ][0]
+                    try:
+                        rank = [
+                            score["value"]
+                            for score in ballot[
+                                "scores"
+                            ] 
+                            if score["tag"] == "rank"
+                        ][0]
+                    except Exception:
+                        forfeit_status = ballot.get("forfeit", "false")
+                        if forfeit_status == 1:
+                            forfeit_status = "true"
+                        else:
+                            pass
+                        logging.warning(
+                            f"No 'scores' key found for event {event_name}, round {label}, section {section["id"]}, ballot {ballot["id"]}. This may indicate a forfeit. Forfeit status is {forfeit_status}."
+                        )
+                        rank = 999 # High value here = forfeit
 
                     try:
                         points = [
@@ -74,13 +87,13 @@ def get_speech_results_from_rounds_only(
                         )
                         section_scoring[entry_name]["rank_total"] += rank
                 # Sort the section_scoring dictionary by rank total
-                section_scoring = dict(
-                    sorted(
-                        section_scoring.items(),
-                        key=lambda item: item[1]["rank_total"],
-                        reverse=False,
+                    section_scoring = dict(
+                        sorted(
+                            section_scoring.items(),
+                            key=lambda item: item[1]["rank_total"],
+                            reverse=False,
+                        )
                     )
-                )
                 for index, (entry_name, scoring) in enumerate(
                     section_scoring.items(), start=1
                 ):
