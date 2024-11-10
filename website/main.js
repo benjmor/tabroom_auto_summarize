@@ -4,6 +4,7 @@ function submitForm() {
     // Get form data
     const tournamentNumber = document.getElementById('tournamentNumber').value;
     const schoolName = document.getElementById('schoolName').value;
+    const email = document.getElementById('email').value;
 
     // Validate tournament number format
     if (!/^\d{5}$/.test(tournamentNumber) || (tournamentNumber == "00000")) {
@@ -17,10 +18,17 @@ function submitForm() {
         return;
     }
 
+    // Email must include @ sign.
+    if (email.length > 50 || !/@/.test(email) ) {
+        alert('Please enter a valid email with 50 characters or less.');
+        return;
+    }
+
     // Create a JSON object with the form data
     const formData = {
         tournament: tournamentNumber,
-        school: schoolName
+        school: schoolName,
+        email: email
     };
     
     // Perform a POST request to the API Gateway endpoint to send the request

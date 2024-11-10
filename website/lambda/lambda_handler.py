@@ -46,7 +46,7 @@ class Claude3Wrapper:
                 body=json.dumps(
                     {
                         "anthropic_version": "bedrock-2023-05-31",
-                        "max_tokens": 4*1024,
+                        "max_tokens": 4 * 1024,
                         "messages": [
                             {
                                 "role": "user",
@@ -150,7 +150,6 @@ def lambda_handler(event, context):
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
     }
 
-    # Do some data validation -- ensure that the number is 5 digits and the school name is 50 characters or less
     s3_client = boto3.client("s3")
     parsed_body = json.loads(event["body"])
     parsed_body["read_only"] = os.getenv("READ_ONLY", True)
