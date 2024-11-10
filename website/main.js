@@ -19,7 +19,7 @@ function submitForm() {
     }
 
     // Email must include @ sign.
-    if (email.length > 50 || !/@/.test(email) ) {
+    if (email.length > 50 || (email.length != 0  && !/@/.test(email))) {
         alert('Please enter a valid email with 50 characters or less.');
         return;
     }

@@ -133,25 +133,27 @@ def handler(event, context):
             TopicArn=os.environ["SNS_TOPIC_ARN"],
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
-        if "email" in event:
-            lambda_client = boto3.client("lambda")
-            logging.info(
-                f"Invoking email_results_lambda_function_name for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
-            )
-            lambda_client.invoke(
-                FunctionName="email_results_lambda_function_name",
-                InvocationType="Event",
-                Payload=json.dumps(
-                    {
-                        "email": event["email"],
-                        "tournament": tournament_id,
-                        "school": event["school"],
-                    }
-                ),
-            )
     except Exception:
         logging.info(
             f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+        )
+    # Email results to interested parties as needed
+    logging.warning(f"Email: {event.get("email", "")}")
+    if "email" in event:
+        lambda_client = boto3.client("lambda")
+        logging.warning(
+            f"Invoking email_results_lambda_function_name for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+        )
+        lambda_client.invoke(
+            FunctionName="email_results_lambda_function_name",
+            InvocationType="Event",
+            Payload=json.dumps(
+                {
+                    "email": event["email"],
+                    "tournament": tournament_id,
+                    "school": event["school"],
+                }
+            ),
         )
 
 
