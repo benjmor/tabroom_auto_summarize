@@ -111,7 +111,9 @@ def handler(event, context):
             Item=data,
         )
     except Exception as e:
-        logging.error(f"Tabroom Summary failed with the following error! {repr(e)} Traceback: {traceback.format_exc()}!")
+        logging.error(
+            f"Tabroom Summary failed with the following error! {repr(e)} Traceback: {traceback.format_exc()}!"
+        )
         if tournament_id:
             message = f"Tabroom Summary for tournament {tournament_id} failed with the following error! {repr(e)}! Traceback: {traceback.format_exc()}"
         else:
@@ -119,7 +121,7 @@ def handler(event, context):
         try:
             boto3.client("sns").publish(
                 TopicArn=os.environ["SNS_TOPIC_ARN"],
-                Message=f"Tabroom Summary failed with the following error! {repr(e)}!",
+                Message=message,  # f"Tabroom Summary failed with the following error! {repr(e)}!",
             )
         except Exception:
             logging.error("Error publishing error to SNS")
@@ -129,10 +131,13 @@ def handler(event, context):
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
     except Exception:
-        logging.info(f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!")
+        logging.info(
+            f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+        )
 
 
 if __name__ == "__main__":
+    # This section is only used for testing; the Lambda handler is not invoked as the "__main__" routine
     os.environ["SNS_TOPIC_ARN"] = (
         "arn:aws:sns:us-east-1:238589881750:summary_generation_topic"
     )
@@ -143,13 +148,13 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="24581",
+        default="32824",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         # "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
-        "percentile_minimum": 25,  # CHSSA championship -- should include all results
+        "percentile_minimum": 25,  # 0 # CHSSA championship -- should include all results
     }
     handler(event, {})

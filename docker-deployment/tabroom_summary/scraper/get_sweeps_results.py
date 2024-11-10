@@ -49,9 +49,7 @@ def get_sweeps_results(browser):
             title = link.text
             logging.info(f"Title: {title}, URL: {href}")
     except Exception as e:
-        logging.warning(
-            f"Warning: {e} (this may just indicate that the tournament does not publish sweepstakes results)"
-        )
+        logging.debug(f"No sweepstakes found.")
         return []
     # For now, just grab the first link...
     url = links[0].get_attribute("href")
