@@ -145,7 +145,7 @@ def handler(event, context):
             f"Invoking email_results_lambda_function_name for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
         )
         lambda_client.invoke(
-            FunctionName="email_results_lambda_function_name",
+            FunctionName="email_results_lambda_function",
             InvocationType="Event",
             Payload=json.dumps(
                 {
