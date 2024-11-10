@@ -5,6 +5,9 @@ import logging
 import os
 import traceback
 from tabroom_summary import tabroom_summary
+import json
+import json
+import json
 
 """
 This is the main routine for the tabroom_summary Lambda. It will query Tabroom.com for the tournament results and then
@@ -130,6 +133,22 @@ def handler(event, context):
             TopicArn=os.environ["SNS_TOPIC_ARN"],
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
+        if "email" in event:
+            lambda_client = boto3.client("lambda")
+            logging.info(
+                f"Invoking email_results_lambda_function_name for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+            )
+            lambda_client.invoke(
+                FunctionName="email_results_lambda_function_name",
+                InvocationType="Event",
+                Payload=json.dumps(
+                    {
+                        "email": event["email"],
+                        "tournament": tournament_id,
+                        "school": event["school"],
+                    }
+                ),
+            )
     except Exception:
         logging.info(
             f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"

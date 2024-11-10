@@ -128,7 +128,7 @@ resource "aws_iam_role_policy" "lambda_s3_writes" {
 }
 
 resource "aws_lambda_function" "api_lambda_function" {
-  function_name = "api_lambda_function"
+  function_name = var.lambda_api_name
   runtime       = "python3.12"
   handler       = "lambda_handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
@@ -255,4 +255,12 @@ resource "aws_sns_topic" "summary_generation_topic" {
 #### Batching Module ####
 module "ddb_and_batch_lambdas" {
   source = "./ddb_and_batch_lambdas"
+}
+
+### Email Lambda Module
+module "email_lambda" {
+  source = "./email_results_lambda"
+  sender_email = var.sender_email
+  lambda_api_name = var.lambda_api_name
+  email_results_lambda_function_name = var.email_results_lambda_function_name
 }

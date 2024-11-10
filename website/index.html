@@ -16,9 +16,11 @@
     <p class="instruction">
     Generates newspaper articles for schools' Tabroom results.<br><br>
 
-    To find the tournament ID for a tournament, click on the tournament on <a>Tabroom.com</a> and find the 5-digit tourn_id from the URL.<br><br>
+    To find the tournament ID for a tournament, click on the tournament on <a href="https://www.tabroom.com">Tabroom.com</a> and find the 5-digit tourn_id from the URL.<br><br>
 
     Submit a blank school name to display a list of all schools with results.<br><br>
+
+    If we don't have results immediately available, you can supply your email address to be emailed results when they're available.
 
     Please <b>SUBMIT</b> these results to your school administrators, newspapers, social media feeds, and other relevant media!<br><br>
     </p>
@@ -28,6 +30,9 @@
         <br><br>
         <label for="schoolName">School Name:</label>
         <input type="text" id="schoolName" name="schoolName" required>
+        <br><br>
+        <label for="email">[Optional] Email:</label>
+        <input type="text" id="email" name="email" required>
         <br><br>
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
