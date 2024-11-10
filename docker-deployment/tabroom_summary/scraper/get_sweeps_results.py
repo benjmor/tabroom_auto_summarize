@@ -2,6 +2,9 @@ import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
 
 
 # TODO - currently, sweepstakes only pulls from the first listed sweepstakes page. Would need to figure out logic for handling multiple pages.
@@ -10,10 +13,16 @@ def parse_sweeps_page(
     target_url,
 ):
     browser.get(target_url)
-    # Find the table on the page
-    table = browser.find_element(By.TAG_NAME, "table")
-    # Find all rows in the table
-    rows = table.find_elements(By.TAG_NAME, "tr")
+    try:
+        # Find the table on the page
+        table = browser.find_element(By.TAG_NAME, "table")
+        # Find all rows in the table
+        rows = table.find_elements(By.TAG_NAME, "tr")
+    except NoSuchElementException:
+        logging.warning(
+            "No table found on the page. Probably not a valid sweepstakes result."
+        )
+        return []
     sweeps_list = []
     for row in rows:
         # Find all cells in the row
