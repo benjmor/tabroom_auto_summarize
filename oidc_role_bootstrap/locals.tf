@@ -57,7 +57,8 @@ locals {
           "arn:aws:lambda:us-east-1:238589881750:function:docker-selenium-lambda-tabroom-prod-main",
           "arn:aws:lambda:us-east-1:238589881750:function:schedule_scrape_lambda_function",
           "arn:aws:lambda:us-east-1:238589881750:function:batch_process_lambda_function",
-          "arn:aws:lambda:us-east-1:238589881750:function:recent_summaries_lambda_function"
+          "arn:aws:lambda:us-east-1:238589881750:function:recent_summaries_lambda_function",
+          "arn:aws:lambda:us-east-1:238589881750:function:email_results_lambda_function"
         ]
       },
       {
@@ -90,6 +91,33 @@ locals {
         "Resource" : [
           "*",
         ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ses:VerifyEmailIdentity",
+        ],
+        "Resource" : [
+          "*",
+        ]
+      },
+            {
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:CreateRole",
+          "iam:PutRolePolicy",
+          "iam:PassRole",
+          "iam:AttachRolePolicy"
+        ],
+        "Resource" : [
+          "arn:aws:iam::238589881750:role/ses_notify_role",
+          "arn:aws:iam::238589881750:role/summary_lambda_role",
+        ],
+        "Condition": {
+          "StringLikeIfExists": {
+            "iam:PassedToService": "lambda.amazonaws.com"
+          }
+        }
       }
     ]
   })
