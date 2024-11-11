@@ -123,13 +123,5 @@ data "aws_iam_policy_document" "summmarizer_role" {
     resources = [
       "arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:${var.email_results_lambda_function_name}",
     ]
-    condition {
-      test     = "StringEquals"
-      variable = "iam:PassedToService"
-
-      values = [
-        "lambda.amazonaws.com"
-      ]
-    }
   }
 }
