@@ -6,6 +6,7 @@ data "aws_iam_policy_document" "lambda_ses_and_invoke" {
 
     actions = [
       "ses:SendRawEmail",
+      "ses:SendEmail",
     ]
 
     resources = [
