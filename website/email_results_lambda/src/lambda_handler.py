@@ -12,15 +12,19 @@ def lambda_handler(event, context):
         raise Exception("Missing email, school, or tournament ID")
     # Invoke Lambda to process input using LLM
     lambda_client = boto3.client("lambda")
+    # Have to double-dump the payload to match the other Lambda
+    inner_payload = json.dumps(
+        {
+            "tournament": tournament_id,
+            "school": school,
+        }
+    )
     response = lambda_client.invoke(
         FunctionName="api_lambda_function",
         InvocationType="RequestResponse",  # synchronous
         Payload=json.dumps(
             {
-                "body": {
-                    "tournament": tournament_id,
-                    "school": school,
-                },
+                "body": inner_payload,
             },
         ),
     )
