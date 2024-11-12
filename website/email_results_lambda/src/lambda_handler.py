@@ -31,6 +31,9 @@ def lambda_handler(event, context):
     response_payload = response["Payload"].read().decode("utf-8")
     if "ERROR" in response_payload:
         raise Exception(response_payload)
+    content = response_payload.get("body")
+    data = json.loads(content)
+    relevant_text = data.get("file_content")
     # Send email
     ses_client = boto3.client("ses")
     response = ses_client.send_email(
@@ -39,7 +42,7 @@ def lambda_handler(event, context):
             "Body": {
                 "Text": {
                     "Charset": "UTF-8",
-                    "Data": response_payload,
+                    "Data": relevant_text,
                 }
             },
             "Subject": {
