@@ -1,3 +1,7 @@
+# Overview
+
+This is the part of the repo that contains the logic for scraping results from Tabroom and creating LLM-ready prompts.
+
 # docker-selenium-lambda
 
 [![badge](https://github.com/umihico/docker-selenium-lambda/actions/workflows/demo-test.yml/badge.svg)](https://github.com/umihico/docker-selenium-lambda/actions/workflows/demo-test.yml)
