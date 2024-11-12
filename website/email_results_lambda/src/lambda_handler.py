@@ -15,7 +15,14 @@ def lambda_handler(event, context):
     response = lambda_client.invoke(
         FunctionName="api_lambda_function",
         InvocationType="RequestResponse",  # synchronous
-        Payload=f'{{"tournament": "{tournament_id}", "school": "{school}"}}',
+        Payload=json.dumps(
+            {
+                "body": {
+                    "tournament": tournament_id,
+                    "school": school,
+                },
+            },
+        ),
     )
     response_payload = response["Payload"].read().decode("utf-8")
     if "ERROR" in response_payload:
