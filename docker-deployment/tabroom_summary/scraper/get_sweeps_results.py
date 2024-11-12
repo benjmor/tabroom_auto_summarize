@@ -57,12 +57,15 @@ def get_sweeps_results(browser):
             href = link.get_attribute("href")
             title = link.text
             logging.info(f"Title: {title}, URL: {href}")
+
+        # For now, just grab the first link...
+        url = links[0].get_attribute("href")
+        sweeps_list = parse_sweeps_page(browser=browser, target_url=url)
+
     except Exception as e:
         logging.debug(f"No sweepstakes found.")
         return []
-    # For now, just grab the first link...
-    url = links[0].get_attribute("href")
-    sweeps_list = parse_sweeps_page(browser=browser, target_url=url)
+
     return sweeps_list
 
 
