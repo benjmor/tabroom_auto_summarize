@@ -1,5 +1,4 @@
 # Assumes that DDB and S3 have been bootstrapped for TF usage
-
 terraform {
   backend "s3" {
     encrypt        = "true"
