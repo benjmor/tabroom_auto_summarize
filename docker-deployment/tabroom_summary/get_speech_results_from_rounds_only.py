@@ -29,6 +29,11 @@ def get_speech_results_from_rounds_only(
         logging.debug(f"Parsing results from event {event_name} round {label}...")
         # For now, only concerned with Finals
         if label == "Finals":
+            if "sections" not in round:
+                logging.warning(
+                    f"No 'sections' key found for event {event_name}, round {label}. Skipping."
+                )
+                continue
             for section in round["sections"]:
                 section_scoring = {}
                 logging.debug(
