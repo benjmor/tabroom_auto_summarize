@@ -3,7 +3,7 @@ from .get_debate_results_from_rounds_only import get_debate_results_from_rounds_
 from .get_debate_or_congress_results import get_debate_or_congress_results
 from .get_speech_results_from_rounds_only import get_speech_results_from_rounds_only
 from .get_district_qualifier_results import get_district_qualifier_results
-
+import logging
 
 def parse_result_sets(
     event: dict,
@@ -94,11 +94,12 @@ def parse_result_sets(
             result_set.get("label", "") for result_set in event.get("result_sets", [{}])
         ]:
             # Then grab that result set and pass it to the designated parsing function
+            logging.debug(f"Parsing Final Places in {event["name"]}")
             final_results_result_set = [
                 result_set
                 for result_set in event.get("result_sets", [{}])
                 if result_set.get("label", "") == "Final Places"
-            ][0]["results"]
+            ][0].get("results", {})
             speech_final_place_results = get_speech_results_from_final_places(
                 final_results_result_set=final_results_result_set,
                 event_name=event["name"],
