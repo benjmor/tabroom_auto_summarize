@@ -88,8 +88,8 @@ def resolve_longname_to_shortname(long_name: str):
     if long_name in cary_acad_list:
         return "Cary Acad"
 
-    # ALWAYS REMOVE
-    always_remove = ["Junior-Senior", "Charter Public", "Public Charter"]
+    # ALWAYS REMOVE these phrases and illegal-in-names-on-Windows characters
+    always_remove = ["Junior-Senior", "Charter Public", "Public Charter", ":"]
     for remove_phrase in always_remove:
         long_name = long_name.replace(remove_phrase, "")
 

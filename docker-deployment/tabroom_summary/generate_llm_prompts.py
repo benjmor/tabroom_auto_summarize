@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 import os
+import string
 from .generate_llm_prompt_header import generate_llm_prompt_header
 from .create_data_strings import create_data_strings
 from .generate_list_generation_prompt import generate_list_generation_prompt
@@ -162,9 +163,25 @@ def generate_llm_prompts(
                 exist_ok=True,
             )
             with open(f"{tournament_id}/{short_school_name}/gpt_prompt.txt", "w") as f:
-                f.write(final_llm_payload)
+                try:
+                    f.write(final_llm_payload)
+                except UnicodeEncodeError:
+                    f.write(
+                        "".join(
+                            filter(lambda x: x in string.printable, final_llm_payload)
+                        )
+                    )
             with open(
                 f"{tournament_id}/{short_school_name}/numbered_list_prompt.txt", "w"
             ) as f:
-                f.write(numbered_list_prompt)
+                try:
+                    f.write(numbered_list_prompt)
+                except UnicodeEncodeError:
+                    f.write(
+                        "".join(
+                            filter(
+                                lambda x: x in string.printable, numbered_list_prompt
+                            )
+                        )
+                    )
     return all_schools_dict
