@@ -45,6 +45,7 @@ def parse_results_wrapper(
         parallel_browser = Chrome(
             options=chrome_options_tuple[0],
             service=chrome_options_tuple[1],
+            keep_alive=True,
         )
         # Update to use the new browser
         thread_arguments = (

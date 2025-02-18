@@ -56,7 +56,10 @@ def handler(event, context):
                     with open(
                         f"{tournament_id}/{school_name}/gpt_prompt.txt", "w"
                     ) as f:
-                        f.write(response[school_name]["gpt_prompt"])
+                        try:
+                            f.write(response[school_name]["gpt_prompt"])
+                        except UnicodeEncodeError:
+                            f.write(response[school_name]["gpt_prompt"].encode("utf-8"))
         else:
             # Save the tournament results to S3
             s3_client = boto3.client("s3")
@@ -135,7 +138,7 @@ def handler(event, context):
         )
     except Exception:
         logging.info(
-            f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+            f"Error publishing error to SN S for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
         )
     # Email results to interested parties as needed
     logging.warning(f"Email: {event.get("email", "")}")
@@ -169,13 +172,13 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="34220",
+        default="31548",
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         # "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
-        "percentile_minimum": 25,  # 0 # CHSSA championship -- should include all results
+        "percentile_minimum": 0,  # 0 # CHSSA championship -- should include all results
     }
     handler(event, {})

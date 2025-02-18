@@ -53,7 +53,13 @@ def main(
     name_to_school_dict_overall = {}
     name_to_full_name_dict_overall = {}
     # This browser will be the ONLY browser if running in single-process mode
-    browser = webdriver.Chrome(options=chrome_options, service=chrome_service)
+    browser = webdriver.Chrome(
+        options=chrome_options,
+        service=chrome_service,
+    )
+    # Extend timeouts for Harvard
+    browser.timeouts.page_load = 60 * 30
+    browser.timeouts.script = 60 * 30
     logging.debug("Starting browser session")
 
     # Navigate to the page with the dropdown menu
@@ -126,7 +132,9 @@ def main(
             )
         with futures.ThreadPoolExecutor(max_workers=len(thread_arguments)) as executor:
             results = list(
-                executor.map(parse_results_wrapper, thread_arguments, timeout=600)
+                executor.map(
+                    parse_results_wrapper, thread_arguments, timeout=1500
+                )  # 25 minutes - Harvard is slow
             )
 
     # Get attendee data
