@@ -41,12 +41,31 @@ resource "aws_s3_object" "website_functions" {
   # content_type = "text/html"
 }
 
+resource "aws_s3_object" "md-block-fork" {
+  depends_on = [aws_s3_bucket.website_bucket]
+  bucket     = local.website_bucket_name
+  key        = "md-block-fork.js"
+  source     = "${path.module}/md-block-fork.js"
+  etag       = filemd5("${path.module}/md-block-fork.js")
+  content_type = "application/javascript"
+}
+
 resource "aws_s3_object" "website_css" {
   depends_on = [aws_s3_bucket.website_bucket]
   bucket     = local.website_bucket_name
   key        = "stylesheet.css"
   source     = "${path.module}/stylesheet.css"
   etag       = filemd5("${path.module}/stylesheet.css")
+
+  # content_type = "text/html"
+}
+
+resource "aws_s3_object" "website_icon" {
+  depends_on = [aws_s3_bucket.website_bucket]
+  bucket     = local.website_bucket_name
+  key        = "favicon.ico"
+  source     = "${path.module}/favicon.ico"
+  etag       = filemd5("${path.module}/favicon.ico")
 
   # content_type = "text/html"
 }
