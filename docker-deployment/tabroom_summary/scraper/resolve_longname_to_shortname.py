@@ -55,6 +55,7 @@ def resolve_longname_to_shortname(long_name: str):
         "dhs independent": "DHS",
         "damien high school and st lucy's priory": "Damien HS and St. Lucy's Priory",
         "davidson academy online": "Davidson Academy",
+        "msms": "Mississippi School For Mathematics and Science",
         "st. ignatius college prep": "St Ignatius College Prep",
         "vegas debates": "Vegas Debates",
         "young genius, bay area speech and debate": "Young Genius",
