@@ -10,20 +10,24 @@ data "archive_file" "lambda_source" {
 
 data "aws_iam_policy_document" "public_website_access" {
   statement {
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-
     actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
+      "s3:GetObject"
     ]
-
-    resources = [
-      aws_s3_bucket.website_bucket.arn,
-      "${aws_s3_bucket.website_bucket.arn}/*",
-    ]
+    principals {
+      identifiers = [
+      aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
+      type = "AWS"
+    }
+    resources = ["arn:aws:s3:::site-${var.domain_name}/*"]
+  }
+  
+  statement {
+    actions = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::site-${var.domain_name}"]
+    principals {
+      type = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
+    }
   }
 }
 

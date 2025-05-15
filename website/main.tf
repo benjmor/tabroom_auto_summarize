@@ -14,6 +14,13 @@ resource "aws_s3_bucket_public_access_block" "website_bucket" {
   restrict_public_buckets = false
 }
 
+resource "aws_s3_bucket_ownership_controls" "website_bucket" {
+  bucket = aws_s3_bucket.website_bucket.id
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 resource "aws_s3_bucket_website_configuration" "website_bucket" {
   bucket = aws_s3_bucket.website_bucket.id
   index_document {
@@ -102,9 +109,9 @@ resource "aws_route53_record" "exampleDomain-a" {
   name    = local.domain_name
   type    = "A"
   alias {
-    name                   = aws_s3_bucket_website_configuration.website_bucket.website_endpoint
-    zone_id                = aws_s3_bucket.website_bucket.hosted_zone_id
-    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.prod_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.prod_distribution.hosted_zone_id
+    evaluate_target_health = false
   }
 }
 

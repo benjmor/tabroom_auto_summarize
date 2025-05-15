@@ -14,6 +14,11 @@ variable "lambda_api_name" {
     description = "The name of the lambda function that processes API requests from the website."
 }
 
+variable "domain_name" {
+    type = string
+    description = "The domain name of the website."
+}
+
 variable "email_results_lambda_function_name" {
     type = string
     description = "The name of the lambda function that sends emails."
