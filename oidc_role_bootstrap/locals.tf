@@ -96,6 +96,10 @@ locals {
         "Effect" : "Allow",
         "Action" : [
           "ses:VerifyEmailIdentity",
+          "acm:*",
+          "cloudfront:*",
+          "route53:*",
+          "apigateway:*",
         ],
         "Resource" : [
           "*",
