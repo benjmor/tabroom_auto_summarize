@@ -1,13 +1,8 @@
-resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {}
-
 resource "aws_cloudfront_distribution" "prod_distribution" {
   depends_on = [ aws_acm_certificate_validation.cert ]
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id = "S3-${aws_s3_bucket.website_bucket.bucket}"
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
-    }
   }
   
   # By default, show index.html file
@@ -54,5 +49,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.cert.arn
     ssl_support_method = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
+  http_version = "http2and3"
 }
