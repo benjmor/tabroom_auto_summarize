@@ -9,6 +9,7 @@ data "archive_file" "lambda_source" {
 }
 
 data "aws_iam_policy_document" "public_website_access" {
+  depends_on = [ aws_cloudfront_distribution.prod_distribution ]
   statement {
     actions = [
       "s3:GetObject"

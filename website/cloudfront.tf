@@ -1,6 +1,7 @@
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {}
 
 resource "aws_cloudfront_distribution" "prod_distribution" {
+  depends_on = [ aws_acm_certificate_validation.cert ]
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id = "S3-${aws_s3_bucket.website_bucket.bucket}"
