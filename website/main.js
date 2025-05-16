@@ -56,25 +56,25 @@ function submitForm() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Replace with your bucket name and file path
-    const bucketName = 'tabroomsummary.com';
-    const filePath = 'recent_tournaments.txt';
-    const fileUrl = `http://${bucketName}.s3.amazonaws.com/${filePath}`;
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Replace with your bucket name and file path
+//     const bucketName = 'tabroomsummary.com';
+//     const filePath = 'recent_tournaments.txt';
+//     const fileUrl = `http://${bucketName}.s3.amazonaws.com/${filePath}`;
     
-    // Fetch the .txt file
-    fetch(fileUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            // Display the file content in the div with id 'file-content'
-            document.getElementById('file-content').textContent = data;
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-});
+//     // Fetch the .txt file
+//     fetch(fileUrl)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.text();
+//         })
+//         .then(data => {
+//             // Display the file content in the div with id 'file-content'
+//             document.getElementById('file-content').textContent = data;
+//         })
+//         .catch(error => {
+//             console.error('There was a problem with the fetch operation:', error);
+//         });
+// });
