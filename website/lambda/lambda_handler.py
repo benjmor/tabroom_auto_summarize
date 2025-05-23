@@ -38,7 +38,7 @@ class Claude3Wrapper:
         )
 
         # Invoke Claude 3 with the text prompt
-        model_id = "anthropic.claude-3-haiku-20240307-v1:0"  # "anthropic.claude-3-sonnet-20240229-v1:0"
+        model_id = "anthropic.claude-3-7-sonnet-20250219-v1:0"  # "anthropic.claude-3-sonnet-20240229-v1:0"
 
         try:
             response = client.invoke_model(
