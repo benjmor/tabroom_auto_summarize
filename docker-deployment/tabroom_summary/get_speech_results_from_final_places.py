@@ -50,7 +50,10 @@ def get_speech_results_from_final_places(
             place = int(result["place"])
         except (ValueError, TypeError, KeyError):
             place = current_implicit_place_value
-        percentile = result["percentile"]
+        try:
+            percentile = result["percentile"]
+        except KeyError:
+            percentile = int(100.0 * (1 - (place - 1) / unique_entry_count))
         # Palmer likes to hide round-by-round results in this very low-priority column.
         # Might as well include it to give a summary of how each round went.
         ranks_by_round = ""

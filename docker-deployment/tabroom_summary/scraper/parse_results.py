@@ -15,6 +15,7 @@ from .parse_prelim_records_results import parse_prelim_records_results
 from .parse_speaker_awards_results import parse_speaker_awards_results
 from .parse_district_qualifiers import parse_district_qualifiers
 from .parse_dicts_from_prelim_seeds import parse_dicts_from_prelim_seeds
+import os
 
 
 def parse_results(input_data):
@@ -44,6 +45,8 @@ def parse_results(input_data):
         ],
     }
     """
+    IS_NSDA_NATIONALS = os.getenv("IS_NSDA_NATIONALS", "false") == "true"
+
     # Unpack input tuple -- invoking functions via Thread Executors requires a single argument that gets unpacked
     (
         option,
@@ -131,7 +134,10 @@ def parse_results(input_data):
                 browser,
                 result_page_detail["result_id"],
             )
-        elif result_page_detail["result_name"] == "Prelim Records":
+        elif (
+            result_page_detail["result_name"] == "Prelim Records"
+            and not IS_NSDA_NATIONALS  # NSDA Nationals Prelim Records are anonymized
+        ):
             (
                 result_table_content,
                 code_to_name_dict,
