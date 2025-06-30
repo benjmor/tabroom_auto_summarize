@@ -20,7 +20,7 @@ Unlike previous versions, this version will NOT ever directly send LLM prompts t
 # Set log level
 logging.basicConfig(level=logging.INFO)
 
-DATA_BUCKET = "tabroom-summaries-data-bucket"  # TODO - remove after testing
+DATA_BUCKET = "tabroom-summaries-data-bucket"
 
 
 def handler(event, context):
@@ -45,6 +45,7 @@ def handler(event, context):
             data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
             context=event_context,
             percentile_minimum=percentile_minimum,
+            max_results_to_pass_to_gpt=event.get("max_results_to_pass_to_gpt", 15),
         )
 
         # Save the result outputs
@@ -172,7 +173,7 @@ if __name__ == "__main__":
         "-t",
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
-        required=False,  # TODO - require again
+        required=False,
         default="35467",  # NSDA 2025,
     )
     args = parser.parse_args()
@@ -181,5 +182,6 @@ if __name__ == "__main__":
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         # "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
         "percentile_minimum": 0,  # 0 # NSDA championship -- should include all results
+        "max_results_to_pass_to_gpt": 25,  # Account for larger entries at NSDA
     }
     handler(event, {})

@@ -70,12 +70,13 @@ def get_debate_or_congress_results(
         if r_set["label"] != "Speaker Awards":
             try:
                 # Get the total number of entries in the result set
+                # TODO - if a results set only has part of the entries, we would need a different source for the total entries.
                 total_entries = max(
                     total_entries,
                     len(
                         r_set["results"],
                     ),
-                )  # TODO - figure out total entries in cases where partial results are published
+                )
             except:
                 pass  # If we can't get the total entries, skip it
 
@@ -120,9 +121,16 @@ def get_debate_or_congress_results(
             results_by_round = ""  # Palmer likes to hide round-by-round results in this very low-priority column.
             if label == "All Rounds":
                 list_of_round_results = []
+                last_round_was_blank = False
                 for value in result["values"]:
                     if value.get("value", ""):
+                        if last_round_was_blank:
+                            # If the last round was blank, add a bye for it
+                            list_of_round_results.append("B")
+                            last_round_was_blank = False
                         list_of_round_results.append(value["value"])
+                    else:
+                        last_round_was_blank = True
                 results_by_round = ", ".join(list_of_round_results)
             else:
                 for value in result["values"]:

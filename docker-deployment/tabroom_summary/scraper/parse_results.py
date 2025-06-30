@@ -177,7 +177,6 @@ def parse_results(input_data):
                 result_table_content,
                 name_to_school_dict,
             ) = parse_district_qualifiers(browser)
-        # TODO - Add support for more page types
         else:
             continue
         result_contents.append(result_table_content)

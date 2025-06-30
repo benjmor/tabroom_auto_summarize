@@ -38,7 +38,7 @@ class Claude3Wrapper:
         )
 
         # Invoke Claude 3 with the text prompt
-        model_id = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        model_id = "us.anthropic.claude-3-haiku-20240307-v1:0"
 
         try:
             response = client.invoke_model(
@@ -266,7 +266,7 @@ def lambda_handler(event, context):
                 ObjectAttributes=["ObjectSize"],
             )
         except Exception as ex:
-            logging.error(f"Error while looking up placeholder: {repr(ex)}")
+            logging.warning(f"Error while looking up placeholder: {repr(ex)}")
             placeholder_attributes = None
 
         # Get a list of all the schools in the tournament so that the user knows what they can choose from

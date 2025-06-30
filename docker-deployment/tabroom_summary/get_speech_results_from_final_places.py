@@ -9,7 +9,7 @@ def get_speech_results_from_final_places(
     event_name: str,
     entry_dictionary,
     entry_to_school_dict,
-    event_entry_count_override: int = None,  # TODO - pass this value
+    event_entry_count_override: int = None,
 ):
     """
     Assumes there is a Final Places result published for a speech event.
@@ -24,7 +24,7 @@ def get_speech_results_from_final_places(
             )
             continue
         unique_entries.add(result["entry"])
-    if event_entry_count_override is not None:
+    if event_entry_count_override is not None and event_entry_count_override > 0:
         unique_entry_count = event_entry_count_override
     else:
         unique_entry_count = len(

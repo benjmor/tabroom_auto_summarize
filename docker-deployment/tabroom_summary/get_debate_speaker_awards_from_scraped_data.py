@@ -1,3 +1,6 @@
+import unicodedata
+
+
 def get_parsed_speaker_points(round_by_round: str) -> str:
     all_rounds = round_by_round.split(",")
     parsed_points = []
@@ -54,7 +57,13 @@ def get_debate_speaker_awards_from_scraped_data(
                 "event_name": event_name,
                 "event_type": "debate",
                 "result_set": "Speaker Awards",
-                "entry_name": speaker_result["name"],
+                "entry_name": "".join(
+                    [
+                        c
+                        for c in unicodedata.normalize("NFD", speaker_result["name"])
+                        if not unicodedata.combining(c)
+                    ]
+                ),
                 "entry_code": entry_code,
                 "school_name": speaker_result["school"],
                 "rank": f"{place_no_tiebreak}/{total_entries}",
