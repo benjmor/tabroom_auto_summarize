@@ -37,7 +37,7 @@ resource "aws_lambda_function" "email_results_lambda_function" {
 #     }
 #   }
   source_code_hash = data.archive_file.ses_lambda_handler_source.output_base64sha256
-  timeout          = 28 # Needs to run longer but API Gateway could still time out at 30s unless we adapt: https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-api-gateway-integration-timeout-limit-29-seconds/
+  timeout          = 58 # Needs to run longer but API Gateway could still time out at 30s unless we adapt: https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-api-gateway-integration-timeout-limit-29-seconds/
 }
 
 # Create the SES record -- will need manual verification and manual request to move SES from Sandbox to Production mode
