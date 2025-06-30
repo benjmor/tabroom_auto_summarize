@@ -118,6 +118,7 @@ def get_speech_results_from_rounds_only(
                             "rank": index,
                             "round_reached": "N/A",
                             "percentile": percentile,
+                            "place": index,
                             "results_by_round": "N/A",
                         }
                     )

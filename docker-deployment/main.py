@@ -1,5 +1,6 @@
 import argparse
 import boto3
+import botocore
 import datetime
 import logging
 import os
@@ -116,7 +117,7 @@ def handler(event, context):
             TableName=table_name,
             Item=data,
         )
-    except Exception as e:
+    except InterruptedError as e:  # Exception as e:
         logging.error(
             f"Tabroom Summary failed with the following error! {repr(e)} Traceback: {traceback.format_exc()}!"
         )
@@ -136,9 +137,9 @@ def handler(event, context):
             TopicArn=os.environ["SNS_TOPIC_ARN"],
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
-    except Exception:
+    except (botocore.exceptions.ClientError, botocore.exceptions.NoRegionError):
         logging.info(
-            f"Error publishing error to SN S for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
+            f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
         )
     # Email results to interested parties as needed
     logging.warning(f"Email: {event.get("email", "")}")
@@ -172,13 +173,13 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="32547",
+        default="35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
     event = {
         "tournament": tournament_id,  # "30799",  # "29810",  # "20134",
         # "context": "This tournament is the California State Championship, which requires students to qualify to the tournament from their local region. Round 4 of Congress and speech events is the semifinal round. Round 5 of Congress and speech events is the final round. In debate events, there are 4 preliminary rounds, followed by elimination rounds. All rounds were judged by panels of judges who each evaluated competitors and submitted an independent ballot.",  # CHSSA-specific
-        "percentile_minimum": 0,  # 0 # CHSSA championship -- should include all results
+        "percentile_minimum": 0,  # 0 # NSDA championship -- should include all results
     }
     handler(event, {})

@@ -86,12 +86,12 @@ def generate_llm_prompts(
         logging.debug(
             f"School specific results without any filtering:\r\n{json.dumps(sorted_school_results, indent=4)}"
         )
-        data_labels_without_percentile = [
-            label for label in data_labels if label != "percentile"
-        ]
+        # data_labels_without_percentile = [
+        #     label for label in data_labels if label != "percentile"
+        # ]
         data_strings = create_data_strings(
             data_objects=top_sorted_filtered_school_results,
-            data_labels=data_labels_without_percentile,
+            data_labels=data_labels,  # _without_percentile,
         )
         llm_payload = generate_llm_prompt_header(
             tournament_data=tournament_data,
@@ -102,7 +102,7 @@ def generate_llm_prompts(
             has_speech=has_speech,
             has_debate=has_debate,
             entry_dictionary=entry_dictionary,
-            header_string="|".join(data_labels_without_percentile),
+            header_string="|".join(data_labels),  # _without_percentile),
             context=context,
             data_strings=data_strings,
             judge_map=judge_map,
@@ -146,7 +146,7 @@ def generate_llm_prompts(
                 + "\n\n".join(
                     create_data_strings(
                         data_objects=sorted_by_event_without_round_by_round,
-                        data_labels=data_labels_without_percentile,
+                        data_labels=data_labels,  # _without_percentile,
                     )
                 )
                 + "\n"

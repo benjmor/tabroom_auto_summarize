@@ -9,6 +9,7 @@ def get_speech_results_from_final_places(
     event_name: str,
     entry_dictionary,
     entry_to_school_dict,
+    event_entry_count_override: int = None,  # TODO - pass this value
 ):
     """
     Assumes there is a Final Places result published for a speech event.
@@ -23,7 +24,12 @@ def get_speech_results_from_final_places(
             )
             continue
         unique_entries.add(result["entry"])
-    unique_entry_count = len(unique_entries)
+    if event_entry_count_override is not None:
+        unique_entry_count = event_entry_count_override
+    else:
+        unique_entry_count = len(
+            unique_entries
+        )  # if the final places result set is truncated, this will be inaccurate. Fix by passing an override value.
     current_implicit_place_value = 0
     for result in final_results_result_set:
         # Check if the values is a dummy value, continue if it is.
@@ -50,7 +56,10 @@ def get_speech_results_from_final_places(
             place = int(result["place"])
         except (ValueError, TypeError, KeyError):
             place = current_implicit_place_value
-        percentile = result["percentile"]
+        try:
+            percentile = result["percentile"]
+        except KeyError:
+            percentile = int(100.0 * (1 - (place - 1) / unique_entry_count))
         # Palmer likes to hide round-by-round results in this very low-priority column.
         # Might as well include it to give a summary of how each round went.
         ranks_by_round = ""
@@ -72,6 +81,7 @@ def get_speech_results_from_final_places(
                 "rank": f"{rank}/{unique_entry_count}",
                 "round_reached": place,
                 "percentile": percentile,
+                "place": result["rank"],
                 "results_by_round": ranks_by_round,
             }
         )

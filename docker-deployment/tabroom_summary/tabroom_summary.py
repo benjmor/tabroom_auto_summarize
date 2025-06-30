@@ -23,13 +23,17 @@ def main(
     tournament_id: str = "",
     # custom_url: str = "",
     percentile_minimum: int = 40,
-    max_results_to_pass_to_gpt: int = 15,
+    max_results_to_pass_to_gpt: int = 25,  # TODO - Bumping to 25 for NSDA
     context: str = "",
     scrape_entry_records_bool: bool = True,
     default_qualifier_count: int = 1,
 ):
+    os.environ["IS_NSDA_NATIONALS"] = "false"
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
+    if re.match(r"National Speech and Debate Tournament", response_data["name"]):
+        os.environ["IS_NSDA_NATIONALS"] = "true"
+        logging.info("NSDA Nationals detected. Setting IS_NSDA_NATIONALS to true.")
     # Fail early if tournament's end date is in the future or there are no results
     if (
         "end_date" in response_data
@@ -134,10 +138,12 @@ def main(
         "event_type",
         "result_set",
         "entry_name",
+        "entry_code",
         "school_name",
         "rank",
-        "place",
+        "round_reached",
         "percentile",
+        "place",
         "results_by_round",
     ]
     tournament_results = []

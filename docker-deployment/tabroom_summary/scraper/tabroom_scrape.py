@@ -11,7 +11,9 @@ from .get_judge_map import get_judge_map
 from .resolve_longname_to_shortname import resolve_longname_to_shortname
 from .get_sweeps_results import get_sweeps_results
 from collections import Counter
+import botocore
 import boto3
+import os
 
 logging.basicConfig(
     format="%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
@@ -46,8 +48,13 @@ def main(
         "Prelim Records",  # Often Used in tournaments that don't have elim rounds
         "Speaker Awards",  # API data doesn't differentiate individual speaker awards well
         "District Qualifiers",  # Sometimes this is the only thing published.
+        "Prelim Chamber Results",
+        "Qtr Chamber Results",
+        "Sem Chamber Results",
+        "Final Chamber Results",
     ],
     final_round_results_identifiers=["Finals Round results"],
+    force_single_process=True,
 ):
     code_to_name_dict_overall = {}
     name_to_school_dict_overall = {}
@@ -73,7 +80,7 @@ def main(
 
     results = []
     # NOTE - Lambda runs in single-process mode
-    if "--single-process" in chrome_options.arguments:
+    if "--single-process" in chrome_options.arguments or force_single_process:
         # Grab the options data so that we don't have to loop over the dropdown again, which would require multiple browser windows
         event_options_tuples = []
         for event_option in event_options:
@@ -86,13 +93,14 @@ def main(
         for event_option in event_options_tuples:
             # If there is data in the temp_results folder in S3, load it into results
             s3_client = boto3.client("s3")
+            event_name = event_option[0].replace(":", "")  # escape colons
             try:
                 response = s3_client.get_object(
                     Bucket=data_bucket,
-                    Key=f"{tournament_id}/temp_results/{event_option[0]}.json",
+                    Key=f"{tournament_id}/temp_results/{event_name}.json",
                 )
                 results.append(json.loads(response["Body"].read()))
-            except s3_client.exceptions.NoSuchKey:
+            except (s3_client.exceptions.NoSuchKey, botocore.exceptions.ClientError):
                 # If we're running in single-process mode, we don't want to open multiple browser windows
                 # So we'll just run the parse_results function in the main thread
                 single_event_result_data = parse_results_wrapper(
@@ -105,12 +113,21 @@ def main(
                 )
                 results.append(single_event_result_data)
                 # At the end, save the event option into the temp_results folder
-                s3_client.put_object(
-                    Body=json.dumps(single_event_result_data),
-                    Bucket=data_bucket,
-                    Key=f"{tournament_id}/temp_results/{event_option[0]}.json",
-                    ContentType="application/json",
-                )
+                try:
+                    s3_client.put_object(
+                        Body=json.dumps(single_event_result_data),
+                        Bucket=data_bucket,
+                        Key=f"{tournament_id}/temp_results/{event_name}.json",
+                        ContentType="application/json",
+                    )
+                except:
+                    # Create temp_results directory locally if needed
+                    if os.path.exists(f"{tournament_id}/temp_results") == False:
+                        os.makedirs(f"{tournament_id}/temp_results")
+                    with open(
+                        f"{tournament_id}/temp_results/{event_name}.json", "w"
+                    ) as f:
+                        f.write(json.dumps(single_event_result_data))
     else:
         thread_arguments = []
         # Pass options so that parallel processes can create their own browser sessions
