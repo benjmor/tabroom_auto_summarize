@@ -48,6 +48,10 @@ def main(
         "Prelim Records",  # Often Used in tournaments that don't have elim rounds
         "Speaker Awards",  # API data doesn't differentiate individual speaker awards well
         "District Qualifiers",  # Sometimes this is the only thing published.
+        "Prelim Chamber Results",
+        "Qtr Chamber Results",
+        "Sem Chamber Results",
+        "Final Chamber Results",
     ],
     final_round_results_identifiers=["Finals Round results"],
     force_single_process=True,

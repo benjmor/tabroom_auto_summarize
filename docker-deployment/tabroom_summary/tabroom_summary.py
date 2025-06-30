@@ -23,7 +23,7 @@ def main(
     tournament_id: str = "",
     # custom_url: str = "",
     percentile_minimum: int = 40,
-    max_results_to_pass_to_gpt: int = 15,
+    max_results_to_pass_to_gpt: int = 25,  # TODO - Bumping to 25 for NSDA
     context: str = "",
     scrape_entry_records_bool: bool = True,
     default_qualifier_count: int = 1,
@@ -138,10 +138,12 @@ def main(
         "event_type",
         "result_set",
         "entry_name",
+        "entry_code",
         "school_name",
         "rank",
-        "place",
+        "round_reached",
         "percentile",
+        "place",
         "results_by_round",
     ]
     tournament_results = []

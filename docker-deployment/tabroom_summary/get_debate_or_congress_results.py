@@ -6,6 +6,42 @@ from .get_debate_speaker_awards_from_scraped_data import (
 )
 
 
+def get_ranked_ret_val(ret_val):
+    # Sort the ret val based on the round_reached field, then by the number of Ws in the results_by_round field
+    # Shard the data by the result_set type
+    # and then sort each shard by round_reached and number of Ws
+    shards = {}
+    for result in ret_val:
+        result_set = result["result_set"]
+        if result_set not in shards:
+            shards[result_set] = []
+        shards[result_set].append(result)
+
+    for result_set, results in shards.items():
+        if results[0].get("place", "N/A") != "TBD":
+            continue  # If all places are known, no need to rank
+        results.sort(
+            key=lambda x: (
+                int(x.get("round_reached", 0)),
+                x.get("results_by_round", "").count("W"),
+            ),
+            reverse=True,  # Sort by round_reached descending, then by Ws descending
+        )
+        # Assign ranks based on the sorted order
+        for index, single_result in enumerate(results):
+            single_result["rank"] = f"{index + 1}/{len(results)}"
+            single_result["place"] = index + 1
+            single_result["percentile"] = int(
+                100 - ((100 * (index + 1)) / len(results))
+            )
+
+    # Put the shards back together
+    ret_val = []
+    for result_set, results in shards.items():
+        ret_val.extend(results)
+    return ret_val
+
+
 def get_debate_or_congress_results(
     # Event dictionary from the Tabroom data
     event: dict,
@@ -23,18 +59,25 @@ def get_debate_or_congress_results(
     """
     ret_val = []
     event_name = event["name"]
+    total_entries = 0
     for r_set in event.get("result_sets", []):
         if "results" not in r_set:
             continue  # Skip empty result sets
         if r_set.get("bracket") == 1:
             continue  # No brackets for now -- doesn't translate well to text
+            # TODO - would be fun to tell you who a team faced in the bracket, but not a priority right now.
         # Get total entry count
-        try:
-            total_entries = len(
-                r_set["results"]
-            )  # TODO - figure out total entries in cases where partial results are published
-        except:
-            total_entries = 0  # couldn't find the entry count
+        if r_set["label"] != "Speaker Awards":
+            try:
+                # Get the total number of entries in the result set
+                total_entries = max(
+                    total_entries,
+                    len(
+                        r_set["results"],
+                    ),
+                )  # TODO - figure out total entries in cases where partial results are published
+            except:
+                pass  # If we can't get the total entries, skip it
 
         # Take action based on the type of result set
         label = r_set["label"]
@@ -75,14 +118,21 @@ def get_debate_or_congress_results(
             if result["values"] == [{}]:
                 continue  # Sometimes Palmer populates a duplicate entry with blank 'values'. Skip it.
             results_by_round = ""  # Palmer likes to hide round-by-round results in this very low-priority column.
-            for value in result["values"]:
-                if "priority" not in value:
-                    continue
-                if value["priority"] == 999:
-                    results_by_round = value.get("value", "")
-                # Stash the bid type in the results_by_round field
-                if label == "TOC Qualifying Bids" and value["priority"] == 1:
-                    results_by_round = value["value"]
+            if label == "All Rounds":
+                list_of_round_results = []
+                for value in result["values"]:
+                    if value.get("value", ""):
+                        list_of_round_results.append(value["value"])
+                results_by_round = ", ".join(list_of_round_results)
+            else:
+                for value in result["values"]:
+                    if "priority" not in value:
+                        continue
+                    if value["priority"] == 999:
+                        results_by_round = value.get("value", "")
+                    # Stash the bid type in the results_by_round field
+                    if label == "TOC Qualifying Bids" and value["priority"] == 1:
+                        results_by_round = value["value"]
 
             try:
                 entry_name = entry_dictionary[result["entry"]]
@@ -92,8 +142,12 @@ def get_debate_or_congress_results(
                     f"Could not find entry name or code for {result['entry']}. Skipping."
                 )
                 continue
-            rank = result.get("rank", "N/A")
-            round_reached = result.get("place", "N/A")
+            rank = result.get("rank", "TBD")
+            round_reached = (
+                len(results_by_round.split(","))
+                if label == "All Rounds"
+                else result.get("place", "N/A")
+            )
             result_school = result.get(
                 "school", entry_to_school_dict.get(entry_name, "UNKNOWN")
             )
@@ -123,10 +177,16 @@ def get_debate_or_congress_results(
                     "total_entries": total_entries,
                     "round_reached": round_reached,
                     "percentile": percentile,
+                    "place": rank,
                     "results_by_round": results_by_round,
                 }
             )
-    return ret_val
+    # If any placement is TBD, we need to rank the results
+    for instance in ret_val:
+        if instance.get("place", "N/A") == "TBD":
+            return get_ranked_ret_val(ret_val)
+    else:
+        return ret_val
 
 
 if __name__ == "__main__":

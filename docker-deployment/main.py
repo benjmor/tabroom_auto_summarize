@@ -137,7 +137,7 @@ def handler(event, context):
             TopicArn=os.environ["SNS_TOPIC_ARN"],
             Message=f"Tabroom results successfully generated for tournament {tournament_id} ({tourn_metadata.get("name", "")})!",
         )
-    except botocore.exceptions.ClientError:
+    except (botocore.exceptions.ClientError, botocore.exceptions.NoRegionError):
         logging.info(
             f"Error publishing error to SNS for tournament {tournament_id} ({tourn_metadata.get("name", "")})!"
         )
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,  # TODO - require again
-        default="29238",  # NSDA 2024,
+        default="35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id

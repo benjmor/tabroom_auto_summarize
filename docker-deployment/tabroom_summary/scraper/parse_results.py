@@ -15,7 +15,9 @@ from .parse_prelim_records_results import parse_prelim_records_results
 from .parse_speaker_awards_results import parse_speaker_awards_results
 from .parse_district_qualifiers import parse_district_qualifiers
 from .parse_dicts_from_prelim_seeds import parse_dicts_from_prelim_seeds
+from .parse_dicts_from_prelim_chambers import parse_dicts_from_prelim_chambers
 import os
+import re 
 
 
 def parse_results(input_data):
@@ -125,7 +127,17 @@ def parse_results(input_data):
         name_to_school_dict = {}
         name_to_full_name_dict = {}
         browser.get(result_page_detail["result_url"])
-        if result_page_detail["result_name"] == "Final Places":
+        if re.search(r"Prelim Chamber Results", result_page_detail["result_name"]):
+            # This is a special case for NSDA Congress results
+            # We don't parse these results here, but we do need to extract the names and schools
+            result_table_content = {}
+            code_to_name_dict, name_to_school_dict, name_to_full_name_dict = (
+                parse_dicts_from_prelim_chambers(
+                    driver=browser,
+                    result_url=result_page_detail["result_url"],
+                )
+            )
+        elif result_page_detail["result_name"] == "Final Places":
             (
                 result_table_content,
                 code_to_name_dict,
