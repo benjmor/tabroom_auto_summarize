@@ -5,8 +5,7 @@ import json
 import logging
 import selenium
 
-
-def parse_dicts_from_prelim_chambers(
+def parse_dicts_from_all_rounds_result_set(
     driver,
     result_url,
 ):
@@ -16,12 +15,11 @@ def parse_dicts_from_prelim_chambers(
 
     # Get the table element by ID
     result_id = result_url.split("=")[-1]
-    all_tables = driver.find_elements(By.CSS_SELECTOR, "table.tablesorter")
-    if not all_tables:
+    all_rounds_table = driver.find_element(By.CSS_SELECTOR, "table.tablesorter")
+    if not all_rounds_table:
         logging.warning(f"No tables found for result ID {result_id}")
-    for each_table in all_tables:
-        all_rows = each_table.find_elements(By.CSS_SELECTOR, "tbody tr")
-        for each_row in all_rows:
-            row_values = each_row.find_elements(By.CLASS_NAME, "smallish")
-            name_to_school_dict[row_values[0].text] = row_values[1].text
+    all_rows = all_rounds_table.find_elements(By.CSS_SELECTOR, "tbody tr")
+    for each_row in all_rows:
+        row_values = each_row.find_elements(By.CLASS_NAME, "smallish")
+        name_to_school_dict[row_values[0].text] = row_values[1].text
     return name_to_school_dict

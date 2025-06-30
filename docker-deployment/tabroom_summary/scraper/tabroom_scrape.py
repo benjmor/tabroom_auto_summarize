@@ -52,6 +52,7 @@ def main(
         "Qtr Chamber Results",
         "Sem Chamber Results",
         "Final Chamber Results",
+        "All Rounds",
     ],
     final_round_results_identifiers=["Finals Round results"],
     force_single_process=True,

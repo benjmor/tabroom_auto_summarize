@@ -16,8 +16,11 @@ from .parse_speaker_awards_results import parse_speaker_awards_results
 from .parse_district_qualifiers import parse_district_qualifiers
 from .parse_dicts_from_prelim_seeds import parse_dicts_from_prelim_seeds
 from .parse_dicts_from_prelim_chambers import parse_dicts_from_prelim_chambers
+from .parse_dicts_from_all_rounds_result_set import (
+    parse_dicts_from_all_rounds_result_set,
+)
 import os
-import re 
+import re
 
 
 def parse_results(input_data):
@@ -131,12 +134,17 @@ def parse_results(input_data):
             # This is a special case for NSDA Congress results
             # We don't parse these results here, but we do need to extract the names and schools
             result_table_content = {}
-            code_to_name_dict, name_to_school_dict, name_to_full_name_dict = (
-                parse_dicts_from_prelim_chambers(
-                    driver=browser,
-                    result_url=result_page_detail["result_url"],
-                )
+            name_to_school_dict = parse_dicts_from_prelim_chambers(
+                driver=browser,
+                result_url=result_page_detail["result_url"],
             )
+
+        elif result_page_detail["result_name"] == "All Rounds":
+            name_to_school_dict = parse_dicts_from_all_rounds_result_set(
+                driver=browser,
+                result_url=result_page_detail["result_url"],
+            )
+            result_table_content = []
         elif result_page_detail["result_name"] == "Final Places":
             (
                 result_table_content,
