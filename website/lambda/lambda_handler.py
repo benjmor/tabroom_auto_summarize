@@ -38,7 +38,7 @@ class Claude3Wrapper:
         )
 
         # Invoke Claude 3 with the text prompt
-        model_id = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"  # "anthropic.claude-3-sonnet-20240229-v1:0"
+        model_id = "anthropic.claude-3-5-haiku-20241022-v1:0"  # "anthropic.claude-3-sonnet-20240229-v1:0"
 
         try:
             response = client.invoke_model(
@@ -197,7 +197,7 @@ def lambda_handler(event, context):
                     )["Body"]
                     .read()
                     .decode(encoding="utf-8", errors="replace")
-                ).replace("\uFFFD", "--")
+                ).replace("\ufffd", "--")
             except Exception as ex:
                 try:
                     file_content = send_prompt_to_llm_and_save_to_s3(
