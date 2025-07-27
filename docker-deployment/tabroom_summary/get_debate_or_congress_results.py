@@ -22,7 +22,11 @@ def get_ranked_ret_val(ret_val):
             continue  # If all places are known, no need to rank
         results.sort(
             key=lambda x: (
-                int(x.get("round_reached", 0)) if str(x.get("round_reached")).isdigit() else -1,,
+                (
+                    int(x.get("round_reached", 0))
+                    if str(x.get("round_reached")).isdigit()
+                    else 0
+                ),
                 x.get("results_by_round", "").count("W"),
             ),
             reverse=True,  # Sort by round_reached descending, then by Ws descending
