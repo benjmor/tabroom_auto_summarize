@@ -327,7 +327,7 @@ def lambda_handler(event, context):
                 {
                     "file_content": (
                         "Tournament exists, but school does not. "
-                        + "Check that your school name matches the official name. "
+                        + "Check that your school name matches the official name in the Tabroom results. "
                         + f"Schools with results:\n\n{school_data}"
                     ),
                     "gpt_content": "N/A",
