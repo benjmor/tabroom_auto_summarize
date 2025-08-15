@@ -50,7 +50,7 @@ def parse_results(input_data):
         ],
     }
     """
-    IS_NSDA_NATIONALS = os.getenv("IS_NSDA_NATIONALS", "false") == "true"
+    IS_NSDA_NATIONALS = os.getenv("IS_NSDA_NATIONALS", False) 
 
     # Unpack input tuple -- invoking functions via Thread Executors requires a single argument that gets unpacked
     (

@@ -28,11 +28,11 @@ def main(
     scrape_entry_records_bool: bool = True,
     default_qualifier_count: int = 1,
 ):
-    os.environ["IS_NSDA_NATIONALS"] = "false"
+    os.environ["IS_NSDA_NATIONALS"] = False
     response_data = find_or_download_api_response(tournament_id)
     response_data["id"] = tournament_id
     if re.match(r"National Speech and Debate Tournament", response_data["name"]):
-        os.environ["IS_NSDA_NATIONALS"] = "true"
+        os.environ["IS_NSDA_NATIONALS"] = True
         logging.info("NSDA Nationals detected. Setting IS_NSDA_NATIONALS to true.")
     # Fail early if tournament's end date is in the future or there are no results
     if (
