@@ -91,7 +91,9 @@ def parse_result_sets(
                         )
 
         else:
-            if event["type"] == "congress" and os.environ["IS_NSDA_NATIONALS"]:
+            if (event["type"] == "congress") and (
+                os.environ["IS_NSDA_NATIONALS"] == "True"
+            ):
                 debate_final_results = get_nsda_congress_results(
                     event=event,
                     code_dictionary=entry_id_to_entry_code_dictionary,
