@@ -1,13 +1,22 @@
 import unicodedata
+import re
 
 
 def get_parsed_speaker_points(round_by_round: str) -> str:
+    if len(round_by_round) == 0:
+        return "N/A"
     all_rounds = round_by_round.split(",")
     parsed_points = []
     for round in all_rounds:
         # We're trying to find scenarios in which there are multiple judges in a round and fix them
         # 2928 is a two judge round, but 29.75 is a single judge round
         # If there are two decimals, or the number is greater than 100, or there are more than 4 digits in the round, it's a two judge round
+
+        # remove any win-loss indicators and just keep numbers and decimal points
+        round = re.sub(r"[^\d.]", "", round)
+        if len(round) == 0:
+            continue
+
         if (
             len(round.split(".")) == 3
             or float(round) > 100
