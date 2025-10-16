@@ -40,6 +40,7 @@ def resolve_longname_to_shortname(long_name: str):
         "new york university": "NYU",
         "boston college": "Boston College",
         "boston university": "Boston University",
+        "academy": "Academy",  # who names a school academy
         "academy high school": "Academy",
         "air academy high school": "Air Academy",
         "air academy hs": "Air Academy",
