@@ -68,6 +68,7 @@ def resolve_longname_to_shortname(long_name: str):
         "ghs": "GHS",
         "astor redhead academy": "FUHS",
         "stanford ohs": "Stanford OHS",
+        # "durham academy": "Durham Academy",
     }
     if long_name.lower() in special_case_dict:
         return special_case_dict[long_name.lower()]

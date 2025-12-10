@@ -7,8 +7,7 @@ import os
 import traceback
 from tabroom_summary import tabroom_summary
 import json
-import json
-import json
+import string
 
 """
 This is the main routine for the tabroom_summary Lambda. It will query Tabroom.com for the tournament results and then
@@ -60,8 +59,20 @@ def handler(event, context):
                     ) as f:
                         try:
                             f.write(response[school_name]["gpt_prompt"])
-                        except UnicodeEncodeError:
-                            f.write(response[school_name]["gpt_prompt"].encode("utf-8"))
+                        except UnicodeEncodeError as ex:
+                            logging.error(
+                                f"UnicodeEncodeError writing gpt_prompt for {school_name}: {repr(ex)}"
+                            )
+                            f.write(
+                                "".join(
+                                    [
+                                        x
+                                        for x in response[school_name]["gpt_prompt"]
+                                        if x in string.printable
+                                    ]
+                                )
+                            )
+                            # f.write(response[school_name]["gpt_prompt"].encode("utf-8"))
         else:
             # Save the tournament results to S3
             s3_client = boto3.client("s3")
@@ -174,7 +185,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,
-        default="35742",  # "35467",  # NSDA 2025,
+        default="28607",  # "35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
