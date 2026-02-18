@@ -1,4 +1,5 @@
 from .get_speech_results_from_final_places import get_speech_results_from_final_places
+from .get_speech_results_from_scraped_final_places import get_speech_results_from_scraped_final_places
 from .get_debate_results_from_rounds_only import get_debate_results_from_rounds_only
 from .get_debate_or_congress_results import get_debate_or_congress_results
 from .get_speech_results_from_rounds_only import get_speech_results_from_rounds_only
@@ -137,10 +138,13 @@ def parse_result_sets(
             for speech_final_place_result in speech_prelim_seed_results:
                 tournament_results.append(speech_final_place_result)
 
-        # If Final Places is published as a result set...
-        if "Final Places" in all_result_set_labels:
+        # If Final Places is published as a result set in the official API data AND codes are broken...
+        if (
+            "Final Places" in all_result_set_labels
+            and len(entry_id_to_entry_entry_name_dictionary) > 0
+        ):
             # Then grab that result set and pass it to the designated parsing function
-            logging.debug(f"Parsing Final Places in {event["name"]}")
+            logging.debug(f"Parsing Final Places in {event['name']}")
             final_results_result_set = [
                 result_set
                 for result_set in event.get("result_sets", [{}])
@@ -159,6 +163,21 @@ def parse_result_sets(
             )
             for speech_final_place_result in speech_final_place_results:
                 tournament_results.append(speech_final_place_result)
+        elif (
+            "Final Places" in all_result_set_labels
+            and len(entry_id_to_entry_entry_name_dictionary) == 0
+        ):
+            # Use scraped data to generate the speech_final_place_results since the API data is missing entry names
+            logging.debug(
+                f"Parsing Final Places from scraped data in {event['name']} due to missing entry names in API data"
+            )
+            speech_final_place_results = get_speech_results_from_scraped_final_places(
+                final_results_result_set=[],
+                event_name=event["name"],
+                entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                entry_to_school_dict=name_to_school_dict,
+                scraped_results=scraped_results,
+            )
 
         # Last ditch effort if there's no other results available
         if not tournament_results:

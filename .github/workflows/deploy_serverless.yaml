@@ -56,6 +56,6 @@ jobs:
 
     # Run Serverless Deploy
     - name: install oss-serverless
-      run: npm install -g osls@3.62.1 # using osls instead of serverless because of serverless v4 requiring license key
+      run: npm install -g osls@^3 # using osls instead of serverless because of serverless v4 requiring license key
     - name: serverless deploy
       run: sls deploy --verbose --force
