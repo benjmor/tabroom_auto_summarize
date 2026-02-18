@@ -1,4 +1,4 @@
-# This service name will appear in the Lambda function name
+# This service name will appear as the Lambda function name
 service: docker-selenium-lambda-tabroom
 
 provider:

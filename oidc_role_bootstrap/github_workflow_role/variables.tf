@@ -136,12 +136,12 @@ variable "pod_trust_policy_controls" {
 # Variables for service principal type
 variable "service_name" {
   description = "List of services allowed to assume the role"
-  type        = list(string)
+  type        = list(any)
   default     = []
-  validation {
-    condition     = can(regex("^[A-Za-z0-9.-]+\\.amazonaws\\.com$", var.service_name))
-    error_message = "The service_name variable must be in the format of *.amazonaws.com and can only contain letters, numbers, hyphens, and dots."
-  }
+  # validation {
+  #   condition     = can(regex("^[A-Za-z0-9.-]+\\.amazonaws\\.com$", var.service_name))
+  #   error_message = "The service_name variable must be in the format of *.amazonaws.com and can only contain letters, numbers, hyphens, and dots."
+  # }
 }
 
 variable "service_trust_policy_controls" {
