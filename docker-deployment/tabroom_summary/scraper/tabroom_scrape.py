@@ -1,4 +1,5 @@
 import argparse
+from datetime import datetime, date
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -20,6 +21,14 @@ logging.basicConfig(
     datefmt="%Y-%m-%d:%H:%M:%S",
     level=logging.INFO,
 )
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
+
 
 """
 Returns a dictionary with the following keys:
@@ -78,9 +87,13 @@ def main(
     sha = browser.find_element(By.NAME, "sha").get_attribute("value")
 
     # Pull Username and Password from Secrets Manager
-    secrets_client = boto3.client("secretsmanager")
-    tabroom_username = secrets_client.get_secret_value(SecretId="TABROOM_USERNAME")
-    tabroom_password = secrets_client.get_secret_value(SecretId="TABROOM_PASSWORD")
+    secrets_client = boto3.client("secretsmanager", region_name="us-east-1")
+    tabroom_username = secrets_client.get_secret_value(SecretId="TABROOM_USERNAME").get(
+        "SecretString"
+    )
+    tabroom_password = secrets_client.get_secret_value(SecretId="TABROOM_PASSWORD").get(
+        "SecretString"
+    )
 
     login_data = {
         "username": tabroom_username,
@@ -108,7 +121,7 @@ def main(
         }
         post("%s", %s);
         """
-        % (login_save_url, login_data)
+        % (login_save_url, json.dumps(login_data, cls=DateTimeEncoder))
     )
 
     # Navigate to the page with the dropdown menu
