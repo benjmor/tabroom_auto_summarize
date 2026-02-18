@@ -17,7 +17,7 @@ functions:
     timeout: 900
     # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function. See #102
     memorySize: 2048
-    provisionedConcurrency: 3 # Tabroom allows only 3 concurrent sessions, so we can set this to 3 to maximize throughput while avoiding unnecessary throttling
+    # provisionedConcurrency: 3 # Tabroom allows only 3 concurrent sessions, so we can set this to 3 to maximize throughput while avoiding unnecessary throttling
     image:
       name: img
     environment:
