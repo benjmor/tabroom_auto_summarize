@@ -74,6 +74,7 @@ data "aws_iam_policy_document" "summmarizer_role" {
     actions = [
       "sns:Publish",
       "secretsmanager:DeleteSecret",
+      "secretsmanager:GetSecretValue",
     ]
     resources = [
       "*",

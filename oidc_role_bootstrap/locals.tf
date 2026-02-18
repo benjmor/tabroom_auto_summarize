@@ -101,6 +101,7 @@ locals {
           "cloudfront:*",
           "route53:*",
           "apigateway:*",
+          "secretsmanager:*",
         ],
         "Resource" : [
           "*",
