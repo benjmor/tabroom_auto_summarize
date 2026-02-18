@@ -55,7 +55,9 @@ jobs:
         aws-region: ${{ steps.dotenv.outputs.aws_region }}
 
     # Run Serverless Deploy
-    - name: install oss-serverless
-      run: npm install -g osls@^3 # using osls instead of serverless because of serverless v4 requiring license key
+    # - name: install oss-serverless
+    #   run: npm install -g osls@^3 # using osls instead of serverless because of serverless v4 requiring license key
+    - name: install serverless
+      run: npm install -g serverless@^3.40.0
     - name: serverless deploy
       run: sls deploy --verbose --force
