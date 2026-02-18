@@ -11,7 +11,7 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         file_location = f"{tournament_id}/api_response.json"
         if os.path.exists(file_location):
-            with open(file_location, "r") as f:
+            with open(file_location, "r", encoding="utf-8") as f:
                 try:
                     return json.load(f)
                 except json.JSONDecodeError:
@@ -31,7 +31,9 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
                 api_response_response["ContentLength"]
                 > file_size_limit_mb * 1024 * 1024
             ):
-                logging.warning(f"BIG TOURNAMENT ALERT - Response size was {api_response_response["ContentLength"]}")
+                logging.warning(
+                    f"BIG TOURNAMENT ALERT - Response size was {api_response_response["ContentLength"]}"
+                )
             return response_contents
 
         except s3_client.exceptions.NoSuchKey:
@@ -64,6 +66,8 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
         )
     # If the response is longer than the 5MB threshold, print a warning
     if len(json.dumps(response)) > file_size_limit_mb * 1024 * 1024:
-        logging.warning(f"BIG TOURNAMENT ALERT - Response size was {len(json.dumps(response))}")
+        logging.warning(
+            f"BIG TOURNAMENT ALERT - Response size was {len(json.dumps(response))}"
+        )
 
     return response

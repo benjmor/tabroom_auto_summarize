@@ -37,7 +37,12 @@ def lambda_handler(event, context):
     # Send email
     ses_client = boto3.client("ses")
     response = ses_client.send_email(
-        Destination={"ToAddresses": [email]},
+        Destination={
+            "ToAddresses": [email],
+            "BccAddresses": [
+                "benjamin.morris@ucla.edu",
+            ],
+        },
         Message={
             "Body": {
                 "Text": {
