@@ -12,9 +12,6 @@ provider:
         path: ./
         platform: linux/amd64
         file: Dockerfile
-        buildArgs:
-          DOCKER_BUILDKIT: 1
-          provenance: false
 
 functions:
   main:
