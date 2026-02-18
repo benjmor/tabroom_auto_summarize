@@ -23,7 +23,5 @@ functions:
     environment:
       DATA_BUCKET_NAME: "tabroom-summaries-data-bucket"
       SNS_TOPIC_ARN: "arn:aws:sns:us-east-1:238589881750:summary_generation_topic"
-      TABROOM_USERNAME: ${{ secrets.TABROOM_USERNAME }}
-      TABROOM_PASSWORD: ${{ secrets.TABROOM_PASSWORD }}
     role: arn:aws:iam::238589881750:role/summary_lambda_role
     

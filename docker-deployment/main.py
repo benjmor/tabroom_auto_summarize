@@ -187,7 +187,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,
-        default="38362",  # testing a tournament that gave me trouble  # "35467",  # NSDA 2025,
+        default="39344",  # testing a tournament that gave me trouble  # "35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id

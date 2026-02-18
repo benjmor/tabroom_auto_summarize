@@ -14,7 +14,10 @@ module "workflow_role_readonly" {
   role_name                      = "${var.iam_role_name}-readonly"
   provider_url                   = "https://token.actions.githubusercontent.com"
   oidc_fully_qualified_audiences = ["sts.amazonaws.com"]
-  oidc_fully_qualified_subjects  = ["repo:${var.github_organization}/${var.github_repo}:pull_request"]
+  oidc_fully_qualified_subjects  = [
+      "repo:${var.github_organization}/${var.github_repo}:pull_request",
+      "repo:${var.github_organization}/${var.github_repo}:environment:prod",
+    ]
 }
 resource "aws_iam_role_policy_attachment" "workflow_role_readonly_state_access" {
   role       = module.workflow_role_readonly.iam_role_name
@@ -42,6 +45,7 @@ module "workflow_role" {
   oidc_fully_qualified_audiences = ["sts.amazonaws.com"]
   oidc_fully_qualified_subjects = [
     "repo:${var.github_organization}/${var.github_repo}:ref:refs/heads/${local.protected_branch_name}",
+    "repo:${var.github_organization}/${var.github_repo}:environment:prod",
     # Optional: GitHub environments can also be used to delegate trust, beyond just branch names
     # "repo:${var.github_organization}/${var.github_repo}:environment:${var.github_environment}"
   ]

@@ -76,9 +76,15 @@ def main(
     browser.get(login_url)
     salt = browser.find_element(By.NAME, "salt").get_attribute("value")
     sha = browser.find_element(By.NAME, "sha").get_attribute("value")
+
+    # Pull Username and Password from Secrets Manager
+    secrets_client = boto3.client("secretsmanager")
+    tabroom_username = secrets_client.get_secret_value(SecretId="TABROOM_USERNAME")
+    tabroom_password = secrets_client.get_secret_value(SecretId="TABROOM_PASSWORD")
+
     login_data = {
-        "username": os.environ.get("TABROOM_USERNAME"),
-        "password": os.environ.get("TABROOM_PASSWORD"),
+        "username": tabroom_username,
+        "password": tabroom_password,
         "salt": salt,
         "sha": sha,
     }
@@ -101,7 +107,8 @@ def main(
             form.submit();
         }
         post("%s", %s);
-        """ % (login_save_url, login_data)
+        """
+        % (login_save_url, login_data)
     )
 
     # Navigate to the page with the dropdown menu
