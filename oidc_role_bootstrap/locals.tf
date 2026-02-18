@@ -58,7 +58,8 @@ locals {
           "arn:aws:lambda:us-east-1:238589881750:function:schedule_scrape_lambda_function",
           "arn:aws:lambda:us-east-1:238589881750:function:batch_process_lambda_function",
           "arn:aws:lambda:us-east-1:238589881750:function:recent_summaries_lambda_function",
-          "arn:aws:lambda:us-east-1:238589881750:function:email_results_lambda_function"
+          "arn:aws:lambda:us-east-1:238589881750:function:email_results_lambda_function",
+          "arn:aws:lambda:us-east-1:238589881750:function:docker-selenium-lambda-tabroom-prod-main:provisioned",
         ]
       },
       {
