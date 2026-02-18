@@ -38,7 +38,9 @@ def handler(event, context):
         # Generate a Tabroom summary
         tournament_id = event["tournament"]
         event_context = event.get("context", "")
-        percentile_minimum = event.get("percentile_minimum", 0) # experimenting with removing the percentile minimum
+        percentile_minimum = event.get(
+            "percentile_minimum", 0
+        )  # experimenting with removing the percentile minimum
         response, tourn_metadata = tabroom_summary.main(
             tournament_id=tournament_id,
             data_bucket=os.getenv("DATA_BUCKET_NAME", DATA_BUCKET),
@@ -185,7 +187,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,
-        default="38362", # testing a tournament that gave trouble  # "35467",  # NSDA 2025,
+        default="38362",  # testing a tournament that gave me trouble  # "35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
