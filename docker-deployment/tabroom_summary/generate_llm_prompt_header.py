@@ -95,7 +95,7 @@ ONLY INCLUDE RESULTS FROM THE RESULTS DATA. DO NOT INCLUDE ANY RESULTS THAT DO N
         },
     }
     for data_string in data_strings:
-        if re.search(data_string, "Doubles|Octos|Quarters|Semis") and not found_elims:
+        if re.search(r"Doubles|Octos|Quarters|Semis", data_string) and not found_elims:
             chat_gpt_payload_list.append(
                 f"""'Doubles' refers to the Round of 32 (also known as double-octofinals), 'Octos' refers to the Round of 16 (octofinals), and 'Quarters' refers to the Round of 8 (quarterfinals), respectively. Use these terms to describe the elimination round a debater reached.
             """

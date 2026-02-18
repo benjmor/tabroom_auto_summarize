@@ -15,6 +15,7 @@ on:
 
 jobs:
   deploy_serverless:
+    environment: prod # need to set to prod to pass the github action secrets to lambda
     name: deploy_serverless_function
     runs-on: ubuntu-latest
     defaults:

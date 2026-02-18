@@ -1,7 +1,10 @@
 from .get_speech_results_from_final_places import get_speech_results_from_final_places
-from .get_speech_results_from_scraped_final_places import get_speech_results_from_scraped_final_places
+from .get_speech_results_from_scraped_final_places import (
+    get_speech_results_from_scraped_final_places,
+)
 from .get_debate_results_from_rounds_only import get_debate_results_from_rounds_only
 from .get_debate_or_congress_results import get_debate_or_congress_results
+from .get_debate_or_congress_scraped_results import get_debate_or_congress_scraped_results
 from .get_speech_results_from_rounds_only import get_speech_results_from_rounds_only
 from .get_district_qualifier_results import get_district_qualifier_results
 from .get_speech_prelims_from_nsda_result_sets import (
@@ -103,14 +106,23 @@ def parse_result_sets(
                     scraped_data=scraped_results,
                 )
             else:
-                debate_final_results = get_debate_or_congress_results(
-                    event=event,
-                    code_dictionary=entry_id_to_entry_code_dictionary,
-                    entry_dictionary=entry_id_to_entry_entry_name_dictionary,
-                    entry_to_school_dict=name_to_school_dict,
-                    scraped_data=scraped_results,
-                    event_type=event["type"],
-                )
+                if not entry_id_to_entry_entry_name_dictionary and not entry_id_to_entry_code_dictionary:
+                    logging.warning(
+                        f"No codebreaker for this event, must use scraped data."
+                    )
+                    debate_final_results = get_debate_or_congress_scraped_results(
+                        event=event,
+                        scraped_data=scraped_results,
+                    )
+                else:
+                    debate_final_results = get_debate_or_congress_results(
+                        event=event,
+                        code_dictionary=entry_id_to_entry_code_dictionary,
+                        entry_dictionary=entry_id_to_entry_entry_name_dictionary,
+                        entry_to_school_dict=name_to_school_dict,
+                        scraped_data=scraped_results,
+                        event_type=event["type"],
+                    )
             for debate_final_result in debate_final_results:
                 tournament_results.append(debate_final_result)
 
@@ -172,12 +184,11 @@ def parse_result_sets(
                 f"Parsing Final Places from scraped data in {event['name']} due to missing entry names in API data"
             )
             speech_final_place_results = get_speech_results_from_scraped_final_places(
-                final_results_result_set=[],
                 event_name=event["name"],
-                entry_dictionary=entry_id_to_entry_entry_name_dictionary,
-                entry_to_school_dict=name_to_school_dict,
                 scraped_results=scraped_results,
             )
+            for speech_final_place_result in speech_final_place_results:
+                tournament_results.append(speech_final_place_result)
 
         # Last ditch effort if there's no other results available
         if not tournament_results:
