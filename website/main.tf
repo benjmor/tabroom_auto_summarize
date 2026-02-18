@@ -210,7 +210,7 @@ resource "aws_api_gateway_integration" "api_integration" {
   http_method             = aws_api_gateway_method.api_method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.api_lambda_function.invoke_arn
+  uri                     = "${aws_lambda_function.api_lambda_function.arn}:provisioned" # point to provisioned alias
 }
 
 resource "aws_api_gateway_integration_response" "api_integration_response" {
