@@ -38,7 +38,8 @@ class Claude3Wrapper:
         )
 
         # Invoke Claude 3 with the text prompt
-        model_id = "anthropic.claude-haiku-4-5-20251001-v1:0"
+        account_id = boto3.client("sts").get_caller_identity().get("Account")
+        model_id = f"arn:aws:bedrock:us-east-1:{account_id}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0"
 
         try:
             response = client.invoke_model(
