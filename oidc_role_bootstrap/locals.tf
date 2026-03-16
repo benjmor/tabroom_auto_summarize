@@ -118,6 +118,7 @@ locals {
         "Resource" : [
           "arn:aws:iam::238589881750:role/ses_notify_role",
           "arn:aws:iam::238589881750:role/summary_lambda_role",
+          "arn:aws:iam::238589881750:role/lambda_execution_role",
         ],
         "Condition": {
           "StringLikeIfExists": {
