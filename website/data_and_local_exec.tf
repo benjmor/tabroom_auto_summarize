@@ -48,6 +48,8 @@ data "aws_iam_policy_document" "lambda_s3_writes" {
     actions = [
       "bedrock-runtime:*",
       "bedrock:*",
+      "aws-marketplace:Subscribe",
+      "aws-marketplace:ViewSubscriptions",
     ]
     resources = [
       "*",
