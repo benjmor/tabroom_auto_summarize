@@ -20,6 +20,7 @@ def get_district_qualifier_results(
     for result in scraped_data["result_list"][0]["results"]:
         if result["place"] == "QUAL":
             result_set = "National Qualifier"
+            numeric_place = 1 # it's probably a tie for first in this case but we're being generous
         else:
             numeric_place = int(re.sub("[^0-9]", "", result["place"]))
             # TODO - technically, this isn't always accurate, but most qualifiers have <30 entries
