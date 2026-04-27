@@ -18,12 +18,15 @@ def get_district_qualifier_results(
         logging.warning(f"No results for {event_name}")
         return results_list
     for result in scraped_data["result_list"][0]["results"]:
-        numeric_place = int(re.sub("[^0-9]", "", result["place"]))
-        # TODO - technically, this isn't always accurate, but most qualifiers have <30 entries
-        if numeric_place < 3:
+        if result["place"] == "QUAL":
             result_set = "National Qualifier"
         else:
-            result_set = "National Tournament Alternate"
+            numeric_place = int(re.sub("[^0-9]", "", result["place"]))
+            # TODO - technically, this isn't always accurate, but most qualifiers have <30 entries
+            if numeric_place < 3:
+                result_set = "National Qualifier"
+            else:
+                result_set = "National Tournament Alternate"
         result_object = {
             "event_name": event_name,
             "event_type": event_type,
