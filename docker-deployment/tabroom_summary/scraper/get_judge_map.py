@@ -11,6 +11,7 @@ def get_judge_map(
     browser: Chrome,
     school_short_name_dict: dict,
     unit_test=False,
+    subdomain="staging",
 ):
     """
     Parses the "Judges" table and return a map of schools to judges
@@ -32,7 +33,7 @@ def get_judge_map(
         url = "file:///test_pages/judges_base.html"
     else:
         url = (
-            f"https://www.tabroom.com/index/tourn/judges.mhtml?tourn_id={tournament_id}"
+            f"https://{subdomain}.tabroom.com/index/tourn/judges.mhtml?tourn_id={tournament_id}"
         )
     try:
         browser.get(url)

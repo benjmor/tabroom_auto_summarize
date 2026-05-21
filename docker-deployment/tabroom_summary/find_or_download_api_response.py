@@ -6,7 +6,7 @@ import ssl
 import urllib.request
 
 
-def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
+def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5, subdomain="staging"):
     # Check if the API response is already cached in S3. If it is, use that instead of re-scraping
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
         file_location = f"{tournament_id}/api_response.json"
@@ -44,7 +44,7 @@ def find_or_download_api_response(tournament_id, file_size_limit_mb: int = 5):
     # DOWNLOAD DATA FROM THE TABROOM API - We'll use a combination of this and scraping
     response = json.loads(
         urllib.request.urlopen(  # nosec - uses http
-            url=f"http://www.tabroom.com/api/download_data.mhtml?tourn_id={tournament_id}",
+            url=f"http://{subdomain}.tabroom.com/api/download_data.mhtml?tourn_id={tournament_id}",
             context=ssl._create_unverified_context(),  # nosec - data is all public
         ).read()
     )

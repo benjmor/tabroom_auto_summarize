@@ -338,7 +338,7 @@ def lambda_handler(event, context):
         }
     # TODO - Check that the given tournament ID is valid and has results
     # tournament_url = (
-    #     f"https://www.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
+    #     f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
     # )
     # response = requests.get(tournament_url)
     # decoded_response = response.content.decode("utf-8")

@@ -151,7 +151,8 @@ if __name__ == "__main__":
     """
     This is for testing purposes
     """
-    test_url = "https://www.tabroom.com/index/tourn/results/ranked_list.mhtml?event_id=258034&tourn_id=28356"
+    subdomain = "staging"
+    test_url = f"https://{subdomain}.tabroom.com/index/tourn/results/ranked_list.mhtml?event_id=258034&tourn_id=28356"
     # Start a new browser session
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")

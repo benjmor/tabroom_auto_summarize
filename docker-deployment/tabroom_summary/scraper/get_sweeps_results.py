@@ -80,6 +80,7 @@ if __name__ == "__main__":
     browser = webdriver.Chrome(options=chrome_options, service=chrome_service)
     # tournament_id = "28061" # Hockaday 2023
     tournament_id = "29595"  # CHSSA State 2024
-    test_url = f"https://www.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"
+    subdomain = "staging"
+    test_url = f"https://{subdomain}.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"
     browser.get(test_url)
     get_sweeps_results(tournament_id, browser, {})

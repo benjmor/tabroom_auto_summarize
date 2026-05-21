@@ -25,6 +25,7 @@ if len(logging.getLogger().handlers) > 0:
 else:
     logging.basicConfig(level=logging.INFO)
 
+
 def store_data_in_ddb(
     data: dict,
     ddb_name: str,
@@ -65,10 +66,11 @@ def store_data_in_ddb(
 def find_upcoming_tournaments(
     browser,
     ddb_table_name,
+    subdomain="staging",
 ):
     new_tournament_count = 0
 
-    browser.get("https://www.tabroom.com/index/index.mhtml")
+    browser.get(f"https://{subdomain}.tabroom.com/index/index.mhtml")
     # Get all rows in the table
 
     # Get the Table

@@ -73,8 +73,9 @@ def scrape_entry_record(entry_record_url):
 
 
 if __name__ == "__main__":
-    # test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
-    test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=20134&entry_id=3555490"
+    subdomain = "staging"
+    # test_url = f"https://{subdomain}.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
+    test_url = f"https://{subdomain}.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=20134&entry_id=3555490"
     time_per_10_scrape = timeit.timeit(
         "scrape_entry_record(entry_record_url=test_url)",
         number=10,

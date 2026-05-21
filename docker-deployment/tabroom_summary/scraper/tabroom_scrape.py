@@ -65,6 +65,7 @@ def main(
     ],
     final_round_results_identifiers=["Finals Round results"],
     force_single_process=True,
+    subdomain="staging",
 ):
     code_to_name_dict_overall = {}
     name_to_school_dict_overall = {}
@@ -80,7 +81,7 @@ def main(
     logging.debug("Starting browser session")
 
     # Logging in to Tabroom to access protected results pages
-    login_url = "https://www.tabroom.com/user/login/login.mhtml"
+    login_url = f"https://{subdomain}.tabroom.com/user/login/login.mhtml"
     # need to hit the login url to get the salt and SHA in order to pass those values in the login_save request
     browser.get(login_url)
     salt = browser.find_element(By.NAME, "salt").get_attribute("value")
@@ -101,10 +102,9 @@ def main(
         "salt": salt,
         "sha": sha,
     }
-    login_save_url = "https://www.tabroom.com/user/login/login_save.mhtml"
+    login_save_url = f"https://{subdomain}.tabroom.com/user/login/login_save.mhtml"
     # Send a post request to the login_save URL with the login data to authenticate the session
-    browser.execute_script(
-        """
+    browser.execute_script("""
         function post(path, params) {
             const form = document.createElement('form');
             form.method = 'POST';
@@ -120,12 +120,10 @@ def main(
             form.submit();
         }
         post("%s", %s);
-        """
-        % (login_save_url, json.dumps(login_data, cls=DateTimeEncoder))
-    )
+        """ % (login_save_url, json.dumps(login_data, cls=DateTimeEncoder)))
 
     # Navigate to the page with the dropdown menu
-    base_url = f"https://www.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"
+    base_url = f"https://{subdomain}.tabroom.com/index/tourn/results/index.mhtml?tourn_id={tournament_id}"
     browser.get(base_url)
 
     # Find the dropdown menu element and get its options

@@ -54,7 +54,8 @@ def scrape_entry_record(browser, entry_record_url):
 
 
 if __name__ == "__main__":
-    test_url = "https://www.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
+    subdomain = "staging"
+    test_url = f"https://{subdomain}.tabroom.com/index/tourn/postings/entry_record.mhtml?tourn_id=24104&entry_id=4234996"
     # Start a new browser session
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
