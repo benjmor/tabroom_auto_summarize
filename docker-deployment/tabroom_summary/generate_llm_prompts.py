@@ -158,6 +158,8 @@ def generate_llm_prompts(
 
         # If running outside of Lambda, save off results at the end
         if os.environ.get("AWS_LAMBDA_FUNCTION_NAME") is None:
+            # If the name contains a slash, replace it with an underscore for the filename
+            short_school_name = short_school_name.replace("/", "_")
             os.makedirs(
                 f"{tournament_id}/{short_school_name}",
                 exist_ok=True,

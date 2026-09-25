@@ -54,8 +54,10 @@ def handler(event, context):
         if running_outside_of_lambda:
             # Make the directories as needed
             for school_name in response.keys():
+                # Replace slashes with underscores for Windows compatibility
+                school_name = school_name.replace("/", "_")
                 os.makedirs(f"{tournament_id}/{school_name}", exist_ok=True)
-                if "gpt_prompt" in response[school_name]:
+                if "gpt_prompt" in response.get(school_name, {}):
                     with open(
                         f"{tournament_id}/{school_name}/gpt_prompt.txt", "w"
                     ) as f:
@@ -187,7 +189,7 @@ if __name__ == "__main__":
         "--tournament-id",
         help="Tournament ID (typically a 5-digit number) of the tournament you want to generate results for.",
         required=False,
-        default="39344",  # testing a tournament that gave me trouble  # "35467",  # NSDA 2025,
+        default="40313",  # testing a tournament that gave me trouble  # "35467",  # NSDA 2025,
     )
     args = parser.parse_args()
     tournament_id = args.tournament_id
