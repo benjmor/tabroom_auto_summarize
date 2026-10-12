@@ -221,7 +221,13 @@ def lambda_handler(event, context):
     try:
         tournament_url = f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
         with urllib.request.urlopen(tournament_url) as response:
-            data = json.loads(response.read().decode("utf-8"))
+            page_content = response.read().decode("utf-8", errors="replace")
+        # The tournament page is HTML, but some responses may be JSON or an empty body.
+        # Guard against JSON parsing failures so we can still inspect the HTML.
+        if page_content.lstrip().startswith("{"):
+            data = json.loads(page_content)
+        else:
+            data = {"html": page_content}
     except Exception as ex:
         logging.error(f"Error occurred while fetching tournament details: {repr(ex)}")
         return {
