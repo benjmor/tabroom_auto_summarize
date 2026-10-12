@@ -268,6 +268,40 @@ def lambda_handler(event, context):
                     }
                 ),
             }
+    # Also check if there is a "Results" tab in the id="tabnav" item
+    # Example of HTML:
+    # <ul id="tabnav">
+    # 	<li class="selected">
+    # 		 <a href="/index/tourn/index.mhtml?tourn_id=40386">Invite</a>
+    # 	</li>
+    #     <li class="">
+    #             <a href="/index/tourn/fields.mhtml?tourn_id=40386">Entries</a>
+    #     </li>
+
+    #     <li class="
+    #     ">
+    #             <a href="/index/tourn/judges.mhtml?tourn_id=40386">Results</a>
+    #     </li>
+    # </ul>
+
+    results_tab_match = re.search(
+        r'<ul id="tabnav">.*?<li class=".*?">\s*<a href=".*?">Results</a>',
+        data.get("html", ""),
+        re.DOTALL,
+    )
+    if not results_tab_match:
+        return {
+            "isBase64Encoded": False,
+            "statusCode": 200,
+            "headers": cors_headers,
+            "body": json.dumps(
+                {
+                    "file_content": f"The tournament does not have a 'Results' tab, which indicates that results are not yet available. Please check back after the tournament has concluded.",
+                    "gpt_content": "N/A",
+                    "numbered_list_prompt_content": numbered_list_prompt_content,
+                }
+            ),
+        }
 
     # Check if there are any files in the path bucket_name/tournament_id
     all_objects = s3_client.list_objects_v2(
