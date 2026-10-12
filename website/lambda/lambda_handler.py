@@ -220,7 +220,8 @@ def lambda_handler(event, context):
     # Check the tournament's end date to see if it is still ongoing. If it is, return a message indicating that the tournament is still ongoing.
     try:
         tournament_url = f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
-        response = urllib.request.urlopen(tournament_url)
+        with urllib.request.urlopen(tournament_url) as response:
+            data = json.loads(response.read().decode("utf-8"))
     except Exception as ex:
         logging.error(f"Error occurred while fetching tournament details: {repr(ex)}")
         return {
@@ -238,7 +239,7 @@ def lambda_handler(event, context):
     # In the HTML response, look for the end date in the format "Oct 10 to Oct 11 2026" in a class="smaller half"
     tournament_dates_match = re.search(
         r'<div class="smaller half">.*?(\w{3} \d{1,2} to \w{3} \d{1,2} \d{4})',
-        response.text,
+        data.get("html", ""),
         re.DOTALL,
     )
     # extract the end date, which is everything after the "to" in the match
