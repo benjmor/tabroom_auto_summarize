@@ -255,7 +255,7 @@ def lambda_handler(event, context):
         end_date = datetime.strptime(tournament_dates, "%b %d %Y").replace(
             tzinfo=timezone.utc
         )
-        if datetime.now(tz=timezone.utc) - timedelta(hours=11) <= end_date:
+        if datetime.now(tz=timezone.utc) - timedelta(hours=17) <= end_date:
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,
