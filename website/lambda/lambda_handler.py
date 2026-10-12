@@ -3,6 +3,7 @@ import boto3
 import os
 import logging
 import re
+import requests
 from datetime import datetime, timedelta, timezone
 from botocore.exceptions import ClientError
 
@@ -134,15 +135,6 @@ def send_prompt_to_llm_and_save_to_s3(
     return full_response
 
 
-def tournament_is_invalid(response_content):
-    return False  # Assume function is NOT invalid
-    # TODO - Add validation function
-    # results_tab_does_not_exist(response_content)
-    # tournament_year = "blah"
-    # tournament_month_and_date = "blah"
-    # tournament_is_still_ongoing(response_content)
-
-
 def lambda_handler(event, context):
     print(event)
     cors_headers = {
@@ -225,32 +217,53 @@ def lambda_handler(event, context):
                 ),
             }
 
-    # If the API response file exists in S3 and is larger than 5MB, return an error message and exit
-    # COMMENTED OUT - We're trying to support large tournaments now
-    # try:
-    #     api_response_content = s3_client.get_object_attributes(
-    #         Bucket=bucket_name,
-    #         Key=api_response_key,
-    #         ObjectAttributes=["ObjectSize"],
-    #     )
-    #     api_response_size = api_response_content["ObjectSize"]
-    #     print(f"api_response size is {api_response_size}")
-    #     if api_response_size > 5 * 1024 * 1024:
-    #         return {
-    #             "isBase64Encoded": False,
-    #             "statusCode": 400,
-    #             "headers": cors_headers,
-    #             "body": json.dumps(
-    #                 {
-    #                     "file_content": "API response is too large. Please reach out to the Issues page at https://github.com/benjmor/tabroom_auto_summarize/issues to request results for large tournaments.",
-    #                     "gpt_content": "N/A",
-    #                     "numbered_list_prompt_content": numbered_list_prompt_content,
-    #                 }
-    #             ),
-    #         }
-    # except Exception as ex:
-    #     print(f"Exception when reading api_response.json: {repr(ex)}")
-    #     pass
+    # Check the tournament's end date to see if it is still ongoing. If it is, return a message indicating that the tournament is still ongoing.
+    try:
+        tournament_url = (
+            f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
+        )
+        response = requests.get(tournament_url)
+    except Exception as ex:
+        logging.error(f"Error occurred while fetching tournament details: {repr(ex)}")
+        return {
+            "isBase64Encoded": False,
+            "statusCode": 500,
+            "headers": cors_headers,
+            "body": json.dumps(
+                {
+                    "file_content": "An error occurred while fetching tournament details.",
+                    "gpt_content": "N/A",
+                    "numbered_list_prompt_content": numbered_list_prompt_content,
+                }
+            ),
+        }
+    # In the HTML response, look for the end date in the format "Oct 10 to Oct 11 2026" in a class="smaller half"
+    tournament_dates_match = re.search(
+        r'<div class="smaller half">.*?(\w{3} \d{1,2} to \w{3} \d{1,2} \d{4})',
+        response.text,
+        re.DOTALL,
+    )
+    # extract the end date, which is everything after the "to" in the match
+    if tournament_dates_match:
+        tournament_dates = tournament_dates_match.group(1)
+        end_date_str = tournament_dates.split(" to ")[-1]
+        end_date = datetime.strptime(end_date_str, "%b %d %Y").replace(
+            tzinfo=timezone.utc
+        )
+        if datetime.now(tz=timezone.utc) <= end_date:
+            return {
+                "isBase64Encoded": False,
+                "statusCode": 200,
+                "headers": cors_headers,
+                "body": json.dumps(
+                    {
+                        "file_content": f"The tournament is still ongoing and will end on {end_date.strftime('%B %d, %Y')}. Please check back after the tournament has concluded.",
+                        "gpt_content": "N/A",
+                        "numbered_list_prompt_content": numbered_list_prompt_content,
+                    }
+                ),
+            }
+
     # Check if there are any files in the path bucket_name/tournament_id
     all_objects = s3_client.list_objects_v2(
         Bucket=bucket_name,
@@ -336,25 +349,7 @@ def lambda_handler(event, context):
                 }
             ),
         }
-    # TODO - Check that the given tournament ID is valid and has results
-    # tournament_url = (
-    #     f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
-    # )
-    # response = requests.get(tournament_url)
-    # decoded_response = response.content.decode("utf-8")
-    # if tournament_is_invalid(decoded_response):
-    #     return {
-    #         "isBase64Encoded": False,
-    #         "statusCode": 200,
-    #         "headers": cors_headers,
-    #         "body": json.dumps(
-    #             {
-    #                 "file_content": "ERROR - The tournament ID appears to be invalid or finish in the future.",
-    #                 "gpt_content": "N/A",
-    #                 "numbered_list_prompt_content": numbered_list_prompt_content,
-    #             }
-    #         ),
-    #     }
+
     # Put a placeholder file in the S3 bucket and then trigger the Lambda to generate the LLM prompts and results
     s3_client.put_object(
         Body="Placeholder during generation.",
