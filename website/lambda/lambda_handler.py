@@ -248,6 +248,7 @@ def lambda_handler(event, context):
         data.get("html", ""),
         re.DOTALL,
     )
+    logging.warning(f"tournament_dates_match is {tournament_dates_match}")
     # extract the end date, which is everything after the "to" in the match
     if tournament_dates_match:
         tournament_dates = tournament_dates_match.group(1)
@@ -268,6 +269,22 @@ def lambda_handler(event, context):
                     }
                 ),
             }
+    else:
+        logging.error(
+            f"Could not find tournament dates in the HTML for tournament {tournament_id}."
+        )
+        return {
+            "isBase64Encoded": False,
+            "statusCode": 500,
+            "headers": cors_headers,
+            "body": json.dumps(
+                {
+                    "file_content": f"Could not find tournament dates in the HTML for tournament {tournament_id}.",
+                    "gpt_content": "N/A",
+                    "numbered_list_prompt_content": numbered_list_prompt_content,
+                }
+            ),
+        }
     # Also check if there is a "Results" tab in the id="tabnav" item
     # Example of HTML:
     # <ul id="tabnav">
@@ -275,17 +292,12 @@ def lambda_handler(event, context):
     # 		 <a href="/index/tourn/index.mhtml?tourn_id=40386">Invite</a>
     # 	</li>
     #     <li class="">
-    #             <a href="/index/tourn/fields.mhtml?tourn_id=40386">Entries</a>
-    #     </li>
-
-    #     <li class="
-    #     ">
     #             <a href="/index/tourn/judges.mhtml?tourn_id=40386">Results</a>
     #     </li>
     # </ul>
 
     results_tab_match = re.search(
-        r"<li\b[^>]*>\s*<a\b[^>]*>\s*Results\s*</a>",
+        r"Results</a>",
         data.get("html", ""),
         re.IGNORECASE | re.DOTALL,
     )
