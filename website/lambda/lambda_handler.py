@@ -285,7 +285,7 @@ def lambda_handler(event, context):
     # </ul>
 
     results_tab_match = re.search(
-        r'<ul id="tabnav">.*?<li class=".*?">\s*<a href=".*?">Results</a>',
+        r'<li class=".*?">\s*<a href=".*?">Results</a>',
         data.get("html", ""),
         re.DOTALL,
     )
