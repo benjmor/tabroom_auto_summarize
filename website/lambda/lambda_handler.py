@@ -255,7 +255,7 @@ def lambda_handler(event, context):
         end_date = datetime.strptime(end_date_str, "%b %d %Y").replace(
             tzinfo=timezone.utc
         )
-        if datetime.now(tz=timezone.utc) <= end_date:
+        if datetime.now(tz=timezone.utc).__add__(hours=-11) <= end_date:
             return {
                 "isBase64Encoded": False,
                 "statusCode": 200,
@@ -285,7 +285,7 @@ def lambda_handler(event, context):
     # </ul>
 
     results_tab_match = re.search(
-        r'<li\b[^>]*>\s*<a\b[^>]*>\s*Results\s*</a>',
+        r"<li\b[^>]*>\s*<a\b[^>]*>\s*Results\s*</a>",
         data.get("html", ""),
         re.IGNORECASE | re.DOTALL,
     )
