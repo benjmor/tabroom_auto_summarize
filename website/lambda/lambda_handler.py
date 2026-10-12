@@ -3,7 +3,7 @@ import boto3
 import os
 import logging
 import re
-import requests
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from botocore.exceptions import ClientError
 
@@ -219,10 +219,8 @@ def lambda_handler(event, context):
 
     # Check the tournament's end date to see if it is still ongoing. If it is, return a message indicating that the tournament is still ongoing.
     try:
-        tournament_url = (
-            f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
-        )
-        response = requests.get(tournament_url)
+        tournament_url = f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
+        response = urllib.request.urlopen(tournament_url)
     except Exception as ex:
         logging.error(f"Error occurred while fetching tournament details: {repr(ex)}")
         return {
