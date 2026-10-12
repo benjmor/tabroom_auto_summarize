@@ -244,16 +244,15 @@ def lambda_handler(event, context):
         }
     # In the HTML response, look for the end date in the format "Oct 10 to Oct 11 2026" in a class="smaller half"
     tournament_dates_match = re.search(
-        r'<span class="smaller half">\s*(\w{3}\s*\d{1,2}\s*to\s*\w{3}\s*\d{1,2}\s*\d{4})',
+        r'<span class="smaller half">\s*\w{3}\s*\d{1,2}\s*to\s*(\w{3})\s*(\d{1,2})\s*(\d{4}))',
         data.get("html", ""),
         re.DOTALL,
     )
     logging.warning(f"tournament_dates_match is {tournament_dates_match}")
     # extract the end date, which is everything after the "to" in the match
     if tournament_dates_match:
-        tournament_dates = tournament_dates_match.group(1)
-        end_date_str = tournament_dates.split(" to ")[-1]
-        end_date = datetime.strptime(end_date_str, "%b %d %Y").replace(
+        tournament_dates = f"{tournament_dates_match.group(1)} {tournament_dates_match.group(2)} {tournament_dates_match.group(3)}"
+        end_date = datetime.strptime(tournament_dates, "%b %d %Y").replace(
             tzinfo=timezone.utc
         )
         if datetime.now(tz=timezone.utc).__add__(hours=-11) <= end_date:
