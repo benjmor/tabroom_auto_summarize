@@ -309,7 +309,7 @@ def lambda_handler(event, context):
             "headers": cors_headers,
             "body": json.dumps(
                 {
-                    "file_content": f"The tournament does not have a 'Results' tab, which indicates that results are not yet available. Please check back after the tournament has concluded.",
+                    "file_content": f"The tournament does not have a 'Results' tab on staging.tabroom.com, which indicates that results are not yet available. Please check back after the tournament has concluded.",
                     "gpt_content": "N/A",
                     "numbered_list_prompt_content": numbered_list_prompt_content,
                 }
