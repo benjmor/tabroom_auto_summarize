@@ -243,6 +243,7 @@ def lambda_handler(event, context):
             ),
         }
     # In the HTML response, look for the end date in the format "Oct 10 to Oct 11 2026" in a class="smaller half"
+    # TODO - known bug where if it is a one-day tournament, it will not match this regex. Need to add a separate regex for that case.
     tournament_dates_match = re.search(
         r'<span class="smaller half">\s*\w{3}\s*\d{1,2}\s*to\s*(\w{3})\s*(\d{1,2})\s*(\d{4})',
         data.get("html", ""),
@@ -271,21 +272,21 @@ def lambda_handler(event, context):
                 ),
             }
     else:
-        logging.error(
+        logging.warning(
             f"Could not find tournament dates in the HTML for tournament {tournament_id}."
         )
-        return {
-            "isBase64Encoded": False,
-            "statusCode": 500,
-            "headers": cors_headers,
-            "body": json.dumps(
-                {
-                    "file_content": f"Could not find tournament dates in the HTML for tournament {tournament_id}.",
-                    "gpt_content": "N/A",
-                    "numbered_list_prompt_content": numbered_list_prompt_content,
-                }
-            ),
-        }
+        # return {
+        #     "isBase64Encoded": False,
+        #     "statusCode": 500,
+        #     "headers": cors_headers,
+        #     "body": json.dumps(
+        #         {
+        #             "file_content": f"Could not find tournament dates in the HTML for tournament {tournament_id}.",
+        #             "gpt_content": "N/A",
+        #             "numbered_list_prompt_content": numbered_list_prompt_content,
+        #         }
+        #     ),
+        # }
     # Also check if there is a "Results" tab in the id="tabnav" item
     # Example of HTML:
     # <ul id="tabnav">
