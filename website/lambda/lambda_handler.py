@@ -219,7 +219,7 @@ def lambda_handler(event, context):
 
     # Check the tournament's end date to see if it is still ongoing. If it is, return a message indicating that the tournament is still ongoing.
     try:
-        tournament_url = f"https://staging.tabroom.com/index/tourn/index.mhtml?tourn_id={tournament_id}"
+        tournament_url = f"https://staging.tabroom.com/index/tourn/main.mhtml?tourn_id={tournament_id}"
         with urllib.request.urlopen(tournament_url) as response:
             page_content = response.read().decode("utf-8", errors="replace")
         # The tournament page is HTML, but some responses may be JSON or an empty body.
@@ -291,7 +291,7 @@ def lambda_handler(event, context):
     # Example of HTML:
     # <ul id="tabnav">
     # 	<li class="selected">
-    # 		 <a href="/index/tourn/index.mhtml?tourn_id=40386">Invite</a>
+    # 		 <a href="/index/tourn/main.mhtml?tourn_id=40386">Invite</a>
     # 	</li>
     #     <li class="">
     #             <a href="/index/tourn/judges.mhtml?tourn_id=40386">Results</a>
